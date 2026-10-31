@@ -1,33 +1,77 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useApp } from "@/lib/store";
-import { LEADERBOARD_DATA, RANK_TIERS } from "@/lib/mock-data";
-import { Trophy, Flame, TrendingUp, Award, MapPin, Crown } from "lucide-react";
+import { LEADERBOARD_DATA, RANK_TIERS, LeaderboardEntry } from "@/lib/mock-data";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { Trophy, Flame, TrendingUp, Award, MapPin, Crown, Database } from "lucide-react";
 
 export default function LeaderboardPage() {
   const { profile, currentRank } = useApp();
   const [boardTab, setBoardTab] = useState<"ALL" | "CBSE" | "ICSE">("ALL");
+  const [sortMode, setSortMode] = useState<"GP" | "RATING">("GP");
+  const [liveProfiles, setLiveProfiles] = useState<LeaderboardEntry[]>([]);
 
-  const combinedList = [
-    ...LEADERBOARD_DATA,
-    {
-      rank: 0,
-      name: `${profile.name} (You)`,
-      username: profile.username,
-      board: profile.board,
-      classGrade: profile.classGrade,
-      city: profile.city,
-      xp: profile.xp,
-      rating: profile.rating,
-      streak: profile.streak,
-      badges: profile.earnedBadges.length,
-      avatar: profile.avatar,
-      isCurrentUser: true,
-    },
-  ]
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    supabase
+      .from("profiles")
+      .select("*")
+      .order("xp_points", { ascending: false })
+      .limit(50)
+      .then(({ data }) => {
+        if (data && data.length > 0) {
+          const mapped: LeaderboardEntry[] = data.map((row, i) => ({
+            rank: i + 1,
+            name: row.full_name || "Scholar",
+            username: row.username || `@scholar_${i}`,
+            board: (row.board as "CBSE" | "ICSE") || "CBSE",
+            classGrade: Number(row.class_grade || 10),
+            city: row.city || "Delhi",
+            xp: Number(row.xp_points || 0),
+            rating: Number(row.contest_rating || 1500),
+            streak: Number(row.current_streak || 1),
+            badges: Number(row.badges_count || 1),
+            avatar: row.avatar_url || "🚀",
+          }));
+          setLiveProfiles(mapped);
+        }
+      });
+  }, [profile.xp, profile.rating]);
+
+  // Merge live Supabase profiles + current user + initial benchmark scholars (deduplicated by username)
+  const seenUsernames = new Set<string>();
+  const rawList: (LeaderboardEntry & { isCurrentUser?: boolean })[] = [];
+
+  const currentUserEntry: LeaderboardEntry & { isCurrentUser?: boolean } = {
+    rank: 0,
+    name: `${profile.name} (You)`,
+    username: profile.username,
+    board: profile.board,
+    classGrade: profile.classGrade,
+    city: profile.city,
+    xp: profile.xp,
+    rating: profile.rating,
+    streak: profile.streak,
+    badges: profile.earnedBadges.length,
+    avatar: profile.avatar,
+    isCurrentUser: true,
+  };
+
+  rawList.push(currentUserEntry);
+  seenUsernames.add(profile.username.toLowerCase());
+
+  for (const item of [...liveProfiles, ...LEADERBOARD_DATA]) {
+    const key = item.username.toLowerCase();
+    if (!seenUsernames.has(key)) {
+      seenUsernames.add(key);
+      rawList.push(item);
+    }
+  }
+
+  const combinedList = rawList
     .filter((entry) => boardTab === "ALL" || entry.board === boardTab)
-    .sort((a, b) => b.xp - a.xp)
+    .sort((a, b) => (sortMode === "GP" ? b.xp - a.xp : b.rating - a.rating))
     .map((entry, idx) => ({ ...entry, rank: idx + 1 }));
 
   const weeks = 24;
@@ -208,7 +252,30 @@ export default function LeaderboardPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1 rounded-2xl bg-slate-100 border border-slate-200 p-1">
+              <button
+                onClick={() => setSortMode("GP")}
+                className={`rounded-xl px-3 py-1 text-xs font-extrabold transition ${
+                  sortMode === "GP"
+                    ? "bg-emerald-600 text-white"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                📚 By Study GP
+              </button>
+              <button
+                onClick={() => setSortMode("RATING")}
+                className={`rounded-xl px-3 py-1 text-xs font-extrabold transition ${
+                  sortMode === "RATING"
+                    ? "bg-indigo-600 text-white"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                ⚔️ By Quiz Rating
+              </button>
+            </div>
+
             {(["ALL", "CBSE", "ICSE"] as const).map((tab) => (
               <button
                 key={tab}

@@ -44,11 +44,6 @@ export function Navbar() {
       label: "Ranks",
       icon: Trophy,
     },
-    {
-      href: "/studio",
-      label: "CMS",
-      icon: PenTool,
-    },
   ];
 
   return (

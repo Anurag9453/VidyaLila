@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useApp } from "@/lib/store";
 import { BoardType, ClassGrade, LearningModule, QuizContest } from "@/lib/mock-data";
 import { isSupabaseConfigured } from "@/lib/supabase";
@@ -14,7 +14,11 @@ import {
   CheckCircle2,
   ShieldCheck,
   Flag,
+  Lock,
+  LogOut,
 } from "lucide-react";
+
+const DEFAULT_ADMIN_PASSCODE = "VIDYALILA2026";
 
 export default function WriterStudioPage() {
   const {
@@ -28,8 +32,47 @@ export default function WriterStudioPage() {
   const [activeTab, setActiveTab] = useState<"TRAIL" | "CONTEST" | "REPORTS">(
     "TRAIL"
   );
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [passcodeInput, setPasscodeInput] = useState("");
+  const [passcodeError, setPasscodeError] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [seedMessage, setSeedMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const savedUnlock = sessionStorage.getItem("vidyalila_admin_unlocked_v1");
+      if (savedUnlock === "true") {
+        setIsUnlocked(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const handleUnlockStudio = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passcodeInput.trim() === DEFAULT_ADMIN_PASSCODE) {
+      setIsUnlocked(true);
+      setPasscodeError(null);
+      try {
+        sessionStorage.setItem("vidyalila_admin_unlocked_v1", "true");
+      } catch {
+        // ignore
+      }
+    } else {
+      setPasscodeError("Invalid Admin Passcode. Please enter your Founder Passcode.");
+    }
+  };
+
+  const handleLockStudio = () => {
+    setIsUnlocked(false);
+    setPasscodeInput("");
+    try {
+      sessionStorage.removeItem("vidyalila_admin_unlocked_v1");
+    } catch {
+      // ignore
+    }
+  };
 
   const handleSeedDatabase = async () => {
     setSeeding(true);
@@ -160,6 +203,14 @@ export default function WriterStudioPage() {
     };
 
     addCustomModule(newMod);
+    fetch("/api/studio/publish", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": DEFAULT_ADMIN_PASSCODE,
+      },
+      body: JSON.stringify({ type: "MODULE", moduleData: newMod }),
+    }).catch(() => {});
     setModTitle("");
     setModSubtitle("");
     setUnitBody("");
@@ -264,11 +315,74 @@ export default function WriterStudioPage() {
     };
 
     addCustomContest(newContest);
+    fetch("/api/studio/publish", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-key": DEFAULT_ADMIN_PASSCODE,
+      },
+      body: JSON.stringify({ type: "CONTEST", contestData: newContest }),
+    }).catch(() => {});
     setCqText("");
   };
 
   const inputClass =
     "w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none";
+
+  // Protected Admin Gate so students cannot access /studio without Founder Passcode
+  if (!isUnlocked) {
+    return (
+      <div className="mx-auto max-w-md py-12">
+        <div className="rounded-3xl border-2 border-slate-200 bg-white p-7 sm:p-8 shadow-[0_8px_0_0_#e2e8f0] space-y-5 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-600 border-b-4 border-indigo-800 text-white shadow-sm">
+            <Lock className="h-8 w-8" />
+          </div>
+
+          <div className="space-y-1.5">
+            <span className="inline-flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200 px-3 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-indigo-800">
+              Founder &amp; Academic Team Only
+            </span>
+            <h1 className="text-2xl font-extrabold text-slate-900">
+              Admin CMS Studio Lock 🔒
+            </h1>
+            <p className="text-xs font-medium text-slate-500 leading-relaxed">
+              This area is restricted to the VidyaLila Founder and authorized Content Writers for publishing chapters, quizzes, and reviewing academic error reports.
+            </p>
+          </div>
+
+          <form onSubmit={handleUnlockStudio} className="space-y-4 text-left">
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
+                Admin Studio Passcode
+              </label>
+              <input
+                type="password"
+                required
+                value={passcodeInput}
+                onChange={(e) => setPasscodeInput(e.target.value)}
+                placeholder="Enter Admin Passcode (VIDYALILA2026)"
+                className={inputClass}
+              />
+            </div>
+
+            {passcodeError && (
+              <p className="text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl p-2.5">
+                {passcodeError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="w-full btn-3d-indigo py-3 text-xs sm:text-sm flex items-center justify-center gap-2"
+            >
+              <ShieldCheck className="h-4 w-4" />
+              <span>Unlock Admin CMS Studio</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -276,9 +390,19 @@ export default function WriterStudioPage() {
       <section className="rounded-3xl border-2 border-violet-300 bg-gradient-to-r from-violet-50 via-white to-amber-50 p-6 sm:p-8 shadow-[0_8px_0_0_#ddd6fe]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-xl bg-violet-100 border border-violet-300 px-3 py-1 text-xs font-black text-violet-900">
-              <PenTool className="h-3.5 w-3.5" />
-              <span>CONTENT WRITER & ADMIN CMS STUDIO</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-2 rounded-xl bg-violet-100 border border-violet-300 px-3 py-1 text-xs font-black text-violet-900">
+                <PenTool className="h-3.5 w-3.5" />
+                <span>CONTENT WRITER &amp; ADMIN CMS STUDIO</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleLockStudio}
+                className="inline-flex items-center gap-1 rounded-xl bg-rose-50 border border-rose-200 px-3 py-1 text-xs font-extrabold text-rose-700 hover:bg-rose-100"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Lock Studio</span>
+              </button>
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
               Publish Free Study Chapters & Paid Daily/Weekly Quizzes ✍️

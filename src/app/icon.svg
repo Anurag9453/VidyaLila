@@ -1,0 +1,30 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="16" fill="url(#bg_grad)" />
+  <defs>
+    <linearGradient id="bg_grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="50%" stop-color="#0d9488" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+    <linearGradient id="plume_outer" x1="32" y1="8" x2="32" y2="45" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a7f3d0" />
+      <stop offset="50%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#0d9488" />
+    </linearGradient>
+    <linearGradient id="eye_gold" x1="32" y1="13" x2="32" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="60%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <linearGradient id="eye_indigo" x1="32" y1="16" x2="32" y2="31" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#312e81" />
+    </linearGradient>
+  </defs>
+  <path d="M32 8C22 8 16.5 16.5 18 26C19.2 34 25 40 32 44.5C39 40 44.8 34 46 26C47.5 16.5 42 8 32 8Z" fill="url(#plume_outer)" stroke="#ffffff" stroke-width="2" />
+  <ellipse cx="32" cy="23" rx="9" ry="10.5" fill="url(#eye_gold)" />
+  <ellipse cx="32" cy="24" rx="5.8" ry="7" fill="url(#eye_indigo)" />
+  <circle cx="32" cy="22.5" r="2" fill="#ffffff" />
+  <path d="M32 28.5V50" stroke="#fde68a" stroke-width="2.4" stroke-linecap="round" />
+  <path d="M12 42.5C18 42.5 25.5 45 32 50C38.5 45 46 42.5 52 42.5V51.5C46 51.5 38.5 53.5 32 57.5C25.5 53.5 18 51.5 12 51.5V42.5Z" fill="#ffffff" stroke="#1e293b" stroke-width="2" stroke-linejoin="round" />
+</svg>

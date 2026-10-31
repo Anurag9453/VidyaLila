@@ -1,46 +1,51 @@
-# ⚡ VidyaLila — Gamified CBSE & ICSE Learning Trails + Live Quiz Arena
+# 🦚 VidyaLila — CBSE & ICSE Self-Study & Live Subject Quiz Platform
 
-**VidyaLila** combines **Salesforce Trailhead** (100% free bite-sized learning units, XP points, collectible badges, and scholar ranks) with **LeetCode Contests** (Daily Rapid Blitzes & Sunday Rated Championships, 365-day streak heatmap, Elo rating, and All-India leaderboards).
-
----
-
-## ✨ Key Features Built
-
-1. **Trailhead-Style Free Learning Trails (`/` & `/trails/[slug]`)**
-   - Covers **CBSE** & **ICSE (ISC)** boards for **Class 9 to 12** (with architecture ready to toggle **Class 6 to 8**).
-   - Every module is split into bite-sized **Units** with Topper Formula Boxes & interactive **Checkpoint Challenges**.
-   - Completing a unit awards instant **XP Points** (`+150 XP`, `+250 XP`) and unlocks collectible Module Badges (`Photon Ranger 🔭`, `Java Ninja 💻`, `Calculus Titan 📐`).
-   - 5 Gamified Student Ranks: **Shishya 🌱 → Sadhyapak ⚡ → Vidyarthi 🔥 → Maharathi 👑 → Acharya 💎**.
-
-2. **LeetCode-Style Daily & Weekly Paid Quiz Arena (`/contests`)**
-   - Supports **Subscription Pass** (`₹149/month` or `₹999/year` Pro Pass VIP) **+ Per-Contest Entry Fee** (`₹15` Daily / `₹49` Weekly) with Razorpay Checkout integration.
-   - Live Timed CBT Quiz Engine with countdown timer, question palette, instant score calculation, Elo Contest Rating delta, and solution explanations.
-
-3. **Streak Heatmap, Elo Rating & All-India Leaderboard (`/leaderboard`)**
-   - LeetCode-style green daily activity heatmap, earned badge trophy case, and board-wise (`All-India`, `CBSE`, `ICSE`) leaderboard.
-
-4. **Built-in Content Writer & Admin CMS Studio (`/studio`)**
-   - Your content writers can create & publish new CBSE/ICSE modules, units, checkpoint MCQs, and paid daily/weekly contests directly from the browser.
+**VidyaLila** (*Vidya* = Knowledge + *Lila* = Playful Mastery) is an interactive learning and live quiz platform for **Class 9–12 (CBSE & ICSE)** built with **Next.js 14 (App Router, TypeScript, Tailwind CSS)** and **Supabase (PostgreSQL + Auth)**.
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## ✨ Core Features
 
+1. **Free Bilingual Study Chapters & 100-Mark Unit Practice Tests (`/` & `/trails/[slug]`)**
+   - 100% English UI across the site; **English ↔ Hinglish** toggle exclusively for main unit study content.
+   - **100-Mark Tiered Unit Practice Test** (`10 Questions × 10 Marks`): `10m` on 1st attempt, `5m` after 1 wrong try, `2m` minimum floor after 2+ wrong tries.
+   - **Gyan Points (`GP`)** are earned strictly from completing free study units and unit practice tests.
+
+2. **Dual-Track Live & Upcoming Subject Quizzes (`/contests`)**
+   - Conducted strictly on a **Class + Subject** basis at staggered time slots (`3:00 PM`, `4:00 PM`, `5:00 PM IST`).
+   - Supports both **`🌍 Full Syllabus`** and **`📌 Selected Chapters`** quiz tracks.
+   - **Quiz-Wise Pass Wallet**:
+     - **⚡ Basic Pass (`₹49`)**: `2 Daily Quizzes`
+     - **💎 VIP Pass (`₹149`)**: `7 Daily Quizzes + 1 Weekly Quiz` (`8` total credits)
+     - **👑 Pro Pass (`₹499`)**: `30 Daily Quizzes + 4 Weekly Quizzes` (`34` total credits)
+   - **🎁 Top-Ranker Goodies**: Top 3 & Top 10 winners automatically win Free Pass Credits into their wallet.
+
+3. **Protected Admin CMS & Academic Review Studio (`/studio`)**
+   - Protected by the Founder Admin Passcode (`VIDYALILA2026`).
+   - Publish new Chapters, Units, and Subject Quizzes directly to **Supabase Cloud** (`/api/studio/publish`) and review student-submitted error reports.
+
+---
+
+## 💻 Setup on a New System (2 Minutes)
+
+### 1. Clone & Install Dependencies
 ```bash
+git clone https://github.com/Anurag9453/VidyaLila.git
+cd VidyaLila
 npm install
-npm run dev
 ```
 
+### 2. Create `.env.local` in the Project Root
+Copy `.env.example` to `.env.local` and paste your Supabase keys:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://obnkrztcwpyrfpnuwzvg.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
+SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
+```
+
+### 3. Run the Development Server
+```bash
+npm run dev
+```
 Open **http://localhost:3000** in your browser.
-
----
-
-## 🗄️ Connecting Supabase & Deploying to Vercel
-
-1. Create a free project at [supabase.com](https://supabase.com).
-2. Open the **SQL Editor** in Supabase and run the full script from [`supabase/schema.sql`](./supabase/schema.sql).
-3. Copy `.env.example` to `.env.local` and fill in:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `NEXT_PUBLIC_RAZORPAY_KEY_ID` & `RAZORPAY_KEY_SECRET`
-4. Push this repository to GitHub and import into [Vercel](https://vercel.com) for 1-click deployment.
+- **Admin CMS Studio**: Go to **http://localhost:3000/studio** and unlock with passcode **`VIDYALILA2026`**.

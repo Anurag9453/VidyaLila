@@ -51,9 +51,9 @@ function DoubtsLoungeContent() {
   const { profile } = useApp();
 
   const initialClassParam = Number(searchParams.get("class"));
-  const validInitialGrade: ClassGrade = [9, 10, 11, 12].includes(initialClassParam)
+  const validInitialGrade: ClassGrade = [9, 10].includes(initialClassParam)
     ? (initialClassParam as ClassGrade)
-    : ([9, 10, 11, 12].includes(profile.classGrade) ? profile.classGrade : 9);
+    : (profile.classGrade === 10 ? 10 : 9);
 
   const [selectedGrade, setSelectedGrade] = useState<ClassGrade>(validInitialGrade);
   const [selectedTopic, setSelectedTopic] = useState<string>(
@@ -757,6 +757,7 @@ function DoubtsLoungeContent() {
 
             <div className="space-y-1.5">
               {STUDY_CHANNELS.map((ch) => {
+                const isLocked = ch.classGrade === 11 || ch.classGrade === 12;
                 const isSelected = ch.classGrade === selectedGrade;
                 const isMyJoinedGroup =
                   myMembership?.channelId === ch.id && myMembership?.status === "approved";
@@ -768,23 +769,36 @@ function DoubtsLoungeContent() {
                     key={ch.id}
                     type="button"
                     onClick={() => {
+                      if (isLocked) {
+                        setErrorAlert(
+                          `Class ${ch.classGrade} Doubt Room is coming soon! Discussion groups are currently active for Class 9 and 10.`
+                        );
+                        return;
+                      }
                       setSelectedGrade(ch.classGrade);
                       setSelectedTopic("All Topics");
                       setReplyingTo(null);
                       setErrorAlert(null);
                     }}
                     className={`w-full flex items-center justify-between rounded-2xl px-3.5 py-2.5 text-left text-xs sm:text-sm font-extrabold transition ${
-                      isSelected
+                      isLocked
+                        ? "bg-slate-100 text-slate-400 opacity-60 hover:opacity-85 cursor-pointer"
+                        : isSelected
                         ? "bg-slate-900 text-white shadow-sm"
                         : "bg-slate-50 text-slate-700 hover:bg-slate-100"
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate">
-                      <span>{ch.badgeEmoji}</span>
+                      <span>{isLocked ? "🔒" : ch.badgeEmoji}</span>
                       <span className="truncate">{ch.name}</span>
                     </div>
 
-                    {isBarred ? (
+                    {isLocked ? (
+                      <span className="rounded-lg bg-amber-100 border border-amber-300 px-2 py-0.5 text-[10px] font-black text-amber-900 flex items-center gap-1">
+                        <Lock className="h-2.5 w-2.5" />
+                        Soon
+                      </span>
+                    ) : isBarred ? (
                       <span className="rounded-lg bg-rose-600 px-2 py-0.5 text-[10px] font-black text-white">
                         Barred
                       </span>

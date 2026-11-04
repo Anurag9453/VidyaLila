@@ -16,6 +16,8 @@ import {
   ArrowLeft,
   ChevronRight,
   Swords,
+  Lock,
+  Sparkles,
 } from "lucide-react";
 
 function HomeContent() {
@@ -40,6 +42,7 @@ function HomeContent() {
       ? paramSubject
       : null
   );
+  const [comingSoonAlert, setComingSoonAlert] = useState<string | null>(null);
 
   useEffect(() => {
     const c = Number(searchParams.get("class")) as ClassGrade;
@@ -67,6 +70,7 @@ function HomeContent() {
     border: string;
     shadow: string;
     iconBg: string;
+    isLocked?: boolean;
   }[] = [
     {
       grade: 9,
@@ -77,6 +81,7 @@ function HomeContent() {
       border: "border-emerald-200 hover:border-emerald-400",
       shadow: "shadow-[0_6px_0_0_#a7f3d0]",
       iconBg: "bg-emerald-500",
+      isLocked: false,
     },
     {
       grade: 10,
@@ -87,26 +92,29 @@ function HomeContent() {
       border: "border-amber-200 hover:border-amber-400",
       shadow: "shadow-[0_6px_0_0_#fde68a]",
       iconBg: "bg-amber-500",
+      isLocked: false,
     },
     {
       grade: 11,
       title: "Class 11",
-      subtitle: "Core Concepts • Vectors, Chemical Bonding & Calculus Limits",
+      subtitle: "Senior Secondary • Vectors, Chemical Bonding & Calculus",
       emoji: "🚀",
-      bg: "bg-sky-50/70",
-      border: "border-sky-200 hover:border-sky-400",
-      shadow: "shadow-[0_6px_0_0_#bae6fd]",
-      iconBg: "bg-sky-500",
+      bg: "bg-slate-100/90",
+      border: "border-slate-300",
+      shadow: "shadow-[0_4px_0_0_#cbd5e1]",
+      iconBg: "bg-slate-400",
+      isLocked: true,
     },
     {
       grade: 12,
       title: "Class 12",
-      subtitle: "Advanced • Electrostatics, Electrochemistry & Integrals",
+      subtitle: "Board Exam Focus • Electrostatics, Solutions & Integrals",
       emoji: "👑",
-      bg: "bg-violet-50/70",
-      border: "border-violet-200 hover:border-violet-400",
-      shadow: "shadow-[0_6px_0_0_#ddd6fe]",
-      iconBg: "bg-violet-500",
+      bg: "bg-slate-100/90",
+      border: "border-slate-300",
+      shadow: "shadow-[0_4px_0_0_#cbd5e1]",
+      iconBg: "bg-slate-400",
+      isLocked: true,
     },
   ];
 
@@ -159,6 +167,13 @@ function HomeContent() {
   });
 
   const handleSelectClass = (grade: ClassGrade) => {
+    if (grade === 11 || grade === 12) {
+      setComingSoonAlert(
+        `Class ${grade} chapters & tests are coming soon! We are currently live for Class 9 and 10.`
+      );
+      return;
+    }
+    setComingSoonAlert(null);
     setSelectedClass(grade);
     setSelectedSubject(null);
     router.push(`/?class=${grade}`, { scroll: false });
@@ -227,6 +242,22 @@ function HomeContent() {
           <p className="text-sm sm:text-base text-slate-500 font-medium">
             Select your class below to explore interactive chapters and earn GP (Gyan Points).
           </p>
+
+          {comingSoonAlert && (
+            <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-amber-900 flex items-center justify-between gap-3 shadow-sm text-left max-w-xl mx-auto">
+              <div className="flex items-center gap-2.5 text-xs sm:text-sm font-extrabold">
+                <Lock className="h-4 w-4 text-amber-600 shrink-0" />
+                <span>{comingSoonAlert}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setComingSoonAlert(null)}
+                className="text-amber-800 hover:text-amber-950 font-black text-xs px-2 py-1 rounded-md hover:bg-amber-100 transition shrink-0"
+              >
+                ✕ Dismiss
+              </button>
+            </div>
+          )}
         </section>
       )}
 
@@ -238,27 +269,49 @@ function HomeContent() {
           {classCards.map((item) => (
             <button
               key={item.grade}
+              type="button"
               onClick={() => handleSelectClass(item.grade)}
-              className={`group text-left rounded-2xl sm:rounded-3xl ${item.bg} border-2 ${item.border} ${item.shadow} p-5 sm:p-7 flex items-center justify-between gap-4 hover:-translate-y-1 transition-all`}
+              className={`group relative text-left rounded-2xl sm:rounded-3xl p-5 sm:p-7 flex items-center justify-between gap-4 transition-all ${
+                item.isLocked
+                  ? "bg-slate-100/80 border-2 border-slate-300 shadow-[0_4px_0_0_#cbd5e1] hover:border-slate-400 cursor-pointer"
+                  : `${item.bg} border-2 ${item.border} ${item.shadow} hover:-translate-y-1`
+              }`}
             >
-              <div className="flex items-center gap-4 min-w-0">
+              {item.isLocked && (
+                <span className="absolute -top-3 right-5 rounded-full bg-slate-900 text-amber-300 border border-amber-400/50 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
+                  <Lock className="h-3 w-3" />
+                  Coming Soon
+                </span>
+              )}
+
+              <div className={`flex items-center gap-4 min-w-0 ${item.isLocked ? "opacity-60" : ""}`}>
                 <div
-                  className={`flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl ${item.iconBg} text-2xl sm:text-3xl text-white shadow-sm group-hover:scale-105 transition`}
+                  className={`flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl ${
+                    item.isLocked ? "bg-slate-400" : item.iconBg
+                  } text-2xl sm:text-3xl text-white shadow-sm group-hover:scale-105 transition`}
                 >
-                  {item.emoji}
+                  {item.isLocked ? "🔒" : item.emoji}
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
-                    {item.title}
-                  </h2>
+                  <div className="flex items-center gap-1.5">
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                      {item.title}
+                    </h2>
+                  </div>
                   <p className="text-xs sm:text-sm font-medium text-slate-600 mt-1 line-clamp-2">
-                    {item.subtitle}
+                    {item.isLocked
+                      ? "Senior secondary syllabus is coming soon! Live chapters currently for Class 9 & 10."
+                      : item.subtitle}
                   </p>
                 </div>
               </div>
 
               <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-white border border-slate-200 text-slate-700 group-hover:bg-slate-900 group-hover:text-white transition">
-                <ArrowRight className="h-4 w-4" />
+                {item.isLocked ? (
+                  <Lock className="h-4 w-4 text-slate-400" />
+                ) : (
+                  <ArrowRight className="h-4 w-4" />
+                )}
               </div>
             </button>
           ))}

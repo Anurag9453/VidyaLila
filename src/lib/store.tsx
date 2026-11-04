@@ -427,8 +427,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           Boolean(meta?.onboarding_completed) ||
           Boolean(localOnboard?.completed);
 
-        const resolvedClass: ClassGrade =
+        const rawClass =
           localOnboard?.classGrade || (data.class_grade as ClassGrade) || 9;
+        const resolvedClass: ClassGrade = rawClass === 10 ? 10 : 9;
 
         const resolvedLang: ContentLanguage =
           localOnboard?.preferredLanguage ||
@@ -492,9 +493,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       } else if (meta) {
         const hasOnboarded =
           Boolean(meta.onboarding_completed) || Boolean(localOnboard?.completed);
-        const resolvedClass: ClassGrade =
+        const rawClass =
           localOnboard?.classGrade ||
           (Number(meta.class_grade || 9) as ClassGrade);
+        const resolvedClass: ClassGrade = rawClass === 10 ? 10 : 9;
         const resolvedLang: ContentLanguage =
           localOnboard?.preferredLanguage ||
           (meta.preferred_language as ContentLanguage) ||

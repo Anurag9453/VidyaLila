@@ -130,6 +130,7 @@ function AuthAndSettingsContent() {
   const [showPassModal, setShowPassModal] = useState(false);
   const [defaultModalPkg, setDefaultModalPkg] =
     useState<PassPackageType>("WEEKLY");
+  const [classSettingsAlert, setClassSettingsAlert] = useState<string | null>(null);
 
   // Form states for Sign Up / Sign In
   const [email, setEmail] = useState("");
@@ -475,20 +476,39 @@ function AuthAndSettingsContent() {
                 </label>
                 <select
                   value={profile.classGrade}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const val = Number(e.target.value) as ClassGrade;
+                    if (val === 11 || val === 12) {
+                      setClassSettingsAlert(
+                        `Class ${val} syllabus is coming soon! VidyaLila is currently live for Class 9 and 10.`
+                      );
+                      return;
+                    }
+                    setClassSettingsAlert(null);
                     updateProfileBoardAndClass(
                       profile.board,
-                      Number(e.target.value) as ClassGrade,
+                      val,
                       activeUserLang
-                    )
-                  }
+                    );
+                  }}
                   className="w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:outline-none"
                 >
-                  <option value={9}>Class 9</option>
-                  <option value={10}>Class 10</option>
-                  <option value={11}>Class 11</option>
-                  <option value={12}>Class 12</option>
+                  <option value={9}>Class 9 (Live)</option>
+                  <option value={10}>Class 10 (Live)</option>
+                  <option value={11} disabled className="text-slate-400 bg-slate-100">
+                    Class 11 (Coming Soon 🔒)
+                  </option>
+                  <option value={12} disabled className="text-slate-400 bg-slate-100">
+                    Class 12 (Coming Soon 🔒)
+                  </option>
                 </select>
+
+                {classSettingsAlert && (
+                  <p className="mt-1.5 text-xs font-bold text-amber-700 flex items-center gap-1">
+                    <Lock className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+                    <span>{classSettingsAlert}</span>
+                  </p>
+                )}
               </div>
 
               {/* Language Preference */}
@@ -899,15 +919,26 @@ function AuthAndSettingsContent() {
                     </label>
                     <select
                       value={classGrade}
-                      onChange={(e) =>
-                        setClassGrade(Number(e.target.value) as ClassGrade)
-                      }
+                      onChange={(e) => {
+                        const val = Number(e.target.value) as ClassGrade;
+                        if (val === 11 || val === 12) {
+                          setSignupHandleError(
+                            `Class ${val} is coming soon! Please select Class 9 or 10.`
+                          );
+                          return;
+                        }
+                        setClassGrade(val);
+                      }}
                       className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
                     >
-                      <option value={9}>Class 9</option>
-                      <option value={10}>Class 10</option>
-                      <option value={11}>Class 11</option>
-                      <option value={12}>Class 12</option>
+                      <option value={9}>Class 9 (Live)</option>
+                      <option value={10}>Class 10 (Live)</option>
+                      <option value={11} disabled className="text-slate-400 bg-slate-100">
+                        Class 11 (Coming Soon 🔒)
+                      </option>
+                      <option value={12} disabled className="text-slate-400 bg-slate-100">
+                        Class 12 (Coming Soon 🔒)
+                      </option>
                     </select>
                   </div>
 

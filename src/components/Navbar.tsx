@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   AtSign,
   AlertCircle,
+  Lock,
 } from "lucide-react";
 import { PaymentModal } from "./PaymentModal";
 import { BrandLogo } from "./BrandLogo";
@@ -40,7 +41,10 @@ export function Navbar() {
 
   // First-time onboarding modal state (Unique @username + Class 9-12 + Language Preference)
   const [onboardUsername, setOnboardUsername] = useState("");
-  const [onboardClass, setOnboardClass] = useState<ClassGrade>(9);
+  const [onboardClass, setOnboardClass] = useState<ClassGrade>(
+    profile.classGrade === 10 ? 10 : 9
+  );
+  const [onboardClassError, setOnboardClassError] = useState<string | null>(null);
   const [onboardLang, setOnboardLang] = useState<ContentLanguage>("HINGLISH");
   const [savingOnboarding, setSavingOnboarding] = useState(false);
   const [checkingHandle, setCheckingHandle] = useState(false);
@@ -387,31 +391,65 @@ export function Navbar() {
               )}
             </div>
 
-            {/* 2. Class Selection (Class 9 to 12) */}
+            {/* 2. Class Selection (Class 9 & 10 Active, 11 & 12 Coming Soon) */}
             <div className="space-y-2">
-              <label className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-slate-700">
-                <GraduationCap className="h-4 w-4 text-indigo-600" />
-                <span>2. Select Your Class</span>
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-slate-700">
+                  <GraduationCap className="h-4 w-4 text-indigo-600" />
+                  <span>2. Select Your Class</span>
+                </label>
+                <span className="text-[10px] font-bold text-slate-400">
+                  Starting with Class 9 &amp; 10
+                </span>
+              </div>
+
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {([9, 10, 11, 12] as ClassGrade[]).map((grade) => {
                   const active = onboardClass === grade;
+                  const isLocked = grade === 11 || grade === 12;
+
                   return (
                     <button
                       key={grade}
                       type="button"
-                      onClick={() => setOnboardClass(grade)}
-                      className={`rounded-2xl border-2 border-b-4 py-3 px-3 text-center font-extrabold text-sm transition ${
-                        active
+                      onClick={() => {
+                        if (isLocked) {
+                          setOnboardClassError(
+                            `Class ${grade} is coming soon! Please select Class 9 or 10 to start learning.`
+                          );
+                          return;
+                        }
+                        setOnboardClassError(null);
+                        setOnboardClass(grade);
+                      }}
+                      className={`relative rounded-2xl border-2 border-b-4 py-3 px-3 text-center font-extrabold text-sm transition ${
+                        isLocked
+                          ? "border-slate-200 bg-slate-100 text-slate-400 opacity-60 hover:opacity-80 cursor-pointer"
+                          : active
                           ? "border-indigo-600 bg-indigo-50 text-indigo-950"
                           : "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
                       }`}
                     >
-                      Class {grade}
+                      <div className="flex items-center justify-center gap-1">
+                        <span>Class {grade}</span>
+                        {isLocked && <Lock className="h-3 w-3 text-slate-400" />}
+                      </div>
+                      {isLocked && (
+                        <span className="block text-[9px] font-black uppercase text-amber-600 mt-0.5">
+                          Soon
+                        </span>
+                      )}
                     </button>
                   );
                 })}
               </div>
+
+              {onboardClassError && (
+                <p className="text-xs font-bold text-amber-700 flex items-center gap-1.5 pt-1 animate-in fade-in">
+                  <Lock className="h-3.5 w-3.5 shrink-0 text-amber-600" />
+                  <span>{onboardClassError}</span>
+                </p>
+              )}
             </div>
 
             {/* 3. Language Preference (Hinglish or English) */}

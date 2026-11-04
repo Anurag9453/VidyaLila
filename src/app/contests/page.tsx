@@ -41,8 +41,9 @@ function ContestArenaContent() {
   } = useApp();
 
   const [selectedQuizClass, setSelectedQuizClass] = useState<ClassGrade>(
-    profile.classGrade
+    profile.classGrade === 10 ? 10 : 9
   );
+  const [quizClassAlert, setQuizClassAlert] = useState<string | null>(null);
   const [activeContest, setActiveContest] = useState<QuizContest | null>(null);
   const [paymentTarget, setPaymentTarget] = useState<QuizContest | null>(null);
   const [defaultModalPkg, setDefaultModalPkg] =
@@ -628,23 +629,54 @@ function ContestArenaContent() {
               </span>
             </p>
 
-            {/* Class Filter */}
+            {/* Class Filter (Class 9 & 10 Live, 11 & 12 Locked) */}
             <div className="flex items-center gap-1.5 text-xs font-bold">
-              {([9, 10, 11, 12] as ClassGrade[]).map((grade) => (
-                <button
-                  key={grade}
-                  onClick={() => setSelectedQuizClass(grade)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-extrabold transition ${
-                    selectedQuizClass === grade
-                      ? "bg-emerald-600 text-white shadow-sm"
-                      : "bg-white border border-slate-200 text-slate-600 hover:text-slate-900"
-                  }`}
-                >
-                  Class {grade}
-                </button>
-              ))}
+              {([9, 10, 11, 12] as ClassGrade[]).map((grade) => {
+                const isLocked = grade === 11 || grade === 12;
+                return (
+                  <button
+                    key={grade}
+                    onClick={() => {
+                      if (isLocked) {
+                        setQuizClassAlert(
+                          `Class ${grade} Live Quizzes are coming soon! Daily & Weekly quizzes are currently active for Class 9 and 10.`
+                        );
+                        return;
+                      }
+                      setQuizClassAlert(null);
+                      setSelectedQuizClass(grade);
+                    }}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-extrabold transition flex items-center gap-1 ${
+                      isLocked
+                        ? "bg-slate-100 border border-slate-200 text-slate-400 opacity-60 hover:opacity-90 cursor-pointer"
+                        : selectedQuizClass === grade
+                        ? "bg-emerald-600 text-white shadow-sm"
+                        : "bg-white border border-slate-200 text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    <span>Class {grade}</span>
+                    {isLocked && <Lock className="h-3 w-3 text-slate-400" />}
+                  </button>
+                );
+              })}
             </div>
           </div>
+
+          {quizClassAlert && (
+            <div className="rounded-xl border border-amber-300 bg-amber-50 p-2.5 text-amber-900 flex items-center justify-between text-xs font-bold animate-in fade-in">
+              <div className="flex items-center gap-2">
+                <Lock className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+                <span>{quizClassAlert}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setQuizClassAlert(null)}
+                className="text-amber-800 hover:text-amber-950 font-black text-[11px] px-1.5 py-0.5 rounded hover:bg-amber-100"
+              >
+                ✕ Dismiss
+              </button>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {STAGGERED_TIME_SLOTS.map((item) => (

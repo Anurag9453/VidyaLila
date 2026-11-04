@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Constructing 30 degrees</title>
+  <desc>A 60 degree ray BQ and ray BC with arcs from P and Q of 3 cm meeting at X; ray BX halves the angle so that angle XBC is 30 degrees.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 337.57 317.78 A 160 160 0 0 0 234.72 139.65" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 414.19 195.68 A 120 120 0 0 0 336.21 170.06" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 361.98 214.69 A 120 120 0 0 0 378.78 134.34" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="180.0" y1="290.0" x2="420.0" y2="290.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="180.0" y1="290.0" x2="300.0" y2="82.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="180.0" y1="290.0" x2="394.8" y2="166.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <path d="M 244.0 290.0 A 64.0 64.0 0 0 0 235.43 258.0" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="259.2" y="272.8" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">30°</text>
+  <path d="M 235.43 258.0 A 64.0 64.0 0 0 0 212.0 234.57" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="238.0" y="236.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">30°</text>
+  <!-- Point Dots -->
+  <circle cx="180.0" cy="290.0" r="3" fill="currentColor" />
+  <circle cx="420.0" cy="290.0" r="3" fill="currentColor" />
+  <circle cx="340.0" cy="290.0" r="3" fill="currentColor" />
+  <circle cx="260.0" cy="151.44" r="3" fill="currentColor" />
+  <circle cx="377.46" cy="176.0" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="173.0" y="302.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">B</text>
+  <text x="427.0" y="302.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">C</text>
+  <text x="340.0" y="304.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="253.0" y="144.44" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">Q</text>
+  <text x="384.46" y="169.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">X</text>
+  <text x="162.0" y="318.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">QBC = 60°</text>
+</svg>

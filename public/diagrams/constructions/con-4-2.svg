@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>SSS triangle ABC with sides 5, 6, 7</title>
+  <desc>Triangle ABC with a horizontal base AB of 5 cm, side BC of 6 cm from the arc centred at B and side CA of 7 cm from the arc centred at A, meeting at the apex C.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 445.28 87.79 A 238.92 238.92 0 0 0 247.42 128.17" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 426.63 171.93 A 278.74 278.74 0 0 0 228.77 44.03" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="190.56" y1="320.14" x2="389.66" y2="320.14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="190.56" y1="320.14" x2="341.88" y2="86.05" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="389.66" y1="320.14" x2="341.88" y2="86.05" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <path d="M 226.4 320.14 A 35.84 35.84 0 0 0 210.01 290.04" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="234.28" y="300.34" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">57.1°</text>
+  <path d="M 353.82 320.14 A 35.84 35.84 0 1 0 382.49 285.03" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="428.22" y="355.62" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">78.5°</text>
+  <path d="M 320.26 119.49 A 39.82 39.82 0 0 0 349.84 125.06" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="331.92" y="142.87" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">44.4°</text>
+  <!-- Point Dots -->
+  <circle cx="190.56" cy="320.14" r="3" fill="currentColor" />
+  <circle cx="389.66" cy="320.14" r="3" fill="currentColor" />
+  <circle cx="341.88" cy="86.05" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="183.56" y="332.14" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="396.66" y="332.14" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="341.88" y="76.05" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">C</text>
+  <text x="290.11" y="338.14" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">AB = 5 cm</text>
+  <text x="379.77" y="207.09" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">BC = 6 cm</text>
+  <text x="252.22" y="207.09" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">CA = 7 cm</text>
+</svg>

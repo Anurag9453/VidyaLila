@@ -25,13 +25,18 @@ const PLAN_CONFIG = {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { userId, packagePlan } = body as {
+    const { userId, packagePlan, phone, userName, userEmail } = body as {
       userId?: string;
       packagePlan: "ONE_DAY" | "WEEKLY" | "MONTHLY";
+      phone?: string;
+      userName?: string;
+      userEmail?: string;
     };
 
     const config = PLAN_CONFIG[packagePlan] || PLAN_CONFIG.WEEKLY;
     const orderId = `order_vl_${Date.now()}_${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const cleanPhone = (phone || "").replace(/[^0-9]/g, "");
 
     // If user is authenticated in Supabase, log the created order in public.payment_orders
     if (userId && !userId.startsWith("local-")) {
@@ -43,7 +48,19 @@ export async function POST(req: Request) {
         amount_inr: config.amountInr,
         razorpay_order_id: orderId,
         status: "created",
+        phone: cleanPhone || null,
+        user_name: userName || null,
+        user_email: userEmail || null,
+        contact_status: "PENDING_CONTACT",
       });
+
+      // Also persist phone number in student's profile for future checkouts
+      if (cleanPhone.length >= 10) {
+        await supabaseAdmin
+          .from("profiles")
+          .update({ phone: cleanPhone })
+          .eq("id", userId);
+      }
     }
 
     return NextResponse.json({

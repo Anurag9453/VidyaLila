@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>ASA triangle XYZ: 6 cm, 45 deg, 75 deg</title>
+  <desc>Triangle XYZ with base XY of 6 cm, a 45 degree angle at X and a 75 degree angle at Y both built by compass arcs, the two rays meeting at Z where the angle is 60 degrees.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="180.0" y1="290.64" x2="180.0" y2="82.79" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="420.0" y1="290.64" x2="420.0" y2="82.79" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <path d="M 300.0 290.64 A 120.0 120.0 0 0 0 111.17 192.34" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 316.7 171.81 A 120.0 120.0 0 0 0 226.12 196.08" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 195.05 75.45 A 120.0 120.0 0 0 0 121.17 203.42" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 218.3 117.89 A 120.0 120.0 0 0 0 130.46 67.17" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 288.76 221.35 A 120.0 120.0 0 0 0 288.76 119.93" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 488.83 192.34 A 120.0 120.0 0 0 0 300.0 290.64" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 398.3 221.81 A 120.0 120.0 0 0 0 310.46 171.1" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 478.83 203.42 A 120.0 120.0 0 0 0 404.95 75.45" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 469.54 67.17 A 120.0 120.0 0 0 0 381.7 117.89" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 377.78 264.72 A 80.0 80.0 0 0 0 431.18 223.23" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 376.61 237.85 A 80.0 80.0 0 0 0 443.6 247.08" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="180.0" y1="290.64" x2="420.0" y2="290.64" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="180.0" y1="290.64" x2="369.28" y2="101.36" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="420.0" y1="290.64" x2="369.28" y2="101.36" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <path d="M 228.0 290.64 A 48.0 48.0 0 0 0 213.94 256.7" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="237.28" y="270.91" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">45°</text>
+  <path d="M 372.0 290.64 A 48.0 48.0 0 1 0 407.58 244.28" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="469.19" y="332.38" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">75°</text>
+  <path d="M 341.0 129.64 A 40.0 40.0 0 0 0 379.63 140.0" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="355.31" y="157.52" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">60°</text>
+  <!-- Point Dots -->
+  <circle cx="180.0" cy="290.64" r="3" fill="currentColor" />
+  <circle cx="420.0" cy="290.64" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="290.64" r="3" fill="#9ca3af" />
+  <circle cx="240.0" cy="186.72" r="3" fill="#9ca3af" />
+  <circle cx="120.0" cy="186.72" r="3" fill="#9ca3af" />
+  <circle cx="180.0" cy="82.79" r="3" fill="#9ca3af" />
+  <circle cx="180.0" cy="170.64" r="3" fill="#9ca3af" />
+  <circle cx="300.0" cy="170.64" r="3" fill="#9ca3af" />
+  <circle cx="360.0" cy="186.72" r="3" fill="#9ca3af" />
+  <circle cx="480.0" cy="186.72" r="3" fill="#9ca3af" />
+  <circle cx="420.0" cy="82.79" r="3" fill="#9ca3af" />
+  <circle cx="420.0" cy="170.64" r="3" fill="#9ca3af" />
+  <circle cx="409.08" cy="249.89" r="3" fill="#9ca3af" />
+  <circle cx="369.28" cy="101.36" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="173.0" y="302.64" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">X</text>
+  <text x="427.0" y="302.64" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">Y</text>
+  <text x="376.28" y="94.36" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">Z</text>
+  <text x="300.0" y="306.64" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">A, G</text>
+  <text x="233.0" y="179.72" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">B</text>
+  <text x="110.0" y="190.72" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">C</text>
+  <text x="180.0" y="72.79" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">D</text>
+  <text x="170.0" y="174.64" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">E</text>
+  <text x="307.0" y="182.64" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">F</text>
+  <text x="350.0" y="190.72" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">H</text>
+  <text x="490.0" y="190.72" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">J</text>
+  <text x="420.0" y="72.79" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">K</text>
+  <text x="430.0" y="174.64" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">L</text>
+  <text x="419.08" y="253.89" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">M</text>
+  <text x="300.0" y="308.64" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">XY = 6 cm</text>
+</svg>

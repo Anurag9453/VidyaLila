@@ -18,10 +18,9 @@ import {
   LogOut,
 } from "lucide-react";
 
-const DEFAULT_ADMIN_PASSCODE = "VIDYALILA2026";
-
 export default function WriterStudioPage() {
   const {
+    profile,
     addCustomModule,
     addCustomContest,
     modules,
@@ -33,42 +32,67 @@ export default function WriterStudioPage() {
     "TRAIL"
   );
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [adminKey, setAdminKey] = useState("");
   const [passcodeInput, setPasscodeInput] = useState("");
   const [passcodeError, setPasscodeError] = useState<string | null>(null);
   const [seeding, setSeeding] = useState(false);
   const [seedMessage, setSeedMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    // If signed-in user is an admin in profiles, automatically grant access
+    if (profile?.role === "admin") {
+      setIsUnlocked(true);
+      return;
+    }
     try {
-      const savedUnlock = sessionStorage.getItem("vidyalila_admin_unlocked_v1");
-      if (savedUnlock === "true") {
+      const savedKey = sessionStorage.getItem("vidyalila_admin_key_v1");
+      if (savedKey) {
+        setAdminKey(savedKey);
         setIsUnlocked(true);
       }
     } catch {
       // ignore
     }
-  }, []);
+  }, [profile?.role]);
 
-  const handleUnlockStudio = (e: React.FormEvent) => {
+  const handleUnlockStudio = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcodeInput.trim() === DEFAULT_ADMIN_PASSCODE) {
-      setIsUnlocked(true);
-      setPasscodeError(null);
-      try {
-        sessionStorage.setItem("vidyalila_admin_unlocked_v1", "true");
-      } catch {
-        // ignore
+    setPasscodeError(null);
+    const key = passcodeInput.trim();
+    if (!key) return;
+
+    try {
+      const res = await fetch("/api/admin/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-key": key,
+        },
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setIsUnlocked(true);
+        setAdminKey(key);
+        setPasscodeError(null);
+        try {
+          sessionStorage.setItem("vidyalila_admin_key_v1", key);
+        } catch {
+          // ignore
+        }
+      } else {
+        setPasscodeError(data.error || "Invalid Admin Passcode.");
       }
-    } else {
-      setPasscodeError("Invalid Admin Passcode. Please enter your Founder Passcode.");
+    } catch {
+      setPasscodeError("Could not reach authentication server.");
     }
   };
 
   const handleLockStudio = () => {
     setIsUnlocked(false);
     setPasscodeInput("");
+    setAdminKey("");
     try {
-      sessionStorage.removeItem("vidyalila_admin_unlocked_v1");
+      sessionStorage.removeItem("vidyalila_admin_key_v1");
     } catch {
       // ignore
     }
@@ -78,7 +102,12 @@ export default function WriterStudioPage() {
     setSeeding(true);
     setSeedMessage(null);
     try {
-      const res = await fetch("/api/seed", { method: "POST" });
+      const res = await fetch("/api/seed", {
+        method: "POST",
+        headers: {
+          "x-admin-key": adminKey,
+        },
+      });
       const data = await res.json();
       if (data.ok) {
         setSeedMessage(`✅ ${data.message}`);
@@ -207,7 +236,7 @@ export default function WriterStudioPage() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-admin-key": DEFAULT_ADMIN_PASSCODE,
+        "x-admin-key": adminKey,
       },
       body: JSON.stringify({ type: "MODULE", moduleData: newMod }),
     }).catch(() => {});
@@ -319,7 +348,7 @@ export default function WriterStudioPage() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-admin-key": DEFAULT_ADMIN_PASSCODE,
+        "x-admin-key": adminKey,
       },
       body: JSON.stringify({ type: "CONTEST", contestData: newContest }),
     }).catch(() => {});
@@ -360,7 +389,7 @@ export default function WriterStudioPage() {
                 required
                 value={passcodeInput}
                 onChange={(e) => setPasscodeInput(e.target.value)}
-                placeholder="Enter Admin Passcode (VIDYALILA2026)"
+                placeholder="Enter Admin Studio Passcode"
                 className={inputClass}
               />
             </div>
@@ -408,7 +437,7 @@ export default function WriterStudioPage() {
               Publish Free Study Chapters & Paid Daily/Weekly Quizzes ✍️
             </h1>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-2xl">
-              Built for your Content Writers team! Publish CBSE & ICSE (Class 9–12, plus 6–8 ready) chapters, unit checkpoints, and monetized Daily/Weekly Contests without touching code.
+              Built for your Content Writers team! Publish Class 9–12 conceptual chapters, unit checkpoints, and interactive Daily/Weekly Contests without touching code.
             </p>
           </div>
 
@@ -486,7 +515,7 @@ export default function WriterStudioPage() {
         >
           <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
             <PlusCircle className="h-5 w-5 text-emerald-600" />
-            New Free Subject Chapter (CBSE / ICSE)
+            New Subject Chapter
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -507,7 +536,7 @@ export default function WriterStudioPage() {
 
             <div>
               <label className="block text-xs font-black text-slate-700 mb-1.5">
-                Class Grade (9–12 Active, 6–8 Extensible)
+                Class Grade (Class 9–12)
               </label>
               <select
                 value={modClass}
@@ -515,12 +544,9 @@ export default function WriterStudioPage() {
                 className={inputClass}
               >
                 <option value={9}>Class 9</option>
-                <option value={10}>Class 10 (Board)</option>
+                <option value={10}>Class 10</option>
                 <option value={11}>Class 11</option>
-                <option value={12}>Class 12 (Board)</option>
-                <option value={8}>Class 8 (Early Access)</option>
-                <option value={7}>Class 7 (Early Access)</option>
-                <option value={6}>Class 6 (Early Access)</option>
+                <option value={12}>Class 12</option>
               </select>
             </div>
 

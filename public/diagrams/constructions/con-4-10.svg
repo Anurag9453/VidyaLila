@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Roof truss 3-4-5 (scale 1 cm = 1 m)</title>
+  <desc>The 3-4-5 roof truss drawn as triangle ABC with a horizontal base AB of 4 cm, BC of 3 cm standing at a right angle at B, and CA of 5 cm, drawn at the scale 1 cm = 1 m.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 423.35 161.43 A 120.0 120.0 0 0 0 321.93 161.43" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 408.36 229.05 A 200.0 200.0 0 0 0 306.94 93.81" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="212.64" y1="270.19" x2="372.64" y2="270.19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="372.64" y1="270.19" x2="372.64" y2="150.19" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="372.64" y1="150.19" x2="212.64" y2="270.19" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="372.64,270.19 362.64,270.19 362.64,260.19 372.64,260.19" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <path d="M 248.64 270.19 A 36.0 36.0 0 0 0 241.44 248.59" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="260.07" y="258.38" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">36.9°</text>
+  <path d="M 343.84 171.79 A 36.0 36.0 0 0 0 372.64 186.19" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="350.28" y="198.91" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">53.1°</text>
+  <!-- Point Dots -->
+  <circle cx="212.64" cy="270.19" r="3" fill="currentColor" />
+  <circle cx="372.64" cy="270.19" r="3" fill="currentColor" />
+  <circle cx="372.64" cy="150.19" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="205.64" y="282.19" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="379.64" y="282.19" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="372.64" y="140.19" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">C</text>
+  <text x="292.64" y="288.19" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">AB = 4 cm</text>
+  <text x="386.64" y="214.19" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">BC = 3 cm</text>
+  <text x="282.64" y="200.19" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">CA = 5 cm</text>
+  <text x="226.64" y="138.19" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">scale 1 cm = 1 m</text>
+</svg>

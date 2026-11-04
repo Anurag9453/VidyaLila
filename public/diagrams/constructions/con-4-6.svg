@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>RHS right triangle DEF: hypotenuse 5, side 3</title>
+  <desc>A right triangle DEF with base EF of 3 cm, the right angle at E built with arcs through S, G and T, and the hypotenuse DF of 5 cm reaching D on the vertical ray from E.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="304.0" y1="120.96" x2="304.0" y2="92.96" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <path d="M 376.5 314.77 A 80.0 80.0 0 0 0 376.5 247.15" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 231.5 247.15 A 80.0 80.0 0 0 0 231.5 314.77" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 349.3 166.09 A 120.0 120.0 0 0 0 273.7 233.71" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 334.3 233.71 A 120.0 120.0 0 0 0 258.7 166.09" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 382.86 85.24 A 200.0 200.0 0 0 0 247.62 186.66" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="304.0" y1="280.96" x2="424.0" y2="280.96" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="304.0" y1="280.96" x2="176.0" y2="280.96" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="304.0" y1="280.96" x2="304.0" y2="120.96" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="304.0" y1="120.96" x2="424.0" y2="280.96" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="304.0,280.96 314.0,280.96 314.0,270.96 304.0,270.96" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <!-- Point Dots -->
+  <circle cx="304.0" cy="280.96" r="3" fill="currentColor" />
+  <circle cx="424.0" cy="280.96" r="3" fill="currentColor" />
+  <circle cx="384.0" cy="280.96" r="3" fill="currentColor" />
+  <circle cx="224.0" cy="280.96" r="3" fill="currentColor" />
+  <circle cx="304.0" cy="191.52" r="3" fill="currentColor" />
+  <circle cx="304.0" cy="120.96" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="297.0" y="292.96" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">E</text>
+  <text x="431.0" y="292.96" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">F</text>
+  <text x="384.0" y="294.96" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">S</text>
+  <text x="224.0" y="294.96" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">G</text>
+  <text x="314.0" y="195.52" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">T</text>
+  <text x="297.0" y="113.96" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">D</text>
+  <text x="364.0" y="298.96" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">EF = 3 cm</text>
+  <text x="374.0" y="190.96" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">DF = 5 cm</text>
+  <text x="290.0" y="204.96" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">DE = 4 cm</text>
+</svg>

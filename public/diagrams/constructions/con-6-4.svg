@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Rhombus from two diagonals</title>
+  <desc>Rhombus ABCD with horizontal diagonal AC of 8 cm and vertical diagonal BD of 6 cm crossing at O, with OA equal to OC (4 cm) and OB equal to OD (3 cm).</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 334.38 160.4 A 192.5 192.5 0 0 0 236.76 30.24" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 236.76 369.76 A 192.5 192.5 0 0 0 334.38 239.6" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 363.24 30.24 A 192.5 192.5 0 0 0 265.62 160.4" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 265.62 239.6 A 192.5 192.5 0 0 0 363.24 369.76" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 348.81 95.32 A 115.5 115.5 0 0 0 251.19 95.32" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 251.19 304.68 A 115.5 115.5 0 0 0 348.81 304.68" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="146.0" y1="200.0" x2="454.0" y2="200.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="300.0" y1="84.5" x2="300.0" y2="315.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="146.0" y1="200.0" x2="300.0" y2="84.5" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="300.0" y1="84.5" x2="454.0" y2="200.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="454.0" y1="200.0" x2="300.0" y2="315.5" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="300.0" y1="315.5" x2="146.0" y2="200.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="300.0,200.0 311.55,200.0 311.55,188.45 300.0,188.45" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <line x1="223.0" y1="196.0" x2="223.0" y2="204.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="377.0" y1="204.0" x2="377.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="304.0" y1="144.25" x2="296.0" y2="144.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="304.0" y1="140.25" x2="296.0" y2="140.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="296.0" y1="255.75" x2="304.0" y2="255.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="296.0" y1="259.75" x2="304.0" y2="259.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="146.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="454.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="84.5" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="315.5" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="136.0" y="204.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="464.0" y="204.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">C</text>
+  <text x="307.0" y="193.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">O</text>
+  <text x="300.0" y="74.5" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">B (X)</text>
+  <text x="300.0" y="329.5" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">D (Y)</text>
+  <text x="223.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">AC = 8 cm</text>
+  <text x="314.0" y="146.25" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">BD = 6 cm</text>
+</svg>

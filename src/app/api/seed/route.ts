@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { supabaseAdmin, verifyAdminRequest } from "@/lib/supabase-admin";
 import { INITIAL_MODULES, INITIAL_CONTESTS } from "@/lib/mock-data";
 
-export async function POST() {
+export async function POST(req: Request) {
   try {
+    const isAuthorized = await verifyAdminRequest(req);
+    if (!isAuthorized) {
+      return NextResponse.json(
+        { ok: false, error: "Unauthorized: Admin privileges required to seed database" },
+        { status: 401 }
+      );
+    }
+
     // 1. Check if tables exist in Supabase by querying public.modules
     const { error: checkErr } = await supabaseAdmin
       .from("modules")

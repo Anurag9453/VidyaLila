@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Midpoint of XY = 9 cm</title>
+  <desc>Segment XY of 9 cm with arcs of radius 5 cm from X and Y crossing at P and Q; line PQ meets XY at the midpoint M at a right angle.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 318.96 179.64 A 200 200 0 0 0 259.33 56.52" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 259.33 343.48 A 200 200 0 0 0 318.96 220.36" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 340.67 56.52 A 200 200 0 0 0 281.04 179.64" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 281.04 220.36 A 200 200 0 0 0 340.67 343.48" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="120.0" y1="200.0" x2="480.0" y2="200.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="300.0" y1="112.8" x2="300.0" y2="287.2" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="300.0,200.0 312.0,200.0 312.0,188.0 300.0,188.0" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <line x1="210.0" y1="204.0" x2="210.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="390.0" y1="204.0" x2="390.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="120.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="480.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="112.82" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="287.18" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="113.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">X</text>
+  <text x="487.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">Y</text>
+  <text x="300.0" y="102.82" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="300.0" y="301.18" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Q</text>
+  <text x="307.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">M</text>
+  <text x="110.0" y="190.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">XY = 9 cm</text>
+  <text x="210.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">4.5 cm</text>
+  <text x="390.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">4.5 cm</text>
+</svg>

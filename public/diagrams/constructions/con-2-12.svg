@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Copying an angle (here 50 degrees)</title>
+  <desc>On the left an angle ABC with a 3 cm arc cutting its arms at P and Q; on the right a ray EF with a 3 cm arc cutting it at R and a second arc from R meeting it at S, so angle SEF equals angle ABC.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="137.2" y1="176.0" x2="180.0" y2="268.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="460.0" y1="268.0" x2="417.2" y2="176.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <path d="M 178.83 284.7 A 120 120 0 0 0 123.59 166.23" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 458.83 284.7 A 120 120 0 0 0 403.59 166.23" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 451.16 166.96 A 101.43 101.43 0 0 0 388.28 196.28" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="60.0" y1="268.0" x2="260.0" y2="268.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="60.0" y1="268.0" x2="188.4" y2="114.8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="340.0" y1="268.0" x2="540.0" y2="268.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="340.0" y1="268.0" x2="468.4" y2="114.8" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <line x1="154.1" y1="221.92" x2="161.35" y2="218.54" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="155.79" y1="225.54" x2="163.04" y2="222.16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="443.04" y1="222.16" x2="435.79" y2="225.54" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="441.35" y1="218.54" x2="434.1" y2="221.92" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M 96.0 268.0 A 36.0 36.0 0 0 0 83.14 240.42" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <text x="108.8" y="249.2" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="currentColor" font-weight="600" text-anchor="middle">50°</text>
+  <path d="M 376.0 268.0 A 36.0 36.0 0 0 0 363.14 240.42" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="388.8" y="249.2" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">50°</text>
+  <!-- Point Dots -->
+  <circle cx="60.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="260.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="188.56" cy="114.79" r="3" fill="currentColor" />
+  <circle cx="137.13" cy="176.07" r="3" fill="currentColor" />
+  <circle cx="180.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="340.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="540.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="460.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="417.13" cy="176.07" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="195.56" y="107.79" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">A</text>
+  <text x="53.0" y="280.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">B</text>
+  <text x="267.0" y="280.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">C</text>
+  <text x="130.13" y="169.07" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">P</text>
+  <text x="180.0" y="282.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Q</text>
+  <text x="333.0" y="280.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">E</text>
+  <text x="547.0" y="280.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">F</text>
+  <text x="460.0" y="282.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">R</text>
+  <text x="410.13" y="169.07" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">S</text>
+  <text x="120.0" y="286.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">3 cm</text>
+  <text x="400.0" y="286.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">3 cm</text>
+</svg>

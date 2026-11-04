@@ -81,7 +81,7 @@ function HomeContent() {
     {
       grade: 10,
       title: "Class 10",
-      subtitle: "Board Special • Light, Electricity, Reactions & Trigonometry",
+      subtitle: "Core Concepts • Light, Electricity, Reactions & Trigonometry",
       emoji: "🎯",
       bg: "bg-amber-50/70",
       border: "border-amber-200 hover:border-amber-400",
@@ -101,7 +101,7 @@ function HomeContent() {
     {
       grade: 12,
       title: "Class 12",
-      subtitle: "Board + Entrance • Electrostatics, Electrochemistry & Integrals",
+      subtitle: "Advanced • Electrostatics, Electrochemistry & Integrals",
       emoji: "👑",
       bg: "bg-violet-50/70",
       border: "border-violet-200 hover:border-violet-400",
@@ -155,11 +155,7 @@ function HomeContent() {
   const chaptersForSelection = modules.filter((m) => {
     const classMatch = m.classGrade === selectedClass;
     const subjMatch = m.subject === selectedSubject;
-    const boardMatch =
-      selectedBoardFilter === "BOTH" ||
-      m.board === "BOTH" ||
-      m.board === selectedBoardFilter;
-    return classMatch && subjMatch && boardMatch;
+    return classMatch && subjMatch;
   });
 
   const handleSelectClass = (grade: ClassGrade) => {
@@ -231,25 +227,6 @@ function HomeContent() {
           <p className="text-sm sm:text-base text-slate-500 font-medium">
             Select your class below to explore interactive chapters and earn GP (Gyan Points).
           </p>
-
-          {/* Clean Board Filter Pill */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
-            <div className="inline-flex items-center gap-1 rounded-2xl bg-slate-100 p-1.5 border border-slate-200">
-              {(["BOTH", "CBSE", "ICSE"] as BoardType[]).map((b) => (
-                <button
-                  key={b}
-                  onClick={() => setSelectedBoardFilter(b)}
-                  className={`rounded-xl px-3.5 py-1.5 text-xs font-bold transition ${
-                    selectedBoardFilter === b
-                      ? "bg-white text-slate-900 shadow-sm"
-                      : "text-slate-500 hover:text-slate-900"
-                  }`}
-                >
-                  {b === "BOTH" ? "All Boards (CBSE + ICSE)" : b}
-                </button>
-              ))}
-            </div>
-          </div>
         </section>
       )}
 

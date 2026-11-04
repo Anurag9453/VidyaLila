@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Circle through A and B (centre on the perpendicular bisector)</title>
+  <desc>A horizontal segment AB five centimetres long with its perpendicular bisector MN crossing at D, a point O on the bisector above AB, and a circle of radius 6.5 cm centred at O passing through A and B.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="300.0" y1="354.78" x2="300.0" y2="44.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="300.0" y1="167.76" x2="252.4" y2="282.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="300.0" y1="167.76" x2="347.6" y2="282.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <path d="M 320.67 248.23 A 76.16 76.16 0 0 0 270.41 208.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 270.41 356.0 A 76.16 76.16 0 0 0 320.67 315.77" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 329.59 208.0 A 76.16 76.16 0 0 0 279.33 248.23" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 279.33 315.77 A 76.16 76.16 0 0 0 329.59 356.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 343.82 198.58 A 123.76 123.76 0 0 0 247.26 158.35" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="252.4" y1="282.0" x2="347.6" y2="282.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <circle cx="300.0" cy="167.76" r="123.76" stroke="#2563eb" stroke-width="2.5" fill="none" />
+  <!-- Marks -->
+  <polygon points="300.0,282.0 310.0,282.0 310.0,272.0 300.0,272.0" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <line x1="276.2" y1="286.0" x2="276.2" y2="278.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="273.28" y1="221.5" x2="280.66" y2="224.57" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="271.74" y1="225.19" x2="279.12" y2="228.26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="252.4" cy="282.0" r="3" fill="currentColor" />
+  <circle cx="347.6" cy="282.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="282.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="222.55" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="341.45" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="167.76" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="245.4" y="294.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="354.6" y="294.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="307.0" y="294.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">D</text>
+  <text x="310.0" y="226.55" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">M</text>
+  <text x="310.0" y="345.45" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">N</text>
+  <text x="310.0" y="171.76" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">O</text>
+  <text x="276.2" y="300.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">5 cm</text>
+  <text x="333.8" y="214.88" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">6.5 cm</text>
+</svg>

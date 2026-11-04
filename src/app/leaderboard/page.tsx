@@ -8,7 +8,6 @@ import { Trophy, Flame, TrendingUp, Award, MapPin, Crown, Database } from "lucid
 
 export default function LeaderboardPage() {
   const { profile, currentRank } = useApp();
-  const [boardTab, setBoardTab] = useState<"ALL" | "CBSE" | "ICSE">("ALL");
   const [sortMode, setSortMode] = useState<"GP" | "RATING">("GP");
   const [liveProfiles, setLiveProfiles] = useState<LeaderboardEntry[]>([]);
 
@@ -70,7 +69,6 @@ export default function LeaderboardPage() {
   }
 
   const combinedList = rawList
-    .filter((entry) => boardTab === "ALL" || entry.board === boardTab)
     .sort((a, b) => (sortMode === "GP" ? b.xp - a.xp : b.rating - a.rating))
     .map((entry, idx) => ({ ...entry, rank: idx + 1 }));
 
@@ -89,7 +87,7 @@ export default function LeaderboardPage() {
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-lg bg-indigo-100 border border-indigo-300 px-2.5 py-0.5 text-[10px] font-black text-indigo-800">
-                  {profile.board} • Class {profile.classGrade}
+                  Class {profile.classGrade}
                 </span>
                 {profile.hasProPass && (
                   <span className="rounded-lg bg-amber-100 border border-amber-400 px-2 py-0.5 text-[10px] font-black text-amber-900 flex items-center gap-1">
@@ -200,7 +198,7 @@ export default function LeaderboardPage() {
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold text-slate-500 pt-1">
-            <span>Consistency builds Board Toppers 🚀</span>
+            <span>Consistency builds Top Scholars 🚀</span>
             <div className="flex items-center gap-1.5">
               <span>Less</span>
               <span className="h-3 w-3 rounded-sm bg-slate-100 border border-slate-200" />
@@ -248,7 +246,7 @@ export default function LeaderboardPage() {
               All-India Scholar & Contest Leaderboard
             </h2>
             <p className="text-xs font-semibold text-slate-500">
-              Ranked by Total GP (Gyan Points) &amp; Weekly Rated Quiz Performance (CBSE &amp; ICSE)
+              Ranked by Total GP (Gyan Points) &amp; Weekly Rated Quiz Performance
             </p>
           </div>
 
@@ -275,20 +273,6 @@ export default function LeaderboardPage() {
                 ⚔️ By Quiz Rating
               </button>
             </div>
-
-            {(["ALL", "CBSE", "ICSE"] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setBoardTab(tab)}
-                className={`rounded-2xl border-2 border-b-4 px-4 py-1.5 text-xs font-black transition ${
-                  boardTab === tab
-                    ? "border-amber-500 bg-amber-400 text-slate-950"
-                    : "border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                {tab === "ALL" ? "All-India" : `${tab} Board`}
-              </button>
-            ))}
           </div>
         </div>
 
@@ -298,7 +282,7 @@ export default function LeaderboardPage() {
               <tr className="border-b-2 border-slate-200 text-[11px] font-black uppercase tracking-wider text-slate-500">
                 <th className="py-3 px-4">Rank</th>
                 <th className="py-3 px-4">Student</th>
-                <th className="py-3 px-4">Board & Class</th>
+                <th className="py-3 px-4">Class</th>
                 <th className="py-3 px-4">City</th>
                 <th className="py-3 px-4">Scholar Rank</th>
                 <th className="py-3 px-4">Quiz Rating</th>
@@ -345,7 +329,7 @@ export default function LeaderboardPage() {
                     </td>
                     <td className="py-4 px-4">
                       <span className="rounded-lg bg-slate-100 border border-slate-200 px-2.5 py-1 text-xs font-black text-slate-700">
-                        {row.board} • Class {row.classGrade}
+                        Class {row.classGrade}
                       </span>
                     </td>
                     <td className="py-4 px-4 text-xs font-bold text-slate-600">

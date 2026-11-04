@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Perpendicular bisector of AB = 6 cm, arcs of 4 cm</title>
+  <desc>Segment AB of 6 cm with two pairs of arcs of radius 4 cm crossing at P above and Q below, and the line PQ meeting AB at its midpoint M at a right angle.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 328.96 141.59 A 160 160 0 0 0 256.57 59.51" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 256.57 340.49 A 160 160 0 0 0 328.96 258.41" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 343.43 59.51 A 160 160 0 0 0 271.04 141.59" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 271.04 258.41 A 160 160 0 0 0 343.43 340.49" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="180.0" y1="200.0" x2="420.0" y2="200.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="300.0" y1="94.0" x2="300.0" y2="306.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="300.0,200.0 312.0,200.0 312.0,188.0 300.0,188.0" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <line x1="240.0" y1="204.0" x2="240.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="360.0" y1="204.0" x2="360.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="180.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="420.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="94.17" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="305.83" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="200.0" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="173.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="427.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="300.0" y="84.17" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="300.0" y="319.83" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Q</text>
+  <text x="307.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">M</text>
+  <text x="220.0" y="186.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">AB = 6 cm</text>
+  <text x="240.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">3 cm</text>
+  <text x="360.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">3 cm</text>
+</svg>

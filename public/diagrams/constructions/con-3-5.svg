@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Parallel line at 3 cm from l</title>
+  <desc>A horizontal line l with points X and Y five centimetres apart, 3 cm perpendiculars XU and YV rising from them, and the line m through U and V parallel to l and 3 cm above it.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 127.5 204.19 A 80.0 80.0 0 0 0 127.5 271.81" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 272.5 271.81 A 80.0 80.0 0 0 0 272.5 204.19" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 230.3 190.75 A 120.0 120.0 0 0 0 154.7 123.13" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 245.3 123.13 A 120.0 120.0 0 0 0 169.7 190.75" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 250.71 129.24 A 120.0 120.0 0 0 0 149.29 129.24" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 327.5 204.19 A 80.0 80.0 0 0 0 327.5 271.81" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 472.5 271.81 A 80.0 80.0 0 0 0 472.5 204.19" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 430.3 190.75 A 120.0 120.0 0 0 0 354.7 123.13" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 445.3 123.13 A 120.0 120.0 0 0 0 369.7 190.75" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 450.71 129.24 A 120.0 120.0 0 0 0 349.29 129.24" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="80.0" y1="238.0" x2="520.0" y2="238.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="200.0" y1="282.0" x2="400.0" y2="282.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="200.0" y1="238.0" x2="200.0" y2="118.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="400.0" y1="238.0" x2="400.0" y2="118.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="80.0" y1="118.0" x2="520.0" y2="118.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="200.0,238.0 210.0,238.0 210.0,228.0 200.0,228.0" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <polygon points="400.0,238.0 390.0,238.0 390.0,228.0 400.0,228.0" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <line x1="204.0" y1="178.0" x2="196.0" y2="178.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="200.0" cy="238.0" r="3" fill="currentColor" />
+  <circle cx="400.0" cy="238.0" r="3" fill="currentColor" />
+  <circle cx="120.0" cy="238.0" r="3" fill="currentColor" />
+  <circle cx="280.0" cy="238.0" r="3" fill="currentColor" />
+  <circle cx="320.0" cy="238.0" r="3" fill="currentColor" />
+  <circle cx="480.0" cy="238.0" r="3" fill="currentColor" />
+  <circle cx="200.0" cy="148.56" r="3" fill="currentColor" />
+  <circle cx="400.0" cy="148.56" r="3" fill="currentColor" />
+  <circle cx="200.0" cy="118.0" r="3" fill="currentColor" />
+  <circle cx="400.0" cy="118.0" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="200.0" y="252.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">X</text>
+  <text x="400.0" y="252.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Y</text>
+  <text x="120.0" y="252.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">X<tspan baseline-shift="sub" font-size="10">1</tspan></text>
+  <text x="280.0" y="252.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">X<tspan baseline-shift="sub" font-size="10">2</tspan></text>
+  <text x="320.0" y="252.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Y<tspan baseline-shift="sub" font-size="10">1</tspan></text>
+  <text x="480.0" y="252.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Y<tspan baseline-shift="sub" font-size="10">2</tspan></text>
+  <text x="210.0" y="152.56" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">S</text>
+  <text x="410.0" y="152.56" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">T</text>
+  <text x="193.0" y="111.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">U</text>
+  <text x="407.0" y="111.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">V</text>
+  <text x="520.0" y="228.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">l</text>
+  <text x="520.0" y="108.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">m</text>
+  <text x="300.0" y="300.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">XY = 5 cm</text>
+  <text x="186.0" y="182.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">3 cm</text>
+  <text x="414.0" y="182.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">3 cm</text>
+</svg>

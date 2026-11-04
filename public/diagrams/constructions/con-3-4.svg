@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Parallel line by the rhombus method</title>
+  <desc>A horizontal line l with point P three centimetres above it; points A and B on l and point C beside P form a rhombus PABC with all sides 4 cm, so line PC is parallel to l.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="264.0" y1="140.0" x2="158.17" y2="260.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="318.17" y1="260.0" x2="424.0" y2="140.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="264.0" y1="140.0" x2="264.0" y2="260.0" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <path d="M 117.37 204.03 A 160.0 160.0 0 0 0 218.8 293.48" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 303.18 327.62 A 160.0 160.0 0 0 0 303.18 192.38" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 409.01 207.62 A 160.0 160.0 0 0 0 409.01 72.38" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 464.8 195.97 A 160.0 160.0 0 0 0 363.37 106.52" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="112.0" y1="260.0" x2="488.0" y2="260.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="112.0" y1="140.0" x2="488.0" y2="140.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <line x1="208.08" y1="197.35" x2="214.08" y2="202.65" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="264.0" cy="140.0" r="3" fill="currentColor" />
+  <circle cx="158.17" cy="260.0" r="3" fill="currentColor" />
+  <circle cx="318.17" cy="260.0" r="3" fill="currentColor" />
+  <circle cx="424.0" cy="140.0" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="257.0" y="133.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">P</text>
+  <text x="158.17" y="274.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">A</text>
+  <text x="318.17" y="274.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">B</text>
+  <text x="431.0" y="133.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">C</text>
+  <text x="488.0" y="250.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">l</text>
+  <text x="488.0" y="130.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">m</text>
+  <text x="278.0" y="204.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">3 cm</text>
+</svg>

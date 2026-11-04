@@ -21,7 +21,7 @@
    - **🎁 Top-Ranker Goodies**: Top 3 & Top 10 winners automatically win Free Pass Credits into their wallet.
 
 3. **Protected Admin CMS & Academic Review Studio (`/studio`)**
-   - Protected by the Founder Admin Passcode (`VIDYALILA2026`).
+   - Protected by server-verified Admin Role and private `ADMIN_SECRET_KEY`.
    - Publish new Chapters, Units, and Subject Quizzes directly to **Supabase Cloud** (`/api/studio/publish`) and review student-submitted error reports.
 
 ---
@@ -41,6 +41,7 @@ Copy `.env.example` to `.env.local` and paste your Supabase keys:
 NEXT_PUBLIC_SUPABASE_URL=https://obnkrztcwpyrfpnuwzvg.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
+ADMIN_SECRET_KEY=<your-rotated-admin-secret>
 ```
 
 ### 3. Run the Development Server
@@ -48,4 +49,4 @@ SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
 npm run dev
 ```
 Open **http://localhost:3000** in your browser.
-- **Admin CMS Studio**: Go to **http://localhost:3000/studio** and unlock with passcode **`VIDYALILA2026`**.
+- **Admin CMS Studio**: Go to **http://localhost:3000/studio** and authenticate with your Admin account or private `ADMIN_SECRET_KEY`.

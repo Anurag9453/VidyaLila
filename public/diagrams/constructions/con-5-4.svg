@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Perimeter 12 cm, angles 60 deg and 45 deg</title>
+  <desc>Segment PQ of 12 cm with half-angle rays from P and Q meeting at X, and the perpendicular bisectors of XP and XQ cutting PQ at Y and Z, giving triangle XYZ with angles 60 and 45 degrees at Y and Z.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="114.8" y1="121.5" x2="205.6" y2="278.7" stroke="#9ca3af" stroke-width="1" stroke-dasharray="1 3" stroke-linecap="round" />
+  <line x1="358.4" y1="301.1" x2="442.0" y2="98.7" stroke="#9ca3af" stroke-width="1" stroke-dasharray="1 3" stroke-linecap="round" />
+  <path d="M 152.05 230.65 A 140.0 140.0 0 0 0 258.6 282.12" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 182.19 326.24 A 140.0 140.0 0 0 0 190.89 208.23" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 138.33 73.79 A 140.0 140.0 0 0 0 129.62 191.81" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 168.46 169.38 A 140.0 140.0 0 0 0 61.91 117.91" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 434.64 187.73 A 180.0 180.0 0 0 0 407.37 38.05" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 509.75 80.46 A 180.0 180.0 0 0 0 384.63 167.01" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 290.76 319.57 A 180.0 180.0 0 0 0 415.88 233.02" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 365.87 212.3 A 180.0 180.0 0 0 0 393.14 361.98" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 220.0 257.9 A 160.0 160.0 0 0 0 140.0 119.34" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 426.86 144.76 A 160.0 160.0 0 0 0 380.0 257.9" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 302.13 170.41 A 120.0 120.0 0 0 0 205.77 138.75" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 236.07 191.24 A 120.0 120.0 0 0 0 256.83 91.95" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 355.42 140.44 A 120.0 120.0 0 0 0 274.22 201.23" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 312.0 110.04 A 120.0 120.0 0 0 0 326.43 210.44" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="60.0" y1="257.9" x2="540.0" y2="257.9" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="260.4" y1="142.3" x2="193.6" y2="257.9" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="193.6" y1="257.9" x2="376.4" y2="257.9" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="376.4" y1="257.9" x2="260.4" y2="142.3" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <line x1="223.64" y1="198.02" x2="230.56" y2="202.02" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="126.84" y1="261.9" x2="126.84" y2="253.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="314.16" y1="201.43" x2="319.81" y2="195.78" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="316.99" y1="204.26" x2="322.64" y2="198.61" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="456.14" y1="261.9" x2="456.14" y2="253.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="460.14" y1="261.9" x2="460.14" y2="253.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M 108.0 257.9 A 48.0 48.0 0 0 0 101.57 233.9" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="118.0" y="246.3" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">30°</text>
+  <path d="M 495.65 239.53 A 48.0 48.0 0 0 0 492.0 257.9" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="481.2" y="250.3" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">22½°</text>
+  <path d="M 221.68 257.9 A 28.0 28.0 0 0 0 207.68 233.65" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="228.4" y="241.9" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">60°</text>
+  <path d="M 359.31 240.93 A 24.0 24.0 0 0 0 352.28 257.9" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="343.2" y="248.3" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">45°</text>
+  <!-- Point Dots -->
+  <circle cx="60.0" cy="257.9" r="3" fill="currentColor" />
+  <circle cx="540.0" cy="257.9" r="3" fill="currentColor" />
+  <circle cx="220.0" cy="257.9" r="3" fill="currentColor" />
+  <circle cx="140.0" cy="119.34" r="3" fill="currentColor" />
+  <circle cx="257.46" cy="143.9" r="3" fill="currentColor" />
+  <circle cx="380.0" cy="257.9" r="3" fill="currentColor" />
+  <circle cx="426.86" cy="144.76" r="3" fill="currentColor" />
+  <circle cx="308.08" cy="161.84" r="3" fill="currentColor" />
+  <circle cx="260.51" cy="142.13" r="3" fill="currentColor" />
+  <circle cx="193.68" cy="257.9" r="3" fill="currentColor" />
+  <circle cx="376.28" cy="257.9" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="53.0" y="269.9" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">P</text>
+  <text x="547.0" y="269.9" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">Q</text>
+  <text x="220.0" y="271.9" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">S</text>
+  <text x="133.0" y="112.34" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">T</text>
+  <text x="250.46" y="136.9" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">U</text>
+  <text x="380.0" y="271.9" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">V</text>
+  <text x="433.86" y="137.76" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">W</text>
+  <text x="315.08" y="154.84" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">R</text>
+  <text x="260.51" y="132.13" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">X</text>
+  <text x="186.68" y="269.9" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">Y</text>
+  <text x="383.28" y="269.9" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">Z</text>
+  <text x="300.0" y="275.9" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">PQ = 12 cm</text>
+</svg>

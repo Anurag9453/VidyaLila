@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Constructing 15 degrees</title>
+  <desc>Ray BX at 30 degrees cuts the 4 cm arc at Y; 3 cm arcs from P and Y meet at Z and ray BZ makes a 15 degree angle with BC.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 318.44 290.27 A 160 160 0 0 0 219.94 119.65" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 292.22 110.43 A 160 160 0 0 0 197.43 165.15" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 341.98 192.69 A 120 120 0 0 0 358.78 112.34" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 428.59 216.93 A 120 120 0 0 0 337.09 149.22" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 407.15 239.07 A 120 120 0 0 0 414.58 157.32" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="160.0" y1="268.0" x2="440.0" y2="268.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="160.0" y1="268.0" x2="374.8" y2="144.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="160.0" y1="268.0" x2="430.4" y2="195.6" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <path d="M 224.0 268.0 A 64.0 64.0 0 0 0 221.82 251.44" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="241.2" y="261.2" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">15°</text>
+  <path d="M 221.82 251.44 A 64.0 64.0 0 0 0 215.43 236.0" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="235.6" y="240.8" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">15°</text>
+  <!-- Point Dots -->
+  <circle cx="160.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="440.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="320.0" cy="268.0" r="3" fill="currentColor" />
+  <circle cx="240.0" cy="129.44" r="3" fill="currentColor" />
+  <circle cx="357.46" cy="154.0" r="3" fill="currentColor" />
+  <circle cx="298.56" cy="188.0" r="3" fill="currentColor" />
+  <circle cx="418.07" cy="198.85" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="153.0" y="280.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">B</text>
+  <text x="447.0" y="280.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">C</text>
+  <text x="320.0" y="282.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="233.0" y="122.44" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">Q</text>
+  <text x="364.46" y="147.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">X</text>
+  <text x="291.56" y="181.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">Y</text>
+  <text x="428.07" y="202.85" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">Z</text>
+</svg>

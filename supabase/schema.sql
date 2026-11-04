@@ -12,11 +12,14 @@ create extension if not exists "uuid-ossp";
 -- ----------------------------------------------------------------------------
 create table if not exists public.profiles (
   id uuid references auth.users on delete cascade primary key,
+  email text,
+  phone text,
+  auth_provider text not null default 'email',
   full_name text not null,
   username text unique not null,
   avatar_url text default '🚀',
   board text not null default 'CBSE' check (board in ('CBSE', 'ICSE')),
-  class_grade int not null default 10 check (class_grade between 9 and 12),
+  class_grade int not null default 9 check (class_grade between 9 and 12),
   city text default 'Delhi',
   school_name text default 'VidyaLila Academy',
   role text not null default 'student' check (role in ('student', 'writer', 'admin')),
@@ -36,6 +39,13 @@ create table if not exists public.profiles (
   unlocked_contest_ids text[] not null default '{}',
   created_at timestamptz not null default now()
 );
+
+-- Ensure new columns exist if public.profiles was created by an earlier migration
+alter table public.profiles add column if not exists email text;
+alter table public.profiles add column if not exists phone text;
+alter table public.profiles add column if not exists auth_provider text not null default 'email';
+alter table public.profiles add column if not exists preferred_language text not null default 'HINGLISH' check (preferred_language in ('ENGLISH', 'HINGLISH'));
+alter table public.profiles add column if not exists onboarding_completed boolean not null default false;
 
 -- ----------------------------------------------------------------------------
 -- 2. LEARNING MODULES (CHAPTERS) - 100% Free Self-Study Chapters
@@ -150,8 +160,24 @@ create table if not exists public.payment_orders (
   razorpay_payment_id text,
   razorpay_signature text,
   status text not null default 'created' check (status in ('created', 'paid', 'failed')),
-  created_at timestamptz not null default now()
+  phone text,
+  user_name text,
+  user_email text,
+  failure_reason text,
+  failure_code text,
+  contact_status text not null default 'PENDING_CONTACT' check (contact_status in ('PENDING_CONTACT', 'CONTACTED', 'CONVERTED', 'NOT_INTERESTED')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
+
+-- Ensure payment_orders columns exist if table was created in an earlier migration
+alter table public.payment_orders add column if not exists phone text;
+alter table public.payment_orders add column if not exists user_name text;
+alter table public.payment_orders add column if not exists user_email text;
+alter table public.payment_orders add column if not exists failure_reason text;
+alter table public.payment_orders add column if not exists failure_code text;
+alter table public.payment_orders add column if not exists contact_status text not null default 'PENDING_CONTACT';
+alter table public.payment_orders add column if not exists updated_at timestamptz not null default now();
 
 -- ----------------------------------------------------------------------------
 -- 8. ACADEMIC ERROR REPORTS & BONUS-MARKS AUDIT LOG (Legal Safeguard Queue)
@@ -182,30 +208,114 @@ alter table public.contest_submissions enable row level security;
 alter table public.payment_orders enable row level security;
 alter table public.content_reports enable row level security;
 
+drop policy if exists "Public modules are viewable by everyone" on public.modules;
 create policy "Public modules are viewable by everyone" on public.modules for select using (true);
+
+drop policy if exists "Public units are viewable by everyone" on public.units;
 create policy "Public units are viewable by everyone" on public.units for select using (true);
+
+drop policy if exists "Public contests are viewable by everyone" on public.contests;
 create policy "Public contests are viewable by everyone" on public.contests for select using (true);
+
+drop policy if exists "Public profiles for leaderboard" on public.profiles;
 create policy "Public profiles for leaderboard" on public.profiles for select using (true);
+
+drop policy if exists "Users can insert their own profile" on public.profiles;
 create policy "Users can insert their own profile" on public.profiles for insert with check (auth.uid() = id);
+
+drop policy if exists "Users can update their own profile" on public.profiles;
 create policy "Users can update their own profile" on public.profiles for update using (auth.uid() = id);
+
+-- Restrict student updates to harmless columns only; XP, rating, passes & role can only change on server
+revoke update on public.profiles from authenticated, anon;
+grant update (full_name, username, avatar_url, board, class_grade, preferred_language, onboarding_completed, city, school_name, phone) on public.profiles to authenticated;
+
+create or replace function public.protect_profile_columns()
+returns trigger as $$
+begin
+  -- Prevent authenticated users from modifying protected columns directly
+  if (current_setting('request.jwt.claim.role', true) = 'authenticated' and current_user != 'service_role') then
+    if new.role is distinct from old.role then
+      raise exception 'Security violation: Role cannot be modified directly';
+    end if;
+    if new.xp_points is distinct from old.xp_points then
+      raise exception 'Security violation: XP can only be awarded by the server';
+    end if;
+    if new.contest_rating is distinct from old.contest_rating then
+      raise exception 'Security violation: Contest rating can only be updated by the server';
+    end if;
+    if new.has_pro_pass is distinct from old.has_pro_pass or
+       new.pro_pass_plan is distinct from old.pro_pass_plan or
+       new.daily_passes_remaining is distinct from old.daily_passes_remaining or
+       new.competition_passes_remaining is distinct from old.competition_passes_remaining or
+       new.unlocked_contest_ids is distinct from old.unlocked_contest_ids then
+      raise exception 'Security violation: Passes can only be modified by the server';
+    end if;
+  end if;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists protect_profile_columns_trigger on public.profiles;
+create trigger protect_profile_columns_trigger
+before update on public.profiles
+for each row execute function public.protect_profile_columns();
+
+drop policy if exists "Users can view their own progress" on public.user_unit_progress;
 create policy "Users can view their own progress" on public.user_unit_progress for select using (auth.uid() = user_id);
+
+drop policy if exists "Users can insert their own progress" on public.user_unit_progress;
 create policy "Users can insert their own progress" on public.user_unit_progress for insert with check (auth.uid() = user_id);
+
+drop policy if exists "Users can view contest submissions" on public.contest_submissions;
 create policy "Users can view contest submissions" on public.contest_submissions for select using (true);
+
+drop policy if exists "Users can insert their own submissions" on public.contest_submissions;
 create policy "Users can insert their own submissions" on public.contest_submissions for insert with check (auth.uid() = user_id);
+
+drop policy if exists "Users can view their own payment orders" on public.payment_orders;
 create policy "Users can view their own payment orders" on public.payment_orders for select using (auth.uid() = user_id);
+
+drop policy if exists "Anyone can view and submit content reports" on public.content_reports;
 create policy "Anyone can view and submit content reports" on public.content_reports for select using (true);
+
+drop policy if exists "Authenticated users can submit content reports" on public.content_reports;
 create policy "Authenticated users can submit content reports" on public.content_reports for insert with check (true);
 
 -- ----------------------------------------------------------------------------
--- AUTOMATIC PROFILE CREATION TRIGGER ON SUPABASE SIGNUP
+-- AUTOMATIC PROFILE CREATION TRIGGER ON SUPABASE SIGNUP (EMAIL & GOOGLE OAUTH)
 -- ----------------------------------------------------------------------------
 create or replace function public.handle_new_user()
 returns trigger as $$
+declare
+  raw_name text;
+  clean_handle text;
+  grade_val int;
 begin
+  raw_name := coalesce(
+    new.raw_user_meta_data->>'full_name',
+    new.raw_user_meta_data->>'name',
+    split_part(coalesce(new.email, 'scholar'), '@', 1),
+    'Scholar'
+  );
+  clean_handle := lower(regexp_replace(split_part(coalesce(new.email, raw_name), '@', 1), '[^a-zA-Z0-9]', '', 'g'));
+  if clean_handle = '' then
+    clean_handle := 'scholar';
+  end if;
+
+  grade_val := coalesce((new.raw_user_meta_data->>'class_grade')::int, 9);
+  if grade_val < 9 or grade_val > 12 then
+    grade_val := 9;
+  end if;
+
   insert into public.profiles (
     id,
+    email,
+    phone,
+    auth_provider,
     full_name,
     username,
+    avatar_url,
     board,
     class_grade,
     city,
@@ -214,15 +324,26 @@ begin
   )
   values (
     new.id,
-    coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
-    coalesce(new.raw_user_meta_data->>'username', '@' || lower(regexp_replace(split_part(new.email, '@', 1), '[^a-zA-Z0-9]', '', 'g')) || '_' || substr(new.id::text, 1, 4)),
+    new.email,
+    coalesce(new.raw_user_meta_data->>'phone', null),
+    coalesce(new.raw_app_meta_data->>'provider', 'email'),
+    raw_name,
+    coalesce(new.raw_user_meta_data->>'username', '@' || clean_handle || '_' || substr(new.id::text, 1, 4)),
+    coalesce(new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'picture', '🚀'),
     coalesce(new.raw_user_meta_data->>'board', 'CBSE'),
-    coalesce((new.raw_user_meta_data->>'class_grade')::int, 10),
+    grade_val,
     coalesce(new.raw_user_meta_data->>'city', 'Delhi'),
     coalesce(new.raw_user_meta_data->>'school_name', 'VidyaLila Academy'),
-    coalesce((new.raw_user_meta_data->>'xp_points')::int, 100)
+    coalesce((new.raw_user_meta_data->>'xp_points')::int, 0)
   )
-  on conflict (id) do nothing;
+  on conflict (id) do update set
+    email = excluded.email,
+    full_name = coalesce(public.profiles.full_name, excluded.full_name),
+    avatar_url = case
+      when public.profiles.avatar_url is null or public.profiles.avatar_url = '🚀'
+      then excluded.avatar_url
+      else public.profiles.avatar_url
+    end;
   return new;
 end;
 $$ language plpgsql security definer;
@@ -231,3 +352,73 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- ----------------------------------------------------------------------------
+-- 9. COLLABORATIVE DOUBT CHANNELS & @VIDYABOT MESSAGES
+-- ----------------------------------------------------------------------------
+create table if not exists public.discussion_messages (
+  id uuid default uuid_generate_v4() primary key,
+  channel_id text not null default 'class-9-doubts',
+  class_grade int not null default 9 check (class_grade between 9 and 12),
+  chapter_tag text not null default 'General',
+  -- Optional context linking message to a specific chapter unit or quiz question
+  question_ref jsonb default null,
+  sender_id uuid references public.profiles(id) on delete set null,
+  sender_name text not null,
+  sender_username text not null,
+  sender_avatar text not null default '🚀',
+  sender_role text not null default 'student' check (sender_role in ('student', 'bot', 'admin')),
+  content text not null,
+  parent_id uuid references public.discussion_messages(id) on delete cascade,
+  upvotes int not null default 0,
+  upvoted_by text[] not null default '{}',
+  is_helpful_solution boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_discussion_messages_channel on public.discussion_messages(channel_id, created_at asc);
+create index if not exists idx_discussion_messages_class on public.discussion_messages(class_grade, created_at desc);
+
+alter table public.discussion_messages enable row level security;
+
+drop policy if exists "Anyone can view discussion messages" on public.discussion_messages;
+create policy "Anyone can view discussion messages"
+  on public.discussion_messages for select using (true);
+
+drop policy if exists "Authenticated users can insert student messages" on public.discussion_messages;
+create policy "Authenticated users can insert student messages"
+  on public.discussion_messages for insert
+  with check (auth.uid() = sender_id and sender_role = 'student');
+
+-- ----------------------------------------------------------------------------
+-- 10. STUDY GROUP MEMBERSHIPS (SINGLE-GROUP JOIN REQUEST, ADMIN APPROVAL & BARRING)
+-- ----------------------------------------------------------------------------
+create table if not exists public.study_group_memberships (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) on delete cascade,
+  -- Unique user_key enforces that a student can only request/join ONE group at a time
+  user_key text unique not null,
+  user_name text not null,
+  user_username text not null,
+  user_avatar text not null default '🚀',
+  channel_id text not null default 'class-9-doubts',
+  class_grade int not null default 9 check (class_grade between 9 and 12),
+  request_note text default '',
+  status text not null default 'pending' check (status in ('pending', 'approved', 'rejected', 'barred')),
+  violation_count int not null default 0,
+  last_violation_reason text default null,
+  barred_reason text default null,
+  requested_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists idx_study_group_memberships_status on public.study_group_memberships(status, requested_at desc);
+create index if not exists idx_study_group_memberships_channel on public.study_group_memberships(channel_id, status);
+
+alter table public.study_group_memberships enable row level security;
+
+drop policy if exists "Anyone can read study group memberships" on public.study_group_memberships;
+create policy "Anyone can read study group memberships"
+  on public.study_group_memberships for select using (true);
+
+

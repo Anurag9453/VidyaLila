@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>SAS triangle PQR: 5 cm, 60 deg, 4 cm</title>
+  <desc>Triangle PQR with a horizontal base QR of 4 cm, a 60 degree angle at Q built with two equal 3 cm arcs through S and T, and P on the ray QT five centimetres from Q.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="338.08" y1="107.25" x2="354.08" y2="79.54" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <path d="M 356.91 297.16 A 120.0 120.0 0 0 0 283.03 169.2" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 347.62 160.92 A 120.0 120.0 0 0 0 259.78 211.63" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 401.91 165.74 A 200.0 200.0 0 0 0 255.51 81.22" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="238.08" y1="280.46" x2="398.08" y2="280.46" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="238.08" y1="280.46" x2="338.08" y2="107.25" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="338.08" y1="107.25" x2="398.08" y2="280.46" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <path d="M 278.08 280.46 A 40.0 40.0 0 0 0 258.08 245.82" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="284.85" y="257.46000000000004" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">60°</text>
+  <!-- Point Dots -->
+  <circle cx="238.08" cy="280.46" r="3" fill="currentColor" />
+  <circle cx="398.08" cy="280.46" r="3" fill="currentColor" />
+  <circle cx="358.08" cy="280.46" r="3" fill="currentColor" />
+  <circle cx="298.08" cy="176.54" r="3" fill="currentColor" />
+  <circle cx="338.08" cy="107.25" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="231.08" y="292.46" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">Q</text>
+  <text x="405.08" y="292.46" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">R</text>
+  <text x="358.08" y="294.46" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">S</text>
+  <text x="291.08" y="169.54" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">T</text>
+  <text x="338.08" y="97.25" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="318.08" y="298.46" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">QR = 4 cm</text>
+  <text x="274.08" y="197.86" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">PQ = 5 cm</text>
+</svg>

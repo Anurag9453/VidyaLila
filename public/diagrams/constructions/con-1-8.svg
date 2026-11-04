@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Adding two segments: PR = AB + CD = 7 cm</title>
+  <desc>A line l with points P, Q and R in this order; PQ is 4 cm and QR is 3 cm, so PR is 7 cm.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 301.01 267.62 A 160 160 0 0 0 301.01 132.38" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 424.76 250.71 A 120 120 0 0 0 424.76 149.29" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="116.0" y1="200.0" x2="484.0" y2="200.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="156.0" y1="200.0" x2="436.0" y2="200.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <!-- Point Dots -->
+  <circle cx="156.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="316.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="436.0" cy="200.0" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="156.0" y="190.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="316.0" y="190.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Q</text>
+  <text x="436.0" y="190.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">R</text>
+  <text x="494.0" y="190.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">l</text>
+  <text x="236.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">PQ = AB = 4 cm</text>
+  <text x="376.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">QR = CD = 3 cm</text>
+  <text x="296.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">PR = 7 cm</text>
+</svg>

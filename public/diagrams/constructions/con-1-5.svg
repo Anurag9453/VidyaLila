@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Rope AB = 8 cm, midpoint with a 6 cm string</title>
+  <desc>A horizontal rope AB of 8 cm; arcs of radius 6 cm from A and from B meet at P above and Q below, and PQ cuts the rope at its midpoint M.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 336.07 120.64 A 168 168 0 0 0 250.42 44.03" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 250.42 355.97 A 168 168 0 0 0 336.07 279.36" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 349.58 44.03 A 168 168 0 0 0 263.93 120.64" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 263.93 279.36 A 168 168 0 0 0 349.58 355.97" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="188.0" y1="200.0" x2="412.0" y2="200.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="300.0" y1="74.84" x2="300.0" y2="325.16" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="300.0,200.0 308.4,200.0 308.4,191.6 300.0,191.6" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <line x1="244.0" y1="204.0" x2="244.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="356.0" y1="204.0" x2="356.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="188.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="412.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="74.78" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="325.22" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="181.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="419.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="300.0" y="64.78" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="300.0" y="339.22" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Q</text>
+  <text x="307.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">M</text>
+  <text x="178.0" y="190.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">AB = 8 cm</text>
+  <text x="244.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">4 cm</text>
+  <text x="356.0" y="218.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">4 cm</text>
+</svg>

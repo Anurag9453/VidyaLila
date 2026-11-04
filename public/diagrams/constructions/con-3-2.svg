@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Perpendicular from a point P outside the line</title>
+  <desc>A horizontal line l with point P four centimetres above it, an arc from P cutting l at A and B, two arcs from A and B meeting at Q below l, and the line PQ meeting l at M at a right angle.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="300.0" y1="46.69" x2="180.0" y2="206.69" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="300.0" y1="46.69" x2="420.0" y2="206.69" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="180.0" y1="206.69" x2="300.0" y2="312.52" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="420.0" y1="206.69" x2="300.0" y2="312.52" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <path d="M 158.9 188.43 A 200.0 200.0 0 0 0 441.1 188.43" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 244.03 353.32 A 160.0 160.0 0 0 0 333.48 251.89" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 266.52 251.89 A 160.0 160.0 0 0 0 355.97 353.32" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="120.0" y1="206.69" x2="480.0" y2="206.69" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="300.0" y1="46.69" x2="300.0" y2="312.52" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="300.0,206.69 310.0,206.69 310.0,196.69 300.0,196.69" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <line x1="240.0" y1="210.69" x2="240.0" y2="202.69" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="238.0" y1="122.69" x2="244.4" y2="127.49" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="235.6" y1="125.89" x2="242.0" y2="130.69" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="234.35" y1="259.96" x2="239.65" y2="253.96" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="237.35" y1="262.61" x2="242.65" y2="256.61" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="240.35" y1="265.26" x2="245.65" y2="259.26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="300.0" cy="46.69" r="3" fill="currentColor" />
+  <circle cx="180.0" cy="206.69" r="3" fill="currentColor" />
+  <circle cx="420.0" cy="206.69" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="312.52" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="206.69" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="300.0" y="36.69" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="173.0" y="199.69" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="427.0" y="199.69" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="307.0" y="218.69" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">M</text>
+  <text x="300.0" y="326.52" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Q</text>
+  <text x="480.0" y="196.69" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">l</text>
+  <text x="314.0" y="130.69" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">4 cm</text>
+  <text x="230.0" y="116.69" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">5 cm</text>
+  <text x="370.0" y="116.69" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">5 cm</text>
+  <text x="230.0" y="275.61" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="end">4 cm</text>
+  <text x="370.0" y="275.61" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">4 cm</text>
+</svg>

@@ -6,7 +6,7 @@ import { BrandCrestIcon } from "./BrandLogo";
 import { Sparkles, BookOpen, ShieldCheck } from "lucide-react";
 
 const ROUTE_LOADING_MESSAGES: Record<string, string> = {
-  "/": "Loading CBSE & ICSE Free Study Chapters...",
+  "/": "Loading Interactive Study Chapters...",
   "/contests": "Preparing Live & Upcoming Subject Quiz Arena...",
   "/leaderboard": "Calculating All-India Scholar GP & Contest Rankings...",
   "/studio": "Opening Academic CMS & Review Studio...",
@@ -59,7 +59,7 @@ export function BrandLoaderUI({
             Vidya<span className="text-emerald-600">Lila</span>
           </h2>
           <p className="text-xs font-bold text-slate-500">
-            Class 9–12 CBSE &amp; ICSE Self-Study &amp; Live Subject Quizzes
+            Story-Driven Self-Study &amp; Live Subject Quizzes
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export function BrandLoaderUI({
         {/* Bottom Trust Pill */}
         <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[11px] font-bold text-slate-400">
           <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-          <span>NCERT &amp; Board Aligned • 100% Free Study Units</span>
+          <span>Story-Driven Lessons • 100% Free Study Units</span>
         </div>
       </div>
     </div>
@@ -113,7 +113,7 @@ export function BrandLoader() {
   const activeMessage =
     ROUTE_LOADING_MESSAGES[pathname] ||
     (pathname.startsWith("/trails")
-      ? "Opening Chapter Trail & 100-Mark Unit Practice Test..."
+      ? "Opening Chapter Trail & Unit Checkpoint Quiz..."
       : "Preparing Your VidyaLila Study Arena...");
 
   return <BrandLoaderUI message={activeMessage} progress={progress} />;

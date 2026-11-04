@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Equilateral triangle LMN, side 5 cm</title>
+  <desc>An equilateral triangle LMN with every side 5 cm and every angle 60 degrees, apex N found where two 5 cm arcs from L and M cross.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 363.83 171.88 A 200.0 200.0 0 0 0 217.43 87.36" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 382.57 87.36 A 200.0 200.0 0 0 0 236.17 171.88" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="200.0" y1="286.6" x2="400.0" y2="286.6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="200.0" y1="286.6" x2="300.0" y2="113.39" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="400.0" y1="286.6" x2="300.0" y2="113.39" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <line x1="300.0" y1="290.6" x2="300.0" y2="282.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M 232.0 286.6 A 32.0 32.0 0 0 0 216.0 258.89" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="239.84" y="267.6" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">60°</text>
+  <path d="M 368.0 286.6 A 32.0 32.0 0 1 0 384.0 258.89" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="439.84" y="313.6" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">60°</text>
+  <path d="M 284.0 141.11 A 32.0 32.0 0 0 0 316.0 141.11" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="300.0" y="163.39" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">60°</text>
+  <!-- Point Dots -->
+  <circle cx="200.0" cy="286.6" r="3" fill="currentColor" />
+  <circle cx="400.0" cy="286.6" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="113.39" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="193.0" y="298.6" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">L</text>
+  <text x="407.0" y="298.6" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">M</text>
+  <text x="300.0" y="103.39" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">N</text>
+  <text x="300.0" y="304.6" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">LM = 5 cm</text>
+</svg>

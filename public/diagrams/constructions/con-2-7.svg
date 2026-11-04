@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Constructing 45 degrees</title>
+  <desc>A 90 degree ray BS meets the 4 cm arc at T; 4 cm arcs from P and T meet at U and ray BU halves the right angle, so angle UBC is 45 degrees.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 347.12 332.72 A 160 160 0 0 0 171.28 156.88" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 402.72 165.65 A 160 160 0 0 0 293.28 165.65" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 338.35 210.72 A 160 160 0 0 0 338.35 101.28" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="188.0" y1="316.0" x2="428.0" y2="316.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="188.0" y1="316.0" x2="188.0" y2="68.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="188.0" y1="316.0" x2="360.4" y2="143.6" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="188.0,316.0 200.0,316.0 200.0,304.0 188.0,304.0" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <path d="M 248.0 316.0 A 60.0 60.0 0 0 0 230.43 273.57" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="260.0" y="290.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">45°</text>
+  <path d="M 230.43 273.57 A 60.0 60.0 0 0 0 188.0 256.0" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="218.0" y="248.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">45°</text>
+  <!-- Point Dots -->
+  <circle cx="188.0" cy="316.0" r="3" fill="currentColor" />
+  <circle cx="428.0" cy="316.0" r="3" fill="currentColor" />
+  <circle cx="348.0" cy="316.0" r="3" fill="currentColor" />
+  <circle cx="188.0" cy="156.0" r="3" fill="currentColor" />
+  <circle cx="348.0" cy="156.0" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="181.0" y="328.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">B</text>
+  <text x="435.0" y="328.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">C</text>
+  <text x="348.0" y="330.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="181.0" y="149.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">T</text>
+  <text x="358.0" y="160.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">U</text>
+</svg>

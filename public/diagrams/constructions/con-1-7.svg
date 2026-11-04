@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Point X at 1.25 cm from A on AB = 5 cm</title>
+  <desc>Segment AB of 5 cm with its midpoint M and a point X a quarter of the way from A; bisector PQ crosses AB at M and bisector RS crosses AB at X, both at right angles.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 316.66 171.87 A 120 120 0 0 0 271.28 103.47" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 271.28 296.53 A 120 120 0 0 0 316.66 228.13" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 328.72 103.47 A 120 120 0 0 0 283.34 171.87" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 283.34 228.13 A 120 120 0 0 0 328.72 296.53" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 268.34 158.42 A 80 80 0 0 0 225.63 124.22" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 225.63 275.78 A 80 80 0 0 0 268.34 241.58" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 274.37 124.22 A 80 80 0 0 0 231.66 158.42" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 231.66 241.58 A 80 80 0 0 0 274.37 275.78" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="200.0" y1="200.0" x2="400.0" y2="200.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="300.0" y1="133.6" x2="300.0" y2="266.4" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="250.0" y1="137.6" x2="250.0" y2="262.4" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <polygon points="300.0,200.0 312.0,200.0 312.0,188.0 300.0,188.0" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <polygon points="250.0,200.0 262.0,200.0 262.0,188.0 250.0,188.0" stroke="currentColor" stroke-width="1.5" fill="none" />
+  <line x1="225.0" y1="204.0" x2="225.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="275.0" y1="204.0" x2="275.0" y2="196.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="200.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="400.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="250.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="133.67" r="3" fill="currentColor" />
+  <circle cx="300.0" cy="266.33" r="3" fill="currentColor" />
+  <circle cx="250.0" cy="137.55" r="3" fill="currentColor" />
+  <circle cx="250.0" cy="262.45" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="193.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="250.0" y="214.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">X</text>
+  <text x="300.0" y="214.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">M</text>
+  <text x="407.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="300.0" y="123.67" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="300.0" y="280.33" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">Q</text>
+  <text x="250.0" y="127.55" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">R</text>
+  <text x="250.0" y="276.45" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">S</text>
+  <text x="225.0" y="186.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">AX = 1.25 cm</text>
+  <text x="275.0" y="186.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">XM = 1.25 cm</text>
+  <text x="350.0" y="186.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">MB = 2.5 cm</text>
+</svg>

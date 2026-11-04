@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useApp } from "@/lib/store";
-import { ClassGrade } from "@/lib/mock-data";
+import { ClassGrade, ContentLanguage } from "@/lib/mock-data";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { PaymentModal, PassPackageType } from "@/components/PaymentModal";
 import {
   Mail,
   Lock,
   User,
+  Phone,
   School,
   MapPin,
   Eye,
@@ -25,6 +26,9 @@ import {
   Award,
   Settings,
   Sparkles,
+  GraduationCap,
+  Languages,
+  AtSign,
 } from "lucide-react";
 
 function getPlanDetails(
@@ -81,29 +85,44 @@ function getPlanDetails(
     };
   }
   return {
-    name: "Free Scholar Plan (₹0)",
-    badge: "FREE PLAN",
+    name: "No Active Quiz Pass Purchased",
+    badge: "NO ACTIVE PASS",
     summary:
-      "100% Free Study Units & Chapter Practice Tests (Buy Basic, VIP, or Pro Pass to unlock Live Daily/Weekly Quizzes)",
+      "Chapter study units & unit practice tests are 100% free with your account. Buy a Basic (₹49), VIP (₹149), or Pro (₹499) Pass to unlock Live Daily & Weekly Quizzes.",
     badgeStyle: "bg-slate-200 border-slate-300 text-slate-700",
     cardStyle: "border-slate-200 bg-slate-50",
   };
 }
 
-export default function AuthAndSettingsPage() {
+function AuthAndSettingsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect") || "/";
+  const modeParam = searchParams.get("mode");
+
   const {
     profile,
     isAuthenticated,
+    contentLanguage,
     signUpUser,
     signInUser,
     signInWithGoogle,
     signOutUser,
     updateProfileBoardAndClass,
+    checkUsernameAvailability,
+    updateUniqueUsername,
     activateProPass,
   } = useApp();
 
-  const [mode, setMode] = useState<"SIGNIN" | "SIGNUP">("SIGNIN");
+  const [mode, setMode] = useState<"SIGNIN" | "SIGNUP">(
+    modeParam === "signup" ? "SIGNUP" : "SIGNIN"
+  );
+
+  useEffect(() => {
+    if (modeParam === "signup") setMode("SIGNUP");
+    else if (modeParam === "signin") setMode("SIGNIN");
+  }, [modeParam]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -112,15 +131,114 @@ export default function AuthAndSettingsPage() {
   const [defaultModalPkg, setDefaultModalPkg] =
     useState<PassPackageType>("WEEKLY");
 
-  // Form states
+  // Form states for Sign Up / Sign In
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [board, setBoard] = useState<"CBSE" | "ICSE">("CBSE");
-  const [classGrade, setClassGrade] = useState<ClassGrade>(10);
+  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
+  const [board] = useState<"CBSE" | "ICSE">("CBSE");
+  const [classGrade, setClassGrade] = useState<ClassGrade>(9);
+  const [preferredLanguage, setPreferredLanguage] =
+    useState<ContentLanguage>("HINGLISH");
   const [city, setCity] = useState("");
   const [school, setSchool] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(true);
+
+  // Live username availability check for Sign Up form
+  const [checkingSignupHandle, setCheckingSignupHandle] = useState(false);
+  const [signupHandleAvailable, setSignupHandleAvailable] = useState<
+    boolean | null
+  >(null);
+  const [signupHandleError, setSignupHandleError] = useState<string | null>(
+    null
+  );
+  const [signupHandleSuggestions, setSignupHandleSuggestions] = useState<
+    string[]
+  >([]);
+
+  useEffect(() => {
+    if (mode !== "SIGNUP") return;
+    const cleaned = username.trim().replace(/^@+/, "").toLowerCase();
+    if (!cleaned) {
+      setSignupHandleAvailable(null);
+      setSignupHandleError(null);
+      setSignupHandleSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setCheckingSignupHandle(true);
+      const res = await checkUsernameAvailability(cleaned);
+      setCheckingSignupHandle(false);
+      setSignupHandleAvailable(res.available);
+      setSignupHandleError(res.available ? null : res.error || null);
+      setSignupHandleSuggestions(res.suggestions || []);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [username, mode]);
+
+  // Editable Unique @username in User Settings (when signed in)
+  const [settingsUsername, setSettingsUsername] = useState("");
+  const [checkingSettingsHandle, setCheckingSettingsHandle] = useState(false);
+  const [settingsHandleAvailable, setSettingsHandleAvailable] = useState<
+    boolean | null
+  >(null);
+  const [settingsHandleError, setSettingsHandleError] = useState<string | null>(
+    null
+  );
+  const [settingsHandleMsg, setSettingsHandleMsg] = useState<string | null>(
+    null
+  );
+  const [savingSettingsHandle, setSavingSettingsHandle] = useState(false);
+
+  useEffect(() => {
+    if (profile.username) {
+      setSettingsUsername(profile.username.replace(/^@+/, ""));
+    }
+  }, [profile.username]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const cleaned = settingsUsername.trim().replace(/^@+/, "").toLowerCase();
+    const currentClean = (profile.username || "")
+      .replace(/^@+/, "")
+      .toLowerCase();
+
+    if (!cleaned || cleaned === currentClean) {
+      setSettingsHandleAvailable(null);
+      setSettingsHandleError(null);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setCheckingSettingsHandle(true);
+      const res = await checkUsernameAvailability(cleaned);
+      setCheckingSettingsHandle(false);
+      setSettingsHandleAvailable(res.available);
+      setSettingsHandleError(res.available ? null : res.error || null);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [settingsUsername, isAuthenticated, profile.username]);
+
+  const handleSaveSettingsUsername = async () => {
+    setSettingsHandleError(null);
+    setSettingsHandleMsg(null);
+    setSavingSettingsHandle(true);
+    const res = await updateUniqueUsername(settingsUsername);
+    setSavingSettingsHandle(false);
+    if (!res.ok) {
+      setSettingsHandleAvailable(false);
+      setSettingsHandleError(
+        res.error || "That username is already taken. Please choose another."
+      );
+    } else {
+      setSettingsHandleAvailable(true);
+      setSettingsHandleMsg(`Saved unique username ${res.username}!`);
+    }
+  };
 
   const dailyPassesLeft = profile.dailyPassesRemaining || 0;
   const compPassesLeft = profile.competitionPassesRemaining || 0;
@@ -149,12 +267,23 @@ export default function AuthAndSettingsPage() {
         setSubmitting(false);
         return;
       }
+      if (signupHandleAvailable === false) {
+        setErrorMsg(
+          signupHandleError ||
+            "That @username is already taken. Please pick another unique username."
+        );
+        setSubmitting(false);
+        return;
+      }
       const res = await signUpUser({
         email,
         password,
         fullName,
+        username,
+        phone,
         board,
         classGrade,
+        preferredLanguage,
         city: city || "Delhi",
         school: school || "VidyaLila Scholar",
       });
@@ -162,8 +291,10 @@ export default function AuthAndSettingsPage() {
       if (!res.ok) {
         setErrorMsg(res.error || "Sign up failed.");
       } else {
-        setSuccessMsg(res.message || "Account created! Redirecting...");
-        setTimeout(() => router.push("/"), 900);
+        setSuccessMsg(
+          res.message || "Account created! Redirecting..."
+        );
+        setTimeout(() => router.push(redirectParam), 700);
       }
     } else {
       const res = await signInUser(email, password);
@@ -172,222 +303,348 @@ export default function AuthAndSettingsPage() {
         setErrorMsg(res.error || "Invalid credentials.");
       } else {
         setSuccessMsg("Signed in! Redirecting...");
-        setTimeout(() => router.push("/"), 600);
+        setTimeout(() => router.push(redirectParam), 500);
       }
     }
   };
 
   const handleGoogleLogin = async () => {
     setErrorMsg(null);
-    const res = await signInWithGoogle();
+    setSuccessMsg(null);
+    const res = await signInWithGoogle(redirectParam);
     if (!res.ok && res.error) {
       setErrorMsg(res.error);
     }
   };
 
+  const handleSignOut = async () => {
+    setErrorMsg(null);
+    await signOutUser();
+    setSuccessMsg("You have been signed out cleanly.");
+  };
+
   const inputClass =
     "w-full rounded-2xl border-2 border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:border-emerald-500 focus:bg-white focus:outline-none transition";
+
+  const activeUserLang = profile.preferredLanguage || contentLanguage;
 
   return (
     <div className="mx-auto max-w-4xl py-4 sm:py-6 space-y-6">
       {/* ====================================================================
-          USER SETTINGS & ACTIVE SUBSCRIPTION PLAN CARD (Always Visible)
+          1. USER SETTINGS & ACTIVE SUBSCRIPTION PLAN CARD
+             Shown ONLY when the user is signed in (isAuthenticated === true)
          ==================================================================== */}
-      <section className="rounded-3xl border-2 border-slate-200 bg-white p-6 sm:p-8 shadow-[0_6px_0_0_#e2e8f0] space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
-          <div className="flex items-center gap-3.5">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 border-b-4 border-emerald-700 text-2xl text-white shadow-sm">
-              {profile.avatar || "🚀"}
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[11px] font-extrabold text-slate-700">
-                  <Settings className="h-3 w-3 text-indigo-600" />
-                  User Settings &amp; Active Plan
-                </span>
-                {isAuthenticated && (
+      {isAuthenticated && (
+        <section className="rounded-3xl border-2 border-slate-200 bg-white p-6 sm:p-8 shadow-[0_6px_0_0_#e2e8f0] space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
+            <div className="flex items-center gap-3.5">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 border-b-4 border-emerald-700 text-2xl text-white shadow-sm overflow-hidden">
+                {profile.avatar?.startsWith("http") ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={profile.avatar}
+                    alt={profile.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  profile.avatar || "🚀"
+                )}
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[11px] font-extrabold text-slate-700">
+                    <Settings className="h-3 w-3 text-indigo-600" />
+                    User Settings &amp; Active Plan
+                  </span>
                   <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-700">
                     <CheckCircle2 className="h-3 w-3" /> Signed In
                   </span>
-                )}
+                </div>
+                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
+                  {profile.name}
+                </h1>
+                <p className="text-xs font-bold text-slate-500">
+                  {profile.email || profile.username} • Class {profile.classGrade} •{" "}
+                  {activeUserLang === "HINGLISH" ? "Hinglish" : "English"}
+                </p>
               </div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">
-                {profile.name}
-              </h1>
-              <p className="text-xs font-bold text-slate-500">
-                {profile.email || profile.username} • {profile.school},{" "}
-                {profile.city}
-              </p>
             </div>
-          </div>
 
-          {isAuthenticated && (
             <button
-              onClick={() => signOutUser()}
+              type="button"
+              onClick={handleSignOut}
               className="btn-3d-white px-4 py-2.5 text-xs inline-flex items-center gap-1.5 text-rose-600"
             >
               <LogOut className="h-3.5 w-3.5" />
               <span>Sign Out</span>
             </button>
-          )}
-        </div>
+          </div>
 
-        {/* Active Plan Bought Section */}
-        <div
-          className={`rounded-2xl border-2 p-5 space-y-4 ${planInfo.cardStyle}`}
-        >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="space-y-1">
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-0.5 text-[10px] font-extrabold uppercase ${planInfo.badgeStyle}`}
+          {/* Study Preferences: Unique @username, Class (9-12) & Language Preference (Hinglish / English) */}
+          <div className="rounded-2xl border-2 border-indigo-100 bg-indigo-50/40 p-5 space-y-4">
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <h2 className="text-sm sm:text-base font-extrabold text-slate-900">
+                  Your Study Preferences &amp; Unique Handle
+                </h2>
+                <p className="text-xs font-semibold text-slate-500">
+                  Your unique <strong>@username</strong> identifies you on the Ranks Leaderboard. Change your Class or Study Language anytime.
+                </p>
+              </div>
+            </div>
+
+            {/* Unique @username Editor */}
+            <div className="space-y-1.5">
+              <label className="flex items-center justify-between text-xs font-extrabold text-slate-700">
+                <span className="flex items-center gap-1.5">
+                  <AtSign className="h-4 w-4 text-emerald-600" />
+                  <span>Your Unique Username (Ranks Handle)</span>
+                </span>
+                {checkingSettingsHandle && (
+                  <span className="text-[11px] font-bold text-slate-400">
+                    Checking availability...
+                  </span>
+                )}
+                {!checkingSettingsHandle && settingsHandleAvailable === true && (
+                  <span className="text-[11px] font-extrabold text-emerald-600 flex items-center gap-1">
+                    <CheckCircle2 className="h-3.5 w-3.5" /> @
+                    {settingsUsername.trim().replace(/^@+/, "").toLowerCase()} is available!
+                  </span>
+                )}
+              </label>
+
+              <div className="flex flex-col sm:flex-row gap-2">
+                <div className="relative flex-1">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-extrabold text-slate-400">
+                    @
+                  </span>
+                  <input
+                    type="text"
+                    value={settingsUsername.replace(/^@+/, "")}
+                    onChange={(e) => {
+                      setSettingsUsername(
+                        e.target.value.replace(/^@+/, "").toLowerCase()
+                      );
+                      setSettingsHandleMsg(null);
+                    }}
+                    placeholder="e.g. aarav_optics"
+                    className={`w-full rounded-2xl border-2 bg-white pl-9 pr-4 py-2.5 text-sm font-bold text-slate-900 focus:outline-none transition ${
+                      settingsHandleAvailable === false
+                        ? "border-rose-400 focus:border-rose-500"
+                        : "border-slate-200 focus:border-emerald-500"
+                    }`}
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleSaveSettingsUsername}
+                  disabled={
+                    savingSettingsHandle ||
+                    checkingSettingsHandle ||
+                    settingsHandleAvailable === false ||
+                    !settingsUsername.trim() ||
+                    `@${settingsUsername.trim().replace(/^@+/, "").toLowerCase()}` ===
+                      (profile.username || "").toLowerCase()
+                  }
+                  className="btn-3d-emerald px-5 py-2.5 text-xs font-extrabold shrink-0 disabled:opacity-50"
+                >
+                  {savingSettingsHandle ? "Saving..." : "Save @Username"}
+                </button>
+              </div>
+
+              {settingsHandleError && (
+                <p className="text-xs font-bold text-rose-600 flex items-center gap-1">
+                  <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+                  <span>{settingsHandleError}</span>
+                </p>
+              )}
+              {settingsHandleMsg && (
+                <p className="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                  <span>{settingsHandleMsg}</span>
+                </p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Class Preference */}
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-extrabold text-slate-700 mb-1.5">
+                  <GraduationCap className="h-4 w-4 text-indigo-600" />
+                  <span>Your Class Preference</span>
+                </label>
+                <select
+                  value={profile.classGrade}
+                  onChange={(e) =>
+                    updateProfileBoardAndClass(
+                      profile.board,
+                      Number(e.target.value) as ClassGrade,
+                      activeUserLang
+                    )
+                  }
+                  className="w-full rounded-2xl border-2 border-slate-200 bg-white px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:outline-none"
+                >
+                  <option value={9}>Class 9</option>
+                  <option value={10}>Class 10</option>
+                  <option value={11}>Class 11</option>
+                  <option value={12}>Class 12</option>
+                </select>
+              </div>
+
+              {/* Language Preference */}
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-extrabold text-slate-700 mb-1.5">
+                  <Languages className="h-4 w-4 text-emerald-600" />
+                  <span>Preferred Study Language</span>
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateProfileBoardAndClass(
+                        profile.board,
+                        profile.classGrade,
+                        "HINGLISH"
+                      )
+                    }
+                    className={`rounded-2xl border-2 py-2.5 px-3 text-xs sm:text-sm font-extrabold transition ${
+                      activeUserLang === "HINGLISH"
+                        ? "border-emerald-600 bg-emerald-600 text-white shadow-sm"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    🇮🇳 Hinglish
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateProfileBoardAndClass(
+                        profile.board,
+                        profile.classGrade,
+                        "ENGLISH"
+                      )
+                    }
+                    className={`rounded-2xl border-2 py-2.5 px-3 text-xs sm:text-sm font-extrabold transition ${
+                      activeUserLang === "ENGLISH"
+                        ? "border-emerald-600 bg-emerald-600 text-white shadow-sm"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    🇬🇧 English
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Active Quiz Pass & Credits Section (Only for Signed-In Users) */}
+          <div
+            className={`rounded-2xl border-2 p-5 space-y-4 ${planInfo.cardStyle}`}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-1">
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-0.5 text-[10px] font-extrabold uppercase ${planInfo.badgeStyle}`}
+                >
+                  <Crown className="h-3 w-3" />
+                  {planInfo.badge}
+                </span>
+                <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
+                  {planInfo.name}
+                </h2>
+                <p className="text-xs font-semibold text-slate-600">
+                  {planInfo.summary}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setDefaultModalPkg(profile.proPassPlan || "WEEKLY");
+                  setShowPassModal(true);
+                }}
+                className="btn-3d-amber px-4 py-2.5 text-xs inline-flex items-center gap-1.5 shrink-0"
               >
-                <Crown className="h-3 w-3" />
-                {planInfo.badge}
-              </span>
-              <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
-                Current Plan: {planInfo.name}
-              </h2>
-              <p className="text-xs font-semibold text-slate-600">
-                {planInfo.summary}
-              </p>
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>
+                  {profile.proPassPlan
+                    ? dailyPassesLeft + compPassesLeft === 0
+                      ? "Recharge Quiz Pass"
+                      : "Recharge / Add Pass"
+                    : "Buy Quiz Pass"}
+                </span>
+              </button>
             </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                setDefaultModalPkg(profile.proPassPlan || "WEEKLY");
-                setShowPassModal(true);
-              }}
-              className="btn-3d-amber px-4 py-2.5 text-xs inline-flex items-center gap-1.5 shrink-0"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>
-                {profile.proPassPlan
-                  ? dailyPassesLeft + compPassesLeft === 0
-                    ? "Recharge Quiz Pass"
-                    : "Recharge / Add Pass"
-                  : "Buy Quiz Pass"}
-              </span>
-            </button>
-          </div>
+            {/* Remaining Pass Balances */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-200/70">
+              <div className="rounded-xl bg-white border border-slate-200 p-3.5">
+                <p className="text-[11px] font-extrabold uppercase text-slate-400 flex items-center gap-1">
+                  <Calendar className="h-3.5 w-3.5 text-indigo-600" />
+                  Daily Quiz Credits Left
+                </p>
+                <p className="text-xl font-extrabold text-slate-900 mt-1">
+                  {dailyPassesLeft}
+                </p>
+                <p className="text-[10px] font-bold text-slate-400 mt-0.5">
+                  1 deducted per Daily Quiz
+                </p>
+              </div>
 
-          {/* Remaining Pass Balances */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-200/70">
-            <div className="rounded-xl bg-white border border-slate-200 p-3.5">
-              <p className="text-[11px] font-extrabold uppercase text-slate-400 flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5 text-indigo-600" />
-                Daily Quiz Credits Left
-              </p>
-              <p className="text-xl font-extrabold text-slate-900 mt-1">
-                {dailyPassesLeft}
-              </p>
-              <p className="text-[10px] font-bold text-slate-400 mt-0.5">
-                1 deducted per Daily Quiz
-              </p>
-            </div>
+              <div className="rounded-xl bg-white border border-slate-200 p-3.5">
+                <p className="text-[11px] font-extrabold uppercase text-slate-400 flex items-center gap-1">
+                  <Award className="h-3.5 w-3.5 text-amber-600" />
+                  Weekly Quiz Credits Left
+                </p>
+                <p className="text-xl font-extrabold text-slate-900 mt-1">
+                  {compPassesLeft}
+                </p>
+                <p className="text-[10px] font-bold text-slate-400 mt-0.5">
+                  1 deducted per Weekly Quiz
+                </p>
+              </div>
 
-            <div className="rounded-xl bg-white border border-slate-200 p-3.5">
-              <p className="text-[11px] font-extrabold uppercase text-slate-400 flex items-center gap-1">
-                <Award className="h-3.5 w-3.5 text-amber-600" />
-                Weekly Quiz Credits Left
-              </p>
-              <p className="text-xl font-extrabold text-slate-900 mt-1">
-                {compPassesLeft}
-              </p>
-              <p className="text-[10px] font-bold text-slate-400 mt-0.5">
-                1 deducted per Weekly Quiz
-              </p>
-            </div>
-
-            <div className="rounded-xl bg-white border border-slate-200 p-3.5">
-              <p className="text-[11px] font-extrabold uppercase text-slate-400">
-                Earned Gyan Points (GP)
-              </p>
-              <p className="text-xl font-extrabold text-emerald-600 mt-1">
-                {profile.xp.toLocaleString()} GP
-              </p>
-              <p className="text-[10px] font-bold text-slate-400 mt-0.5">
-                Earned only by studying &amp; unit tests
-              </p>
+              <div className="rounded-xl bg-white border border-slate-200 p-3.5">
+                <p className="text-[11px] font-extrabold uppercase text-slate-400">
+                  Earned Gyan Points (GP)
+                </p>
+                <p className="text-xl font-extrabold text-emerald-600 mt-1">
+                  {profile.xp.toLocaleString()} GP
+                </p>
+                <p className="text-[10px] font-bold text-slate-400 mt-0.5">
+                  Earned only by studying &amp; unit tests
+                </p>
+              </div>
             </div>
           </div>
-
-          <p className="text-[11px] font-bold text-slate-500 bg-white/80 border border-slate-200 rounded-xl px-3.5 py-2">
-            💡 <strong>Quiz-Wise Pass Policy:</strong> Passes are strictly based on{" "}
-            <strong>quiz count</strong> (not unlimited per day). <strong>⚡ Basic Pass (₹49)</strong> = 2 Daily Quizzes,{" "}
-            <strong>💎 VIP Pass (₹149)</strong> = 7 Daily Quizzes + 1 Weekly Quiz,{" "}
-            <strong>👑 Pro Pass (₹499)</strong> = 30 Daily Quizzes + 4 Weekly Quizzes. If you exhaust all your Daily Quizzes early (e.g., taking 7 quizzes in 2 days across multiple classes/subjects), your balance becomes 0 and you must recharge.
-          </p>
-        </div>
-
-        {/* Academic Preferences (Class & Board Settings) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-          <div>
-            <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-              Your Class Preference
-            </label>
-            <select
-              value={profile.classGrade}
-              onChange={(e) =>
-                updateProfileBoardAndClass(
-                  profile.board,
-                  Number(e.target.value) as ClassGrade
-                )
-              }
-              className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
-            >
-              <option value={9}>Class 9</option>
-              <option value={10}>Class 10</option>
-              <option value={11}>Class 11</option>
-              <option value={12}>Class 12</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-              Your Board Preference
-            </label>
-            <select
-              value={profile.board}
-              onChange={(e) =>
-                updateProfileBoardAndClass(
-                  e.target.value as "CBSE" | "ICSE",
-                  profile.classGrade
-                )
-              }
-              className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
-            >
-              <option value="CBSE">CBSE Board</option>
-              <option value="ICSE">ICSE / ISC Board</option>
-            </select>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ====================================================================
-          SIGN IN / SIGN UP CARD (Shown when user is not yet signed in)
+          2. SIGN IN / SIGN UP CARD
+             Shown ONLY when the user is NOT signed in (!isAuthenticated)
          ==================================================================== */}
       {!isAuthenticated && (
-        <div className="rounded-3xl border-2 border-slate-200 bg-white p-6 sm:p-8 shadow-[0_8px_0_0_#e2e8f0] space-y-6">
+        <div className="mx-auto max-w-xl rounded-3xl border-2 border-slate-200 bg-white p-6 sm:p-8 shadow-[0_8px_0_0_#e2e8f0] space-y-6">
           <div className="text-center space-y-2">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 px-3 py-1 text-[11px] font-extrabold text-slate-600">
               <Database className="h-3.5 w-3.5 text-emerald-600" />
               <span>
                 {isSupabaseConfigured
-                  ? "Supabase Auth Connected"
-                  : "Supabase Ready (Add keys in .env.local for Cloud Sync)"}
+                  ? "Supabase Cloud Auth Active"
+                  : "Local Auth Mode"}
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               {mode === "SIGNIN"
-                ? "Sign In to Sync Your Account"
+                ? "Sign In to VidyaLila"
                 : "Create Your Scholar Account"}
-            </h2>
+            </h1>
             <p className="text-xs sm:text-sm font-medium text-slate-500">
               {mode === "SIGNIN"
-                ? "Sign in to save your active quiz pass, unit test scores, and GP (Gyan Points)."
-                : "Join for free to track your chapters, unit tests, and active quiz passes across devices."}
+                ? "Sign in to access chapter practice tests, save your study preferences, and manage quiz passes."
+                : "Create a free account to unlock chapter practice tests and personalize your Class & Study Language."}
             </p>
           </div>
 
@@ -440,25 +697,152 @@ export default function AuthAndSettingsPage() {
             </div>
           )}
 
+          {/* 1-Click Google Sign-In Button at Top */}
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="w-full btn-3d-white py-3.5 text-xs sm:text-sm font-extrabold flex items-center justify-center gap-2.5"
+          >
+            <svg
+              className="h-4 w-4 shrink-0"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill="#4285F4"
+                d="M23.49 12.275c0-.79-.07-1.545-.2-2.275H12v4.51h6.47c-.29 1.48-1.14 2.735-2.405 3.58v2.98h3.88c2.27-2.09 3.545-5.17 3.545-8.795z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 24c3.24 0 5.955-1.08 7.94-2.92l-3.88-2.98c-1.075.72-2.45 1.15-4.06 1.15-3.12 0-5.77-2.11-6.715-4.95H1.275v3.09C3.25 21.305 7.31 24 12 24z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.285 14.3c-.24-.72-.38-1.49-.38-2.3s.14-1.58.38-2.3V6.61H1.275C.465 8.22 0 10.055 0 12s.465 3.78 1.275 5.39l4.01-3.09z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 4.75c1.76 0 3.34.605 4.585 1.795l3.435-3.435C17.95 1.19 15.235 0 12 0 7.31 0 3.25 2.695 1.275 6.61l4.01 3.09C6.23 6.86 8.88 4.75 12 4.75z"
+              />
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          {/* Divider */}
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-slate-200 w-full" />
+            <span className="bg-white px-3 text-[11px] font-bold uppercase text-slate-400">
+              OR USE EMAIL &amp; PASSWORD
+            </span>
+            <div className="border-t border-slate-200 w-full" />
+          </div>
+
           {/* Main Auth Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "SIGNUP" && (
-              <div>
-                <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-                  Full Name *
-                </label>
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                  <input
-                    required
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Enter your full name"
-                    className={inputClass}
-                  />
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
+                      Full Name *
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                      <input
+                        required
+                        type="text"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="Enter your full name"
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
+                      Phone / WhatsApp Number *
+                    </label>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                      <input
+                        required
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="10-digit mobile number"
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+
+                {/* Unique @username Field on Sign Up */}
+                <div className="space-y-1.5">
+                  <label className="flex items-center justify-between text-xs font-extrabold text-slate-700">
+                    <span>Unique Username (@handle for Ranks) *</span>
+                    {checkingSignupHandle && (
+                      <span className="text-[11px] font-bold text-slate-400">
+                        Checking availability...
+                      </span>
+                    )}
+                    {!checkingSignupHandle && signupHandleAvailable === true && (
+                      <span className="text-[11px] font-extrabold text-emerald-600 flex items-center gap-1">
+                        <CheckCircle2 className="h-3.5 w-3.5" /> @
+                        {username.trim().replace(/^@+/, "").toLowerCase()} is available!
+                      </span>
+                    )}
+                  </label>
+                  <div className="relative">
+                    <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <input
+                      required
+                      type="text"
+                      value={username.replace(/^@+/, "")}
+                      onChange={(e) =>
+                        setUsername(
+                          e.target.value.replace(/^@+/, "").toLowerCase()
+                        )
+                      }
+                      placeholder="e.g. aarav_physics, ananya_9th"
+                      className={`w-full rounded-2xl border-2 pl-11 pr-4 py-3 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none transition ${
+                        signupHandleAvailable === false
+                          ? "border-rose-400 bg-rose-50/40 focus:border-rose-500"
+                          : signupHandleAvailable === true
+                          ? "border-emerald-500 bg-emerald-50/20 focus:border-emerald-600"
+                          : "border-slate-200 bg-slate-50 focus:border-emerald-500 focus:bg-white"
+                      }`}
+                    />
+                  </div>
+                  {signupHandleError && (
+                    <div className="rounded-xl bg-rose-50 border border-rose-200 p-2.5 text-xs font-bold text-rose-800 space-y-1">
+                      <p className="flex items-center gap-1.5">
+                        <AlertCircle className="h-3.5 w-3.5 text-rose-600 shrink-0" />
+                        <span>{signupHandleError}</span>
+                      </p>
+                      {signupHandleSuggestions.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                          <span className="text-[11px] text-slate-500">
+                            Try available:
+                          </span>
+                          {signupHandleSuggestions.map((sug) => (
+                            <button
+                              key={sug}
+                              type="button"
+                              onClick={() =>
+                                setUsername(sug.replace(/^@+/, ""))
+                              }
+                              className="rounded-lg bg-white border border-rose-200 px-2 py-0.5 text-[11px] font-extrabold text-emerald-700 hover:bg-emerald-50"
+                            >
+                              {sug}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
             )}
 
             <div>
@@ -511,7 +895,7 @@ export default function AuthAndSettingsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
                     <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-                      Class *
+                      Your Class *
                     </label>
                     <select
                       value={classGrade}
@@ -529,17 +913,17 @@ export default function AuthAndSettingsPage() {
 
                   <div>
                     <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-                      Board *
+                      Preferred Study Language *
                     </label>
                     <select
-                      value={board}
+                      value={preferredLanguage}
                       onChange={(e) =>
-                        setBoard(e.target.value as "CBSE" | "ICSE")
+                        setPreferredLanguage(e.target.value as ContentLanguage)
                       }
                       className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
                     >
-                      <option value="CBSE">CBSE Board</option>
-                      <option value="ICSE">ICSE / ISC Board</option>
+                      <option value="HINGLISH">🇮🇳 Hinglish (Hindi + English)</option>
+                      <option value="ENGLISH">🇬🇧 English (Pure English)</option>
                     </select>
                   </div>
                 </div>
@@ -596,7 +980,7 @@ export default function AuthAndSettingsPage() {
                       Policy
                     </Link>{" "}
                     and understand that VidyaLila is a supplementary self-study
-                    aid alongside official NCERT/Board textbooks.
+                    aid.
                   </span>
                 </label>
               </>
@@ -604,7 +988,11 @@ export default function AuthAndSettingsPage() {
 
             <button
               type="submit"
-              disabled={submitting}
+              disabled={
+                submitting ||
+                (mode === "SIGNUP" &&
+                  (checkingSignupHandle || signupHandleAvailable === false))
+              }
               className="w-full btn-3d-emerald py-3.5 text-sm flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <span>
@@ -617,34 +1005,31 @@ export default function AuthAndSettingsPage() {
               <ArrowRight className="h-4 w-4" />
             </button>
           </form>
-
-          {/* Divider */}
-          <div className="relative flex items-center justify-center">
-            <div className="border-t border-slate-200 w-full" />
-            <span className="bg-white px-3 text-[11px] font-bold uppercase text-slate-400">
-              OR
-            </span>
-            <div className="border-t border-slate-200 w-full" />
-          </div>
-
-          {/* 1-Click Google Sign-In via Supabase OAuth */}
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className="w-full btn-3d-white py-3 text-xs sm:text-sm flex items-center justify-center gap-2.5"
-          >
-            <span>🌐</span>
-            <span>Continue with Google (Supabase OAuth)</span>
-          </button>
         </div>
       )}
 
-      <PaymentModal
-        isOpen={showPassModal}
-        onClose={() => setShowPassModal(false)}
-        defaultPackage={defaultModalPkg}
-        onSuccessPackage={(pkg) => activateProPass(pkg)}
-      />
+      {isAuthenticated && (
+        <PaymentModal
+          isOpen={showPassModal}
+          onClose={() => setShowPassModal(false)}
+          defaultPackage={defaultModalPkg}
+          onSuccessPackage={(pkg) => activateProPass(pkg)}
+        />
+      )}
     </div>
+  );
+}
+
+export default function AuthAndSettingsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-10 text-center text-sm font-bold text-slate-500">
+          Loading Sign In...
+        </div>
+      }
+    >
+      <AuthAndSettingsContent />
+    </Suspense>
   );
 }

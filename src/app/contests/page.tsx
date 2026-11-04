@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useApp } from "@/lib/store";
 import {
@@ -24,6 +25,7 @@ import {
   Radio,
   BookOpen,
   Layers,
+  MessageSquare,
 } from "lucide-react";
 
 function ContestArenaContent() {
@@ -143,7 +145,8 @@ function ContestArenaContent() {
       activeContest.id,
       score,
       activeContest.questions.length,
-      activeContest.xpReward
+      activeContest.xpReward,
+      answers
     );
   };
 
@@ -173,7 +176,7 @@ function ContestArenaContent() {
             </button>
             <div>
               <span className="text-[10px] font-black uppercase tracking-wider text-amber-700">
-                {activeContest.type} RATED EXAM • CLASS{" "}
+                {activeContest.type} RATED QUIZ • CLASS{" "}
                 {activeContest.classGrade} • {activeContest.subject.toUpperCase()}
               </span>
               <h1 className="text-lg sm:text-xl font-black text-slate-900">
@@ -193,7 +196,7 @@ function ContestArenaContent() {
                 onClick={handleFinishQuiz}
                 className="btn-3d-emerald px-5 py-2.5 text-xs"
               >
-                Submit Exam 🚀
+                Submit Quiz 🚀
               </button>
             )}
           </div>
@@ -203,9 +206,13 @@ function ContestArenaContent() {
           <div className="lg:col-span-8 space-y-5">
             {!isSubmitted ? (
               <div className="rounded-3xl border-2 border-slate-200 bg-white p-6 sm:p-8 shadow-[0_8px_0_0_#e2e8f0] space-y-6">
-                <div className="flex items-center justify-between text-xs font-black text-slate-500">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-black text-slate-500">
                   <span>
                     QUESTION {currentQIdx + 1} OF {totalQ}
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-lg bg-amber-50 border border-amber-200 px-2.5 py-1 text-[11px] font-extrabold text-amber-800">
+                    <Lock className="h-3 w-3 text-amber-600" />
+                    <span>Discussion Locked During Live Quiz</span>
                   </span>
                 </div>
 
@@ -271,18 +278,27 @@ function ContestArenaContent() {
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-slate-100 pb-5">
                   <div>
                     <span className="text-xs font-black uppercase text-emerald-600">
-                      Exam Completed!
+                      Quiz Completed!
                     </span>
                     <h2 className="text-2xl font-black text-slate-900">
                       You Scored {correctCount} / {totalQ} 🎯
                     </h2>
                   </div>
-                  <button
-                    onClick={() => setActiveContest(null)}
-                    className="btn-3d-white px-4 py-2 text-xs"
-                  >
-                    Back to Quizzes
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Link
+                      href={`/doubts?class=${activeContest.classGrade}`}
+                      className="btn-3d-indigo px-4 py-2 text-xs inline-flex items-center gap-1.5"
+                    >
+                      <MessageSquare className="h-3.5 w-3.5" />
+                      <span>Discuss Solutions &amp; Ask @VidyaBot</span>
+                    </Link>
+                    <button
+                      onClick={() => setActiveContest(null)}
+                      className="btn-3d-white px-4 py-2 text-xs"
+                    >
+                      Back to Quizzes
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
@@ -612,7 +628,7 @@ function ContestArenaContent() {
               </span>
             </p>
 
-            {/* Class Filter (Allows a Class 10 student to also view & attempt Class 9 Full-Syllabus Quizzes!) */}
+            {/* Class Filter */}
             <div className="flex items-center gap-1.5 text-xs font-bold">
               {([9, 10, 11, 12] as ClassGrade[]).map((grade) => (
                 <button
@@ -696,7 +712,7 @@ function ContestArenaContent() {
 
             <div className="rounded-xl bg-white/90 border border-emerald-200/80 p-3">
               <p className="font-extrabold text-emerald-900">
-                👑 Monthly Exam Winners
+                👑 Monthly Quiz Winners
               </p>
               <p className="text-[11px] font-bold text-slate-600 mt-0.5">
                 <strong>Top 3:</strong> Win Free <strong>👑 Pro Pass</strong> (34 Quizzes • ₹499) • <strong>Top 10:</strong> Win Free 💎 VIP Pass

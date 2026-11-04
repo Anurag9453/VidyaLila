@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Line segment AB of 6 cm</title>
+  <desc>A horizontal line segment AB with A on the left and B on the right, labelled 6 cm.</desc>
+  <!-- Construction Lines and Arcs -->
+  <!-- Given Objects -->
+  <line x1="180.0" y1="200.0" x2="420.0" y2="200.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <!-- Marks -->
+  <!-- Point Dots -->
+  <circle cx="180.0" cy="200.0" r="3" fill="currentColor" />
+  <circle cx="420.0" cy="200.0" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="173.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="427.0" y="212.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="300.0" y="186.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">AB = 6 cm</text>
+</svg>

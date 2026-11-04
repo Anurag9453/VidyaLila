@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Copying a segment: CD = AB = 5 cm</title>
+  <desc>A segment AB of 5 cm above a line l, and on line l a segment CD of the same length found with a compass arc centred at C.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 371.26 302.52 A 200 200 0 0 0 371.26 133.48" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="190.0" y1="98.0" x2="390.0" y2="98.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="150.0" y1="218.0" x2="450.0" y2="218.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="190.0" y1="218.0" x2="390.0" y2="218.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <line x1="290.0" y1="102.0" x2="290.0" y2="94.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="290.0" y1="222.0" x2="290.0" y2="214.0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Point Dots -->
+  <circle cx="190.0" cy="98.0" r="3" fill="currentColor" />
+  <circle cx="390.0" cy="98.0" r="3" fill="currentColor" />
+  <circle cx="190.0" cy="218.0" r="3" fill="currentColor" />
+  <circle cx="390.0" cy="218.0" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="183.0" y="91.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">A</text>
+  <text x="397.0" y="91.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">B</text>
+  <text x="183.0" y="230.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">C</text>
+  <text x="397.0" y="230.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">D</text>
+  <text x="460.0" y="208.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">l</text>
+  <text x="290.0" y="84.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">5 cm</text>
+  <text x="290.0" y="236.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">5 cm</text>
+</svg>

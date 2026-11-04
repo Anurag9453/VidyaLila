@@ -1,5 +1,8 @@
+import { CLASS_9_MATHS_MODULES } from "./class9-maths-data";
+import { CLASS_9_PHYSICS_MODULES } from "./class9-physics-data";
+
 export type BoardType = "CBSE" | "ICSE" | "BOTH";
-export type ClassGrade = 6 | 7 | 8 | 9 | 10 | 11 | 12;
+export type ClassGrade = 9 | 10 | 11 | 12;
 export type CoreSubject = "Physics" | "Chemistry" | "Mathematics";
 export type ContentLanguage = "ENGLISH" | "HINGLISH";
 
@@ -744,83 +747,6 @@ const RAW_INITIAL_MODULES: LearningModule[] = [
   // CLASS 9 - PHYSICS, CHEMISTRY, MATHEMATICS
   // ==========================================================================
   {
-    id: "mod-9-phy-1",
-    slug: "class-9-motion-laws-of-motion",
-    chapterNumber: 1,
-    title: "Motion, Velocity-Time Graphs & Equations",
-    subtitle: "Distance vs Displacement, v-t graph area tricks, and the 3 Equations of Motion!",
-    subtitleHinglish: "Distance aur Displacement ka farak, v-t graphs aur Motion ke 3 Equations ekdum मक्खन ki tarah!",
-    board: "BOTH",
-    classGrade: 9,
-    subject: "Physics",
-    difficulty: "Beginner",
-    badgeName: "Velocity Voyager",
-    badgeEmoji: "🚀",
-    accentColor: "from-sky-500 to-blue-600",
-    totalXp: 400,
-    estimatedMinutes: 35,
-    units: [
-      {
-        id: "u-9phy-1",
-        title: "Distance vs Displacement & Circular Track Trick",
-        durationMinutes: 15,
-        xpReward: 200,
-        summary: "Why is displacement zero after completing 1 full round of a circular stadium?",
-        summaryHinglish: "Agar aap ghar se school gaye aur wapas ghar aa gaye, toh Displacement 0 kyun ho jata hai?",
-        contentSections: [
-          {
-            heading: "Shortest Straight-Line Path 📏",
-            headingHinglish: "Seedha Shortcut Rasta = Displacement 📏",
-            body: "Distance is total path length (scalar, always positive). Displacement is shortest distance from initial to final point (vector).",
-            bodyHinglish: "Distance ka matlab aap kitna chale (kul rasta). Displacement ka matlab starting point se ending point ki seedhi doori! Agar ghum kar wapas wahin aa gaye, toh Displacement = 0!",
-            formulaOrTip: "Half circle of radius R: Distance = πR  |  Displacement = 2R (Diameter)",
-            formulaOrTipHinglish: "Aadha chakkar: Distance = πR, Displacement = 2R | Poora chakkar: Displacement = 0!",
-          },
-        ],
-        checkpointQuestions: [
-          {
-            id: "q-9phy-1",
-            question: "An athlete completes one full round of a circular track of radius R in 40 seconds. What is his displacement at the end of 40 seconds?",
-            questionHinglish: "Ek runner R radius ke gol track ka 1 poora chakkar 40 sec me lagata hai. Uska displacement kitna hoga?",
-            options: ["2πR", "2R", "Zero (0)", "πR"],
-            correctIndex: 2,
-            explanation: "Since the athlete returns to the starting point, initial and final positions are the same, so displacement is 0!",
-            explanationHinglish: "Kyunki wo ghum kar wapas starting point par hi aa gaya, isliye Displacement = 0!",
-          },
-        ],
-      },
-      {
-        id: "u-9phy-2",
-        title: "The 3 Kinematic Equations of Uniform Acceleration",
-        durationMinutes: 20,
-        xpReward: 200,
-        summary: "Master v = u + at, s = ut + ½at², and v² - u² = 2as.",
-        summaryHinglish: "Brake lagne par v = 0 aur rest se chalne par u = 0 rakhne ki trick!",
-        contentSections: [
-          {
-            heading: "Brakes Applied? Set Final Velocity v = 0! 🚗",
-            headingHinglish: "Ruki hui gaadi chale toh u = 0, Brake lage toh v = 0! 🚗",
-            body: "When a car starts from rest, u = 0. When a car stops on applying brakes, v = 0 and acceleration 'a' is negative (retardation).",
-            bodyHinglish: "Physics numericals me aadhe numbers chhupe hote hain shabdon me: 'Starts from rest' padhte hi u = 0 likho, aur 'Comes to stop' padhte hi v = 0 likho!",
-            formulaOrTip: "1) v = u + at   |   2) s = ut + ½at²   |   3) v² - u² = 2as",
-            formulaOrTipHinglish: "Time (t) na diya ho toh teesra formula (v² - u² = 2as) lagao!",
-          },
-        ],
-        checkpointQuestions: [
-          {
-            id: "q-9phy-2",
-            question: "A car starting from rest accelerates uniformly at 2 m/s² for 5 seconds. What is its final velocity?",
-            questionHinglish: "Ek car rest (u=0) se chal kar 2 m/s² ke acceleration se 5 second tak chalti hai. Uski final speed kya hogi?",
-            options: ["5 m/s", "10 m/s", "25 m/s", "2.5 m/s"],
-            correctIndex: 1,
-            explanation: "v = u + at = 0 + (2 × 5) = 10 m/s.",
-            explanationHinglish: "v = u + at = 0 + (2 × 5) = 10 m/s.",
-          },
-        ],
-      },
-    ],
-  },
-  {
     id: "mod-9-chem-1",
     slug: "class-9-mole-concept-atomic-structure",
     chapterNumber: 1,
@@ -897,83 +823,8 @@ const RAW_INITIAL_MODULES: LearningModule[] = [
       },
     ],
   },
-  {
-    id: "mod-9-math-1",
-    slug: "class-9-polynomials-algebraic-identities",
-    chapterNumber: 1,
-    title: "Polynomials, Remainder Theorem & Identities",
-    subtitle: "Factorize cubic polynomials and master a³ + b³ + c³ - 3abc tricks!",
-    subtitleHinglish: "Bina lamba भाग (long division) kiye Remainder nikalna aur a³ + b³ + c³ = 3abc ka जादू!",
-    board: "BOTH",
-    classGrade: 9,
-    subject: "Mathematics",
-    difficulty: "Intermediate",
-    badgeName: "Polynomial Pro",
-    badgeEmoji: "📊",
-    accentColor: "from-amber-500 to-orange-600",
-    totalXp: 400,
-    estimatedMinutes: 35,
-    units: [
-      {
-        id: "u-9math-1",
-        title: "Zeroes of a Polynomial & Remainder Theorem",
-        durationMinutes: 18,
-        xpReward: 200,
-        summary: "Find remainders without long division in 10 seconds!",
-        summaryHinglish: "Long division ko kaho bye-bye! 10 second me Remainder nikalo.",
-        contentSections: [
-          {
-            heading: "Remainder Theorem Shortcut ⚡",
-            headingHinglish: "Jisse Divide Karna Hai Usey 0 Ke Barabar Rakho! ⚡",
-            body: "When P(x) is divided by (x - a), the remainder is simply P(a)!",
-            bodyHinglish: "Agar P(x) ko (x - 2) se divide karna hai, toh x - 2 = 0 se x = 2 nikalo aur seedha P(x) me x ki jagah 2 rakh do!",
-            formulaOrTip: "Divided by (x - 2)? Put x = 2 in P(x) to get the Remainder!",
-            formulaOrTipHinglish: "Agar Remainder 0 aa jaye ➔ Toh wo uska Factor hai (Factor Theorem)!",
-          },
-        ],
-        checkpointQuestions: [
-          {
-            id: "q-9math-1",
-            question: "Find the remainder when P(x) = x³ - 2x² + 4 is divided by (x - 2).",
-            questionHinglish: "Jab P(x) = x³ - 2x² + 4 ko (x - 2) se divide karenge toh Remainder kya aayega?",
-            options: ["0", "4", "8", "-4"],
-            correctIndex: 1,
-            explanation: "P(2) = 2³ - 2(2²) + 4 = 8 - 8 + 4 = 4.",
-            explanationHinglish: "x = 2 rakhne par: 2³ - 2(2²) + 4 = 8 - 8 + 4 = 4.",
-          },
-        ],
-      },
-      {
-        id: "u-9math-2",
-        title: "The Golden Identity (If a + b + c = 0, then a³ + b³ + c³ = 3abc)",
-        durationMinutes: 17,
-        xpReward: 200,
-        summary: "Evaluate (-12)³ + (7)³ + (5)³ without actually cubing!",
-        summaryHinglish: "Bade numbers ka cube mat nikalo—sirf 3abc kar do!",
-        contentSections: [
-          {
-            heading: "Never Cube Big Numbers! 🎯",
-            headingHinglish: "Teen Numbers Jinka Jod 0 Ho Unka Cube = 3abc! 🎯",
-            body: "Whenever you see three numbers whose sum a + b + c = 0, their cubes add up directly to 3abc!",
-            bodyHinglish: "Jab bhi teen numbers a, b, c ka sum 0 ho (jaise -10 + 6 + 4 = 0), toh unke cubes ka sum seedha 3 × a × b × c hota hai!",
-            formulaOrTip: "If a + b + c = 0   ➔   a³ + b³ + c³ = 3abc",
-            formulaOrTipHinglish: "a + b + c = 0 check karo ➔ Phir seedha 3 × a × b × c multiply kar do!",
-          },
-        ],
-        checkpointQuestions: [
-          {
-            id: "q-9math-2",
-            question: "Without calculating cubes, find the value of (-10)³ + (6)³ + (4)³.",
-            questionHinglish: "Bina cube nikale (-10)³ + (6)³ + (4)³ ki value batao:",
-            options: ["-720", "720", "-1000", "0"],
-            correctIndex: 0,
-            explanation: "Since -10 + 6 + 4 = 0, the sum of cubes is 3(-10)(6)(4) = -720!",
-            explanationHinglish: "Kyunki -10 + 6 + 4 = 0 hai, toh answer = 3 × (-10) × 6 × 4 = -720!",
-          },
-        ],
-      },
-    ],
-  },
+  ...CLASS_9_PHYSICS_MODULES,
+  ...CLASS_9_MATHS_MODULES,
 
   // ==========================================================================
   // CLASS 11 - PHYSICS, CHEMISTRY, MATHEMATICS
@@ -1382,7 +1233,7 @@ const RAW_INITIAL_MODULES: LearningModule[] = [
     slug: "calculus-differentiation-integration-trail",
     chapterNumber: 1,
     title: "Calculus – Chain Rule, Maxima & Definite Integrals",
-    subtitle: "CBSE & ISC Class 12 Board + JEE foundation chapter with King's Property shortcuts.",
+    subtitle: "Class 12 definite integrals conceptual mastery chapter with King's Property shortcuts.",
     subtitleHinglish: "Definite Integration ki King's Property se 6-mark ke sawal 4 line me solve karo!",
     board: "BOTH",
     classGrade: 12,
@@ -1646,97 +1497,10 @@ const SUBJECT_QUESTION_BANK: Record<CoreSubject, Omit<CheckpointQuestion, "id">[
 };
 
 export const INITIAL_MODULES: LearningModule[] = RAW_INITIAL_MODULES.map((mod) => {
-  const extraUnits: UnitItem[] = [];
-  if (mod.units.length < 4) {
-    extraUnits.push({
-      id: `${mod.id}-u-extra-1`,
-      title: `High-Yield Board Numericals & Applications (${mod.title})`,
-      durationMinutes: 15,
-      xpReward: 100,
-      summary: `Step-by-step solved numericals and real-world applications from ${mod.title}.`,
-      summaryHinglish: `${mod.title} ke sabse important Board Exam numericals aur real-life applications step-by-step samjho!`,
-      contentSections: [
-        {
-          heading: "Step-by-Step Numerical Solving Strategy",
-          headingHinglish: "Board Exam me Numericals Solve Karne ka 3-Step Formula",
-          body: `Always write Given data with SI units first, state the standard formula clearly (carries 0.5 to 1 mark in CBSE/ICSE step-marking), and substitute values carefully to avoid sign or calculation errors in ${mod.title}.`,
-          bodyHinglish: `Sabse pehle Given values ko SI unit ke sath likho, phir sahi Formula box me likho (CBSE/ICSE me sirf formula likhne ke bhi step-marks milte hain!), aur aakhir me values substitute karke final answer unit ke sath likho.`,
-          formulaOrTip: "💡 Exam Tip: Writing the formula + SI unit in the final answer secures full step-marking!",
-          formulaOrTipHinglish: "💡 Topper Tip: Formula ko box me band karo aur final answer ke aage SI Unit zaroor likho!",
-        },
-      ],
-      checkpointQuestions: [
-        {
-          id: `${mod.id}-q-extra-1`,
-          question: `In Board Exams, what is the first essential step before substituting values into a formula for ${mod.subject}?`,
-          options: [
-            "Convert all given quantities into standard SI units",
-            "Round off all numbers to zero",
-            "Skip writing the formula",
-            "Change the sign of all positive numbers",
-          ],
-          correctIndex: 0,
-          explanation: "Converting all given values into standard SI units prevents 90% of calculation mistakes.",
-        },
-      ],
-    });
-  }
-  if (mod.units.length + extraUnits.length < 5) {
-    extraUnits.push({
-      id: `${mod.id}-u-extra-2`,
-      title: `Assertion-Reason & Case-Study Mastery (${mod.title})`,
-      durationMinutes: 15,
-      xpReward: 100,
-      summary: `Crack tricky Competency-Based, Assertion-Reason, and Case-Study questions from ${mod.title}.`,
-      summaryHinglish: `${mod.title} ke Assertion-Reason aur Case-Study wale tricky sawalon ko 10 second me kaise crack karein!`,
-      contentSections: [
-        {
-          heading: "How to Decode Assertion (A) & Reason (R)",
-          headingHinglish: "Assertion (A) aur Reason (R) ko Sahi Kaise Karein?",
-          body: `First check if Assertion (A) and Reason (R) are individually true statements. If both are true, connect them with the word 'BECAUSE' (Assertion because Reason). If the sentence makes scientific sense, choose Option A; otherwise choose Option B!`,
-          bodyHinglish: `Sabse pehle check karo ki Assertion (A) aur Reason (R) alag-alag sach (True) hain ya nahi. Agar dono True hain, toh dono ke beech me 'KYUNKI (Because)' laga kar padho—agar reason sahi बैठता hai toh Option (A) tick karo, warna Option (B)!`,
-          formulaOrTip: "💡 'Because' Test: Read [Assertion] BECAUSE [Reason] to distinguish Option A from Option B!",
-          formulaOrTipHinglish: "💡 'Kyunki' Trick: [Assertion] KYUNKI [Reason] padhne se Option A aur B ka confusion turant khatam ho jata hai!",
-        },
-      ],
-      checkpointQuestions: [
-        {
-          id: `${mod.id}-q-extra-2`,
-          question: "When both Assertion (A) and Reason (R) are true, how do you verify if R is the correct explanation of A?",
-          options: [
-            "Connect A and R with 'BECAUSE' and check if the cause-effect relationship holds",
-            "Always pick Option B",
-            "Count the number of words in A and R",
-            "Check if A and R have the same first letter",
-          ],
-          correctIndex: 0,
-          explanation: "Linking Assertion (A) and Reason (R) with 'because' tests whether R directly explains the cause of A.",
-        },
-      ],
-    });
-  }
-
-  const bank = SUBJECT_QUESTION_BANK[mod.subject] || SUBJECT_QUESTION_BANK.Physics;
-  const allUnits = [...mod.units, ...extraUnits].map((u) => {
-    const questions = [...u.checkpointQuestions];
-    let bIdx = 0;
-    while (questions.length < 10) {
-      const template = bank[bIdx % bank.length];
-      if (!questions.some((existing) => existing.question === template.question)) {
-        questions.push({
-          ...template,
-          id: `${u.id}-q-bank-${questions.length + 1}`,
-        });
-      }
-      bIdx++;
-      if (bIdx > 30) break;
-    }
-    return {
-      ...u,
-      xpReward: questions.length * 10, // 10 Questions = 100 Marks
-      checkpointQuestions: questions,
-    };
-  });
+  const allUnits = mod.units.map((u) => ({
+    ...u,
+    xpReward: u.checkpointQuestions.length * 10,
+  }));
 
   const totalXp = allUnits.reduce((sum, u) => sum + u.xpReward, 0);
   return {

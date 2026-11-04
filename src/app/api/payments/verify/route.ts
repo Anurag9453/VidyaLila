@@ -25,26 +25,100 @@ export async function POST(req: Request) {
       razorpaySignature?: string;
     };
 
-    const credits = PLAN_CREDITS[packagePlan] || PLAN_CREDITS.WEEKLY;
+    if (!packagePlan || !PLAN_CREDITS[packagePlan]) {
+      return NextResponse.json(
+        { ok: false, error: "Invalid or missing package plan" },
+        { status: 400 }
+      );
+    }
 
-    // If live Razorpay secret is configured, verify HMAC SHA256 signature
+    if (!razorpayOrderId) {
+      return NextResponse.json(
+        { ok: false, error: "Missing order ID" },
+        { status: 400 }
+      );
+    }
+
+    const credits = PLAN_CREDITS[packagePlan];
     const rzpSecret = process.env.RAZORPAY_KEY_SECRET;
-    if (rzpSecret && razorpayPaymentId && razorpaySignature) {
+
+    // 1. Signature Verification:
+    // When live Razorpay secret is present or running in production, real gateway signature is mandatory.
+    if (rzpSecret) {
+      if (!razorpayPaymentId || !razorpaySignature) {
+        return NextResponse.json(
+          { ok: false, error: "Missing payment ID or signature for live verification" },
+          { status: 400 }
+        );
+      }
+
       const expectedSig = crypto
         .createHmac("sha256", rzpSecret)
         .update(`${razorpayOrderId}|${razorpayPaymentId}`)
         .digest("hex");
 
-      if (expectedSig !== razorpaySignature) {
+      const expectedBuffer = Buffer.from(expectedSig);
+      const actualBuffer = Buffer.from(razorpaySignature);
+
+      if (
+        expectedBuffer.length !== actualBuffer.length ||
+        !crypto.timingSafeEqual(expectedBuffer, actualBuffer)
+      ) {
         return NextResponse.json(
           { ok: false, error: "Invalid Razorpay payment signature" },
           { status: 400 }
         );
       }
+    } else if (process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { ok: false, error: "Payment gateway is not configured on server" },
+        { status: 500 }
+      );
     }
 
-    // Update Supabase payment_orders and student profile wallet if userId is a real UUID
+    // 2. Server-side Order and Amount Verification in Supabase:
     if (userId && !userId.startsWith("local-")) {
+      const { data: order, error: orderErr } = await supabaseAdmin
+        .from("payment_orders")
+        .select("*")
+        .eq("razorpay_order_id", razorpayOrderId)
+        .single();
+
+      if (orderErr || !order) {
+        return NextResponse.json(
+          { ok: false, error: "Payment order does not exist in records" },
+          { status: 404 }
+        );
+      }
+
+      // Prevent replay attack (granting passes twice for same payment)
+      if (order.status === "paid") {
+        return NextResponse.json(
+          { ok: false, error: "Payment order has already been verified and processed" },
+          { status: 400 }
+        );
+      }
+
+      // Verify the order user matches
+      if (order.user_id !== userId) {
+        return NextResponse.json(
+          { ok: false, error: "User ID does not match order owner" },
+          { status: 403 }
+        );
+      }
+
+      // Strict amount check: ensure the order record matches the requested plan's expected amount
+      if (order.amount_inr !== credits.amountInr) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error: `Payment amount mismatch: expected ₹${credits.amountInr}, recorded ₹${order.amount_inr}`,
+          },
+          { status: 400 }
+        );
+      }
+
+      // Mark order as paid
       await supabaseAdmin
         .from("payment_orders")
         .update({
@@ -54,6 +128,7 @@ export async function POST(req: Request) {
         })
         .eq("razorpay_order_id", razorpayOrderId);
 
+      // Fetch current profile and update wallet on server
       const { data: currentProfile } = await supabaseAdmin
         .from("profiles")
         .select("daily_passes_remaining, competition_passes_remaining")

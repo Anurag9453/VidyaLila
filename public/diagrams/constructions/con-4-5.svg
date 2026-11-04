@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>AAS made into ASA: BC = 6 cm, B = 50 deg, C = 70 deg</title>
+  <desc>Triangle ABC with a horizontal base BC of 6 cm, a 50 degree angle at B and a 70 degree angle at C drawn with a protractor, and the two rays meeting at A where the angle is 60 degrees.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="347.39" y1="97.03" x2="365.12" y2="75.9" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <line x1="347.39" y1="97.03" x2="335.18" y2="63.48" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <!-- Given Objects -->
+  <line x1="180.0" y1="296.52" x2="420.0" y2="296.52" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="180.0" y1="296.52" x2="347.39" y2="97.03" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="420.0" y1="296.52" x2="347.39" y2="97.03" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <path d="M 220.0 296.52 A 40.0 40.0 0 0 0 205.71 265.88" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="228.94" y="277.7" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">50°</text>
+  <path d="M 380.0 296.52 A 40.0 40.0 0 1 0 406.32 258.93" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="464.23" y="331.49" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">70°</text>
+  <path d="M 326.82 121.54 A 32.0 32.0 0 0 0 358.34 127.1" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="339.4" y="146.33" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">60°</text>
+  <!-- Point Dots -->
+  <circle cx="180.0" cy="296.52" r="3" fill="currentColor" />
+  <circle cx="420.0" cy="296.52" r="3" fill="currentColor" />
+  <circle cx="347.39" cy="97.03" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="347.39" y="87.03" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">A</text>
+  <text x="173.0" y="308.52" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">B</text>
+  <text x="427.0" y="308.52" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">C</text>
+  <text x="300.0" y="314.52" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">BC = 6 cm</text>
+</svg>

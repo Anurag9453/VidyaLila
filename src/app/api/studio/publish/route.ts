@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase-admin";
+import { supabaseAdmin, verifyAdminRequest } from "@/lib/supabase-admin";
 import { LearningModule, QuizContest } from "@/lib/mock-data";
 
 export async function POST(req: Request) {
   try {
-    const adminKey = req.headers.get("x-admin-key");
-    const expectedKey = process.env.ADMIN_STUDIO_PASSCODE || "VIDYALILA2026";
-
-    if (adminKey !== expectedKey) {
+    const isAuthorized = await verifyAdminRequest(req);
+    if (!isAuthorized) {
       return NextResponse.json(
-        { ok: false, error: "Unauthorized: Invalid Admin Studio Passcode" },
+        { ok: false, error: "Unauthorized: Admin privileges required" },
         { status: 401 }
       );
     }

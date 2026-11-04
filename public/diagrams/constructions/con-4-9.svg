@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>SSA: two possible triangles</title>
+  <desc>A base AB of 5 cm with a ray BX at 40 degrees from B, and a 4 cm arc centred at A cutting the ray at two points C1 and C2, giving two different triangles ABC1 and ABC2 with the same AB, angle B and AC.</desc>
+  <!-- Construction Lines and Arcs -->
+  <path d="M 425.4 110.49 A 160.0 160.0 0 0 0 253.48 254.75" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="212.75" y1="269.99" x2="412.75" y2="269.99" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="212.75" y1="269.99" x2="427.24" y2="90.01" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="412.75" y1="269.99" x2="257.15" y2="232.74" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <line x1="412.75" y1="269.99" x2="403.08" y2="110.28" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <line x1="337.83" y1="247.94" x2="335.96" y2="255.72" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="333.94" y1="247.0" x2="332.07" y2="254.78" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+  <path d="M 252.75 269.99 A 40.0 40.0 0 0 0 243.39 244.28" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="263.49" y="255.52" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">40°</text>
+  <!-- Point Dots -->
+  <circle cx="212.75" cy="269.99" r="3" fill="currentColor" />
+  <circle cx="412.75" cy="269.99" r="3" fill="currentColor" />
+  <circle cx="257.15" cy="232.74" r="3" fill="currentColor" />
+  <circle cx="403.08" cy="110.28" r="3" fill="currentColor" />
+  <circle cx="427.24" cy="90.01" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="419.75" y="281.99" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">A</text>
+  <text x="205.75" y="281.99" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">B</text>
+  <text x="250.15" y="225.74" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">C₁</text>
+  <text x="396.08" y="103.28" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">C₂</text>
+  <text x="434.24" y="83.01" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">X</text>
+  <text x="312.75" y="287.99" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">AB = 5 cm</text>
+  <text x="334.95" y="269.36" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="middle">4 cm</text>
+  <text x="421.92" y="194.14" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">4 cm</text>
+</svg>

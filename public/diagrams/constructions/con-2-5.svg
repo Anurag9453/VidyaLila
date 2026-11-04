@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="auto" role="img" style="color: #0f172a; max-width: 100%; display: block;">
+  <title>Constructing 120 degrees</title>
+  <desc>A 4 cm arc from B with points P, Q and R marked 4 cm apart along it at 0, 60 and 120 degrees, and ray BR making a 120 degree angle with ray BC.</desc>
+  <!-- Construction Lines and Arcs -->
+  <line x1="240.0" y1="293.0" x2="340.0" y2="119.8" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" />
+  <path d="M 398.44 315.27 A 160 160 0 0 0 141.49 166.92" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 372.22 135.43 A 160 160 0 0 0 277.43 190.15" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <path d="M 169.65 99.71 A 160 160 0 0 0 169.65 209.16" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3" stroke-linecap="round" fill="none" />
+  <!-- Given Objects -->
+  <line x1="240.0" y1="293.0" x2="480.0" y2="293.0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Result Objects -->
+  <line x1="240.0" y1="293.0" x2="120.0" y2="85.0" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Marks -->
+  <path d="M 280.0 293.0 A 40.0 40.0 0 0 0 220.0 258.36" stroke="#2563eb" stroke-width="1.5" fill="none" />
+  <text x="230.0" y="239.8" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#2563eb" font-weight="600" text-anchor="middle">120°</text>
+  <!-- Point Dots -->
+  <circle cx="240.0" cy="293.0" r="3" fill="currentColor" />
+  <circle cx="480.0" cy="293.0" r="3" fill="currentColor" />
+  <circle cx="400.0" cy="293.0" r="3" fill="currentColor" />
+  <circle cx="320.0" cy="154.44" r="3" fill="currentColor" />
+  <circle cx="160.0" cy="154.44" r="3" fill="currentColor" />
+  <!-- Labels -->
+  <text x="233.0" y="305.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">B</text>
+  <text x="487.0" y="305.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">C</text>
+  <text x="400.0" y="307.0" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">P</text>
+  <text x="327.0" y="147.44" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="start">Q</text>
+  <text x="153.0" y="147.44" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="currentColor" text-anchor="end">R</text>
+  <text x="294.0" y="261.0" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="normal" fill="currentColor" text-anchor="start">60° + 60°</text>
+</svg>

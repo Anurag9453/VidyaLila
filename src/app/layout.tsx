@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
@@ -27,9 +28,9 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "VidyaLila | CBSE & ICSE Free Study Units & Live Quiz Arena",
+  title: "VidyaLila | Interactive Story-Driven Study Units & Live Quiz Arena",
   description:
-    "India's interactive school learning platform offering free chapter-wise study units, GP (Gyan Points) rewards, scholar ranks, and live daily & monthly board quizzes for Class 9-12.",
+    "India's interactive school learning platform offering free chapter-wise study units, GP (Gyan Points) rewards, scholar ranks, and live daily & monthly quizzes for Class 9-12.",
 };
 
 export default function RootLayout({
@@ -41,6 +42,7 @@ export default function RootLayout({
     <html lang="en" className={`${jakarta.variable} ${outfit.variable}`}>
       <body className="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-amber-200 selection:text-slate-900">
         <AppProvider>
+          <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
           <BrandLoader />
           <Navbar />
           <CelebrationModal />
@@ -71,7 +73,7 @@ export default function RootLayout({
               </div>
 
               <p className="text-[11px] leading-relaxed text-slate-400">
-                <strong>Educational &amp; Non-Affiliation Disclaimer:</strong> VidyaLila is an independent supplementary self-study aid and is not affiliated with, endorsed by, or connected to CBSE, CISCE (ICSE/ISC), or NCERT. While all lessons and quiz questions are cross-checked against standard textbooks, content is provided on an &ldquo;as-is&rdquo; basis. Students should always refer to their official NCERT / Board prescribed textbooks as the primary authoritative source for school and board examinations.
+                <strong>Educational Disclaimer:</strong> VidyaLila is an independent supplementary self-study platform offering story-driven Hinglish conceptual lessons and quizzes. All lessons are provided for conceptual clarity on an &ldquo;as-is&rdquo; basis.
               </p>
             </div>
           </footer>

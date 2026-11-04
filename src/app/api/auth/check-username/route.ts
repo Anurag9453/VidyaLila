@@ -12,7 +12,7 @@ const RESERVED_HANDLES = new Set<string>([
   ...LEADERBOARD_DATA.map((entry) => entry.username.toLowerCase()),
 ]);
 
-export function normalizeUsername(raw: string): {
+function normalizeUsername(raw: string): {
   valid: boolean;
   normalized: string;
   handleOnly: string;

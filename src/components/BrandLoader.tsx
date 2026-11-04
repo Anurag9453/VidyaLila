@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { BrandCrestIcon } from "./BrandLogo";
 import { Sparkles, BookOpen, ShieldCheck } from "lucide-react";
@@ -89,17 +89,23 @@ export function BrandLoaderUI({
 
 export function BrandLoader() {
   const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(25);
+  const isFirstMount = useRef(true);
 
-  // Trigger brief branded loader on initial mount and route transitions
+  // Trigger brief branded loader ONLY on subsequent route transitions, NEVER blocking initial mount
   useEffect(() => {
-    setIsVisible(true);
-    setProgress(35);
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
 
-    const t1 = setTimeout(() => setProgress(75), 140);
-    const t2 = setTimeout(() => setProgress(100), 320);
-    const t3 = setTimeout(() => setIsVisible(false), 480);
+    setIsVisible(true);
+    setProgress(45);
+
+    const t1 = setTimeout(() => setProgress(85), 100);
+    const t2 = setTimeout(() => setProgress(100), 220);
+    const t3 = setTimeout(() => setIsVisible(false), 320);
 
     return () => {
       clearTimeout(t1);

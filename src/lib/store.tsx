@@ -561,19 +561,29 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
 
     if (isSupabaseConfigured) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session?.user) {
-          setIsAuthenticated(true);
-          localStorage.setItem("vidyalila_is_auth_v4", "true");
-          fetchSupabaseProfile(
-            session.user.id,
-            session.user.email,
-            session.user.user_metadata,
-            session.access_token
-          );
-        }
+      const fallbackTimer = setTimeout(() => {
         setAuthLoading(false);
-      });
+      }, 600);
+
+      supabase.auth
+        .getSession()
+        .then(({ data: { session } }) => {
+          if (session?.user) {
+            setIsAuthenticated(true);
+            localStorage.setItem("vidyalila_is_auth_v4", "true");
+            fetchSupabaseProfile(
+              session.user.id,
+              session.user.email,
+              session.user.user_metadata,
+              session.access_token
+            );
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          clearTimeout(fallbackTimer);
+          setAuthLoading(false);
+        });
 
       const { data: authListener } = supabase.auth.onAuthStateChange(
         (event, session) => {

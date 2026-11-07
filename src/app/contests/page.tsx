@@ -287,6 +287,13 @@ function ContestArenaContent() {
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <Link
+                      href={`/leaderboard?contestId=${activeContest.id}`}
+                      className="btn-3d-amber px-4 py-2 text-xs inline-flex items-center gap-1.5"
+                    >
+                      <Trophy className="h-3.5 w-3.5" />
+                      <span>View Test Rank List</span>
+                    </Link>
+                    <Link
                       href={`/doubts?class=${activeContest.classGrade}`}
                       className="btn-3d-indigo px-4 py-2 text-xs inline-flex items-center gap-1.5"
                     >
@@ -503,37 +510,47 @@ function ContestArenaContent() {
             )}
           </div>
 
-          <button
-            onClick={() => handleEnterContest(contest)}
-            className={`w-full py-3.5 text-xs flex items-center justify-center gap-2 ${
-              isUnlocked || canUseWalletPass
-                ? "btn-3d-emerald"
-                : "btn-3d-indigo"
-            }`}
-          >
-            {isUnlocked ? (
-              <>
-                <Sparkles className="h-4 w-4" />
-                {contest.isLive
-                  ? "Start Quiz Now"
-                  : `Registered • Opens at ${contest.scheduledTimeSlot}`}
-              </>
-            ) : canUseWalletPass ? (
-              <>
-                <Sparkles className="h-4 w-4" />
-                {contest.isLive
-                  ? "Use 1 Pass & Start Quiz"
-                  : "Use 1 Pass & Pre-Register"}
-              </>
-            ) : (
-              <>
-                <Lock className="h-4 w-4" />
-                {contest.isLive
-                  ? "Add Pass to Start Quiz"
-                  : "Add Pass to Register"}
-              </>
-            )}
-          </button>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button
+              onClick={() => handleEnterContest(contest)}
+              className={`sm:col-span-2 py-3.5 text-xs flex items-center justify-center gap-2 ${
+                isUnlocked || canUseWalletPass
+                  ? "btn-3d-emerald"
+                  : "btn-3d-indigo"
+              }`}
+            >
+              {isUnlocked ? (
+                <>
+                  <Sparkles className="h-4 w-4" />
+                  {contest.isLive
+                    ? "Start Quiz Now"
+                    : `Registered • Opens at ${contest.scheduledTimeSlot}`}
+                </>
+              ) : canUseWalletPass ? (
+                <>
+                  <Sparkles className="h-4 w-4" />
+                  {contest.isLive
+                    ? "Use 1 Pass & Start Quiz"
+                    : "Use 1 Pass & Pre-Register"}
+                </>
+              ) : (
+                <>
+                  <Lock className="h-4 w-4" />
+                  {contest.isLive
+                    ? "Add Pass to Start Quiz"
+                    : "Add Pass to Register"}
+                </>
+              )}
+            </button>
+
+            <Link
+              href={`/leaderboard?contestId=${contest.id}`}
+              className="btn-3d-white py-3.5 px-3 text-xs flex items-center justify-center gap-1.5 font-black text-slate-800"
+            >
+              <Trophy className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+              <span>Rank List</span>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -872,11 +889,18 @@ function ContestArenaContent() {
               key={i}
               className="flex items-center justify-between rounded-2xl border-2 border-slate-200 bg-slate-50 p-4"
             >
-              <div>
+              <div className="space-y-1">
                 <p className="text-sm font-black text-slate-900">{item.title}</p>
                 <p className="text-xs font-bold text-slate-500">
                   Score: {item.score}/{item.total} • {item.date}
                 </p>
+                <Link
+                  href={`/leaderboard?contestId=${item.contestId}`}
+                  className="inline-flex items-center gap-1 text-[11px] font-black text-indigo-600 hover:text-indigo-800 underline"
+                >
+                  <Trophy className="h-3 w-3 text-amber-500" />
+                  <span>View Test Rank List →</span>
+                </Link>
               </div>
               <div className="text-right">
                 <p

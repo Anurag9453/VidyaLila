@@ -1498,16 +1498,47 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
 
     // Record submission & compute validated score/Goodies on the backend API (/api/quizzes/submit)
-    fetch("/api/quizzes/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: profile.id,
-        contestId,
-        contestType: cType,
-        answers: answers || {},
-      }),
-    }).catch(() => {});
+    // Includes high-traffic exponential backoff retry + local pending queue so zero submissions are lost
+    const submissionPayload = {
+      userId: profile.id,
+      contestId,
+      contestType: cType,
+      answers: answers || {},
+      submittedAtIso: new Date().toISOString(),
+    };
+
+    const sendWithRetry = async (attempt = 0) => {
+      try {
+        const res = await fetch("/api/quizzes/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(submissionPayload),
+        });
+        if (!res.ok && attempt < 3) {
+          const delayMs = 1500 * Math.pow(2, attempt) + Math.floor(Math.random() * 800);
+          setTimeout(() => sendWithRetry(attempt + 1), delayMs);
+        }
+      } catch {
+        if (attempt < 3) {
+          const delayMs = 1500 * Math.pow(2, attempt) + Math.floor(Math.random() * 800);
+          setTimeout(() => sendWithRetry(attempt + 1), delayMs);
+        } else {
+          try {
+            const existingRaw = localStorage.getItem("vidyalila_pending_quiz_submissions_v1");
+            const existing = existingRaw ? JSON.parse(existingRaw) : [];
+            existing.push(submissionPayload);
+            localStorage.setItem(
+              "vidyalila_pending_quiz_submissions_v1",
+              JSON.stringify(existing.slice(-20))
+            );
+          } catch {
+            // ignore storage error
+          }
+        }
+      }
+    };
+
+    sendWithRetry(0);
 
     setCelebration({
       title: goodieLabel

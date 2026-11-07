@@ -29,6 +29,93 @@ interface PaymentModalProps {
   onSuccessPackage: (pkg: PassPackageType) => void;
 }
 
+interface RazorpaySuccessResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+}
+
+interface RazorpayFailureResponse {
+  error?: {
+    code?: string;
+    description?: string;
+    source?: string;
+    step?: string;
+    reason?: string;
+    metadata?: {
+      order_id?: string;
+      payment_id?: string;
+    };
+  };
+}
+
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  prefill: {
+    name: string;
+    email?: string;
+    contact: string;
+  };
+  notes?: Record<string, string>;
+  theme?: {
+    color: string;
+  };
+  retry?: {
+    enabled: boolean;
+    max_count: number;
+  };
+  handler: (response: RazorpaySuccessResponse) => Promise<void>;
+  modal: {
+    ondismiss: () => void;
+    confirm_close?: boolean;
+  };
+}
+
+interface RazorpayInstance {
+  open: () => void;
+  on: (
+    event: "payment.failed",
+    handler: (response: RazorpayFailureResponse) => void
+  ) => void;
+}
+
+function ensureRazorpayCheckoutScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") {
+      resolve(false);
+      return;
+    }
+    if ((window as unknown as { Razorpay?: unknown }).Razorpay) {
+      resolve(true);
+      return;
+    }
+    const existingScript = document.querySelector(
+      'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
+    );
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(true));
+      existingScript.addEventListener("error", () => resolve(false));
+      setTimeout(() => {
+        resolve(
+          Boolean((window as unknown as { Razorpay?: unknown }).Razorpay)
+        );
+      }, 1500);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
 export const PASS_PACKAGES: {
   id: PassPackageType;
   symbol: string;
@@ -96,7 +183,8 @@ export const PASS_PACKAGES: {
     durationLabel: "/ 34 quizzes",
     dailyCount: 30,
     competitionCount: 4,
-    summary: "30 Daily Quizzes + 4 Weekly Quizzes (34 Total Credits • Save 40%)",
+    summary:
+      "30 Daily Quizzes + 4 Weekly Quizzes (34 Total Credits • Save 40%)",
     perks: [
       "30 Daily Quiz Credits (1 deducted per Daily Quiz)",
       "4 Weekly / Monthly Quiz Credits",
@@ -117,8 +205,10 @@ export function PaymentModal({
   contestTitle,
   onSuccessPackage,
 }: PaymentModalProps) {
-  const { isAuthenticated, signInWithGoogle, profile, updateProfilePhone } = useApp();
-  const [selectedPkg, setSelectedPkg] = useState<PassPackageType>(defaultPackage);
+  const { isAuthenticated, signInWithGoogle, profile, updateProfilePhone } =
+    useApp();
+  const [selectedPkg, setSelectedPkg] =
+    useState<PassPackageType>(defaultPackage);
   const [phone, setPhone] = useState(profile.phone || "");
   const [phoneError, setPhoneError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -129,10 +219,20 @@ export function PaymentModal({
   } | null>(null);
 
   useEffect(() => {
+    setSelectedPkg(defaultPackage);
+  }, [defaultPackage]);
+
+  useEffect(() => {
     if (profile.phone && !phone) {
       setPhone(profile.phone);
     }
   }, [profile.phone, phone]);
+
+  useEffect(() => {
+    if (isOpen) {
+      ensureRazorpayCheckoutScript();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -193,7 +293,6 @@ export function PaymentModal({
     setPhoneError("");
 
     const cleanPhone = phone.replace(/[^0-9]/g, "");
-    // Save phone to profile state & Supabase
     updateProfilePhone(cleanPhone);
 
     setIsProcessing(true);
@@ -202,6 +301,7 @@ export function PaymentModal({
     let createdOrderId = "";
 
     try {
+      // 1. Create order on backend (creates real Razorpay order_id via https://api.razorpay.com/v1/orders when keys are set)
       const orderRes = await fetch("/api/payments/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -210,100 +310,140 @@ export function PaymentModal({
           packagePlan: selectedPkg,
           phone: cleanPhone,
           userName: profile.name,
+          userUsername: profile.username,
           userEmail: profile.email,
+          contestTitle: contestTitle || "",
         }),
       });
+
       const orderData = await orderRes.json();
-      createdOrderId = orderData.orderId || `order_vl_${Date.now()}`;
 
-      // Check if live Razorpay key is present and script loaded
-      const rzpKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-      const isLiveRazorpay =
-        typeof window !== "undefined" &&
-        (window as unknown as { Razorpay?: unknown }).Razorpay &&
-        rzpKey &&
-        !rzpKey.includes("your_key");
+      if (!orderRes.ok || !orderData.ok) {
+        setIsProcessing(false);
+        await logFailureToBackend(
+          orderData.error ||
+            "Could not initialize Razorpay order. Please check your API keys.",
+          orderData.code || "ORDER_CREATION_ERROR"
+        );
+        return;
+      }
 
-      if (isLiveRazorpay) {
-        type RazorpayOptions = {
-          key: string;
-          amount: number;
-          currency: string;
-          name: string;
-          description: string;
-          order_id?: string;
-          prefill: {
-            name: string;
-            email?: string;
-            contact: string;
-          };
-          handler: (response: {
-            razorpay_payment_id: string;
-            razorpay_order_id: string;
-            razorpay_signature: string;
-          }) => Promise<void>;
-          modal: {
-            ondismiss: () => void;
-          };
-        };
+      createdOrderId = orderData.orderId;
+      const activeRzpKey: string | null =
+        orderData.razorpayKeyId ||
+        process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
+        null;
 
-        const RazorpayClass = (window as unknown as { Razorpay: new (opts: RazorpayOptions) => { open: () => void; on: (event: string, handler: (errData: { error?: { description?: string; reason?: string; code?: string } }) => void) => void } }).Razorpay;
+      // 2. If backend confirmed RAZORPAY mode (real rzp_test_... or rzp_live_... key configured)
+      if (orderData.mode === "RAZORPAY" && activeRzpKey) {
+        const scriptReady = await ensureRazorpayCheckoutScript();
+        const RazorpayConstructor = (
+          window as unknown as {
+            Razorpay?: new (opts: RazorpayOptions) => RazorpayInstance;
+          }
+        ).Razorpay;
 
-        const rzp = new RazorpayClass({
-          key: rzpKey,
-          amount: activePkg.priceInr * 100,
-          currency: "INR",
-          name: "VidyaLila Passes",
+        if (!scriptReady || !RazorpayConstructor) {
+          setIsProcessing(false);
+          await logFailureToBackend(
+            "Razorpay Checkout SDK could not be loaded. Please check your internet connection or ad-blocker.",
+            "SDK_LOAD_ERROR",
+            createdOrderId
+          );
+          return;
+        }
+
+        let failureAlreadyLogged = false;
+
+        const rzp = new RazorpayConstructor({
+          key: activeRzpKey,
+          amount: orderData.amountPaise || activePkg.priceInr * 100,
+          currency: orderData.currency || "INR",
+          name: "VidyaLila",
           description: `${activePkg.name} • ${activePkg.summary}`,
           order_id: createdOrderId,
           prefill: {
             name: profile.name,
-            email: profile.email,
-            contact: cleanPhone,
+            email: profile.email || undefined,
+            contact: `+91${cleanPhone}`,
           },
-          handler: async (response) => {
-            const verifyRes = await fetch("/api/payments/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                userId: profile.id,
-                packagePlan: selectedPkg,
-                razorpayOrderId: response.razorpay_order_id,
-                razorpayPaymentId: response.razorpay_payment_id,
-                razorpaySignature: response.razorpay_signature,
-              }),
-            });
-            if (verifyRes.ok) {
+          notes: {
+            userId: profile.id || "",
+            packagePlan: selectedPkg,
+            phone: cleanPhone,
+            userName: profile.name || "",
+          },
+          theme: {
+            color: "#4f46e5",
+          },
+          retry: {
+            enabled: true,
+            max_count: 3,
+          },
+          handler: async (response: RazorpaySuccessResponse) => {
+            try {
+              const verifyRes = await fetch("/api/payments/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  userId: profile.id,
+                  packagePlan: selectedPkg,
+                  razorpayOrderId:
+                    response.razorpay_order_id || createdOrderId,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature,
+                  phone: cleanPhone,
+                  userName: profile.name,
+                  userEmail: profile.email,
+                }),
+              });
+
+              const verifyData = await verifyRes.json();
+
+              if (verifyRes.ok && verifyData.ok) {
+                setIsProcessing(false);
+                onSuccessPackage(selectedPkg);
+                onClose();
+              } else {
+                setIsProcessing(false);
+                await logFailureToBackend(
+                  verifyData.error ||
+                    "Payment signature verification failed on server.",
+                  "SIGNATURE_VERIFICATION_FAILED",
+                  createdOrderId
+                );
+              }
+            } catch {
               setIsProcessing(false);
-              onSuccessPackage(selectedPkg);
-              onClose();
-            } else {
-              setIsProcessing(false);
-              logFailureToBackend(
-                "Payment verification signature failed on server.",
-                "VERIFICATION_FAILED",
+              await logFailureToBackend(
+                "Network error while verifying payment receipt.",
+                "VERIFY_NETWORK_ERROR",
                 createdOrderId
               );
             }
           },
           modal: {
+            confirm_close: true,
             ondismiss: () => {
               setIsProcessing(false);
-              logFailureToBackend(
-                "User closed payment popup before completing payment.",
-                "PAYMENT_CANCELLED_BY_USER",
-                createdOrderId
-              );
+              if (!failureAlreadyLogged) {
+                logFailureToBackend(
+                  "Student closed the Razorpay checkout popup before completing payment.",
+                  "CHECKOUT_DISMISSED",
+                  createdOrderId
+                );
+              }
             },
           },
         });
 
-        rzp.on("payment.failed", (resp) => {
+        rzp.on("payment.failed", (resp: RazorpayFailureResponse) => {
+          failureAlreadyLogged = true;
           setIsProcessing(false);
           const desc =
             resp.error?.description ||
             resp.error?.reason ||
-            "Bank transaction failed or card declined.";
+            "Bank or UPI transaction declined.";
           const code = resp.error?.code || "PAYMENT_FAILED";
           logFailureToBackend(desc, code, createdOrderId);
         });
@@ -312,7 +452,7 @@ export function PaymentModal({
         return;
       }
 
-      // Demo simulation mode when Razorpay credentials are not yet added
+      // 3. Fallback Demo Mode ONLY when Razorpay keys are still placeholder values
       await fetch("/api/payments/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -321,6 +461,9 @@ export function PaymentModal({
           packagePlan: selectedPkg,
           razorpayOrderId: createdOrderId,
           razorpayPaymentId: `pay_vl_sim_${Date.now()}`,
+          phone: cleanPhone,
+          userName: profile.name,
+          userEmail: profile.email,
         }),
       });
 
@@ -361,17 +504,17 @@ export function PaymentModal({
           >
             <X className="h-5 w-5" />
           </button>
-          <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-300">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-300">
             <ShieldCheck className="h-4 w-4" />
-            VidyaLila Quiz &amp; Competition Passes
+            <span>VidyaLila Official Examination Passes • Razorpay Checkout</span>
           </div>
           <h3 className="mt-1 text-xl sm:text-2xl font-extrabold pr-6">
-            Choose Your Quiz Package ⚡
+            Choose Your Test Pass Package ⚡
           </h3>
           <p className="mt-1 text-xs font-medium text-indigo-100">
             {contestTitle
               ? `Unlocking "${contestTitle}" — Pick Basic Pass (Daily), VIP Pass (Weekly), or Pro Pass (Monthly).`
-              : "Pick Basic Pass (Daily), VIP Pass (Weekly), or Pro Pass (Monthly) to unlock live subject quizzes."}
+              : "Supports UPI (GPay, PhonePe, Paytm), Debit/Credit Cards & Netbanking via Razorpay."}
           </p>
         </div>
 
@@ -399,7 +542,10 @@ export function PaymentModal({
               </div>
 
               <div className="rounded-xl bg-white/80 border border-rose-200 p-3 text-[11px] font-medium text-slate-700 leading-relaxed">
-                🛡️ <strong>Your money is completely safe:</strong> If any amount was deducted by your bank or UPI app, it is securely reversed and credited back to your account within 2–3 business days.
+                🛡️ <strong>Your money is completely safe:</strong> If any amount
+                was deducted by your bank or UPI app, it is automatically
+                reversed within 2–3 business days. Our team has also been
+                notified to assist you.
               </div>
 
               <div className="flex flex-col sm:flex-row items-center gap-2 pt-1">
@@ -409,7 +555,7 @@ export function PaymentModal({
                   className="btn-3d-indigo w-full sm:w-auto px-4 py-2 text-xs font-extrabold inline-flex items-center justify-center gap-1.5"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
-                  <span>Try Again</span>
+                  <span>Retry Razorpay Checkout</span>
                 </button>
 
                 <a
@@ -473,13 +619,18 @@ export function PaymentModal({
                   <div className="mt-3 pt-2.5 border-t border-slate-200/80 space-y-1 text-[11px] font-bold text-slate-700">
                     <p className="flex items-center gap-1">
                       <Calendar className="h-3 w-3 text-indigo-600 shrink-0" />
-                      <span>{pkg.dailyCount} Daily Quiz{pkg.dailyCount > 1 ? "zes" : ""}</span>
+                      <span>
+                        {pkg.dailyCount} Daily Quiz
+                        {pkg.dailyCount > 1 ? "zes" : ""}
+                      </span>
                     </p>
                     <p className="flex items-center gap-1">
                       <Trophy className="h-3 w-3 text-amber-600 shrink-0" />
                       <span>
                         {pkg.competitionCount > 0
-                          ? `${pkg.competitionCount} Weekly Quiz${pkg.competitionCount > 1 ? "zes" : ""}`
+                          ? `${pkg.competitionCount} Weekly Quiz${
+                              pkg.competitionCount > 1 ? "zes" : ""
+                            }`
                           : "No Weekly Quiz"}
                       </span>
                     </p>
@@ -514,8 +665,10 @@ export function PaymentModal({
 
             <div className="rounded-xl bg-amber-50 border border-amber-200 p-2.5 text-[11px] font-bold text-amber-900 leading-relaxed">
               💡 <strong>Quiz-Wise Pass Rule:</strong> Passes are strictly{" "}
-              <strong>quiz-count based</strong> (not unlimited per day). For example, the{" "}
-              <strong>VIP Pass (Weekly)</strong> gives you <strong>7 Daily Quizzes + 1 Weekly Quiz</strong> total. If you exhaust all 7 Daily Quizzes in 2 days (by taking multiple subject/class quizzes), your pass limit will be exhausted and you will need to recharge again.
+              <strong>quiz-count based</strong> (not unlimited per day). For
+              example, the <strong>VIP Pass (Weekly)</strong> gives you{" "}
+              <strong>7 Daily Quizzes + 1 Weekly Quiz</strong> total. Once all
+              credits are used, you can recharge anytime.
             </div>
           </div>
 
@@ -567,7 +720,8 @@ export function PaymentModal({
                   </p>
                 ) : (
                   <p className="text-[11px] font-medium text-slate-500 leading-snug">
-                    🔒 Required for instant pass delivery &amp; official invoice. If payment ever fails, our founder can contact you immediately so your pass is not delayed.
+                    🔒 Pre-filled into Razorpay Checkout for 1-tap UPI &amp;
+                    instant pass activation.
                   </p>
                 )}
               </div>
@@ -580,32 +734,33 @@ export function PaymentModal({
                 className="w-full btn-3d-emerald py-3.5 text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isProcessing ? (
-                  <span>Processing Payment with Razorpay...</span>
+                  <span>Opening Razorpay Secure Gateway...</span>
                 ) : (
                   <>
                     <Sparkles className="h-5 w-5" />
                     <span>
-                      Pay ₹{activePkg.priceInr} &amp; Activate {activePkg.name}
+                      Pay ₹{activePkg.priceInr} via Razorpay &amp; Activate{" "}
+                      {activePkg.name}
                     </span>
                   </>
                 )}
               </button>
 
-              {/* Founder simulation & Demo note */}
+              {/* Security & Test Failure Simulator Bar */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 text-[11px] font-bold text-slate-500">
                 <span className="flex items-center gap-1">
                   <Lock className="h-3.5 w-3.5 text-slate-400" />
-                  Instant Activation &bull; 100% Encrypted Payment
+                  Secured by Razorpay (UPI, Cards, NetBanking)
                 </span>
 
                 <button
                   type="button"
                   onClick={handleSimulateFailure}
                   disabled={isProcessing}
-                  className="text-amber-700 hover:text-amber-900 underline font-extrabold inline-flex items-center gap-1 hover:scale-102 transition"
+                  className="text-amber-700 hover:text-amber-900 underline font-extrabold inline-flex items-center gap-1 transition"
                 >
                   <Bug className="h-3.5 w-3.5" />
-                  <span>Test Failure Notification (Simulate Drop)</span>
+                  <span>Simulate Payment Drop (Test Lead Alert)</span>
                 </button>
               </div>
             </div>
@@ -619,7 +774,8 @@ export function PaymentModal({
                   Sign In Required to Buy a Quiz Pass
                 </h4>
                 <p className="text-xs font-semibold text-slate-600">
-                  Quiz passes are linked to your student account. Please sign in or create a free account first to purchase a pass.
+                  Quiz passes are linked to your student account. Please sign in
+                  or create a free account first to purchase a pass.
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">

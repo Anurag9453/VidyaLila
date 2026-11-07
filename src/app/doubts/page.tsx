@@ -18,6 +18,7 @@ import {
   loadLocalMemberships,
   mergeMembershipsList,
   renderBotOrChatMarkdown,
+  renderUserAvatar,
   saveLocalDiscussions,
   saveLocalMemberships,
 } from "@/components/DoubtDrawer";
@@ -522,8 +523,8 @@ function DoubtsLoungeContent() {
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2.5">
-                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white border border-slate-200 text-base">
-                              {reqItem.userAvatar}
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white border border-slate-200 text-base">
+                              {renderUserAvatar(reqItem.userAvatar)}
                             </span>
                             <div>
                               <div className="flex flex-wrap items-center gap-1.5">
@@ -654,7 +655,9 @@ function DoubtsLoungeContent() {
                       >
                         <div className="space-y-1">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="text-sm">{mem.userAvatar}</span>
+                            <span className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-white border border-slate-200 text-xs">
+                              {renderUserAvatar(mem.userAvatar)}
+                            </span>
                             <span className="text-xs sm:text-sm font-extrabold text-slate-900">
                               {mem.userName}
                             </span>
@@ -1147,13 +1150,13 @@ function DoubtsLoungeContent() {
                           <div className="flex flex-wrap items-start justify-between gap-2">
                             <div className="flex items-center gap-2.5">
                               <span
-                                className={`flex h-10 w-10 items-center justify-center rounded-xl text-lg border ${
+                                className={`flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl text-lg border ${
                                   isBot
                                     ? "bg-indigo-600 text-white border-indigo-700"
                                     : "bg-slate-100 border-slate-200"
                                 }`}
                               >
-                                {msg.senderAvatar}
+                                {renderUserAvatar(msg.senderAvatar)}
                               </span>
                               <div>
                                 <div className="flex flex-wrap items-center gap-2">
@@ -1282,13 +1285,13 @@ function DoubtsLoungeContent() {
                                   <div className="flex flex-wrap items-center justify-between gap-2">
                                     <div className="flex items-center gap-2">
                                       <span
-                                        className={`flex h-8 w-8 items-center justify-center rounded-xl text-base ${
+                                        className={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl text-base ${
                                           isRepBot
                                             ? "bg-indigo-600 text-white"
                                             : "bg-slate-100 border border-slate-200"
                                         }`}
                                       >
-                                        {rep.senderAvatar}
+                                        {renderUserAvatar(rep.senderAvatar)}
                                       </span>
                                       <span className="text-xs sm:text-sm font-extrabold text-slate-900">
                                         {rep.senderName}

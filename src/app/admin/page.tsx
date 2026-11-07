@@ -721,8 +721,23 @@ export default function AdminPortalPage() {
                   {/* Student & Lead Details */}
                   <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 border text-base">
-                        {lead.avatar || "🚀"}
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-100 border text-base">
+                        {lead.avatar?.startsWith("http") ||
+                        lead.avatar?.includes("googleusercontent.com") ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={
+                              lead.avatar.startsWith("http")
+                                ? lead.avatar
+                                : `https://${lead.avatar.replace(/^\/+/, "")}`
+                            }
+                            alt=""
+                            referrerPolicy="no-referrer"
+                            className="h-full w-full rounded-xl object-cover"
+                          />
+                        ) : (
+                          lead.avatar || "🚀"
+                        )}
                       </span>
                       <span className="text-sm font-extrabold text-slate-900">
                         {lead.userName}

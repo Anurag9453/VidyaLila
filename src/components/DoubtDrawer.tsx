@@ -33,6 +33,30 @@ import {
 } from "lucide-react";
 
 const LOCAL_STORAGE_DISCUSSIONS_KEY = "vidyalila_discussions_v1";
+
+export function renderUserAvatar(avatar?: string, fallback = "🚀") {
+  if (
+    avatar &&
+    (avatar.startsWith("http://") ||
+      avatar.startsWith("https://") ||
+      avatar.startsWith("//") ||
+      avatar.includes("googleusercontent.com"))
+  ) {
+    const src = avatar.startsWith("http")
+      ? avatar
+      : `https://${avatar.replace(/^\/+/, "")}`;
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt=""
+        referrerPolicy="no-referrer"
+        className="h-full w-full rounded-[inherit] object-cover"
+      />
+    );
+  }
+  return <>{avatar || fallback}</>;
+}
 const LOCAL_STORAGE_MEMBERSHIPS_KEY = "vidyalila_group_memberships_v1";
 
 export function loadLocalDiscussions(): DiscussionMessage[] {
@@ -685,13 +709,13 @@ export function DoubtDrawer({
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex items-center gap-2.5">
                             <span
-                              className={`flex h-9 w-9 items-center justify-center rounded-xl text-lg border ${
+                              className={`flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl text-lg border ${
                                 isBot
                                   ? "bg-indigo-600 text-white border-indigo-700"
                                   : "bg-slate-100 border-slate-200"
                               }`}
                             >
-                              {msg.senderAvatar}
+                              {renderUserAvatar(msg.senderAvatar)}
                             </span>
                             <div>
                               <div className="flex flex-wrap items-center gap-1.5">
@@ -777,13 +801,13 @@ export function DoubtDrawer({
                                 <div className="flex items-center justify-between gap-2">
                                   <div className="flex items-center gap-2">
                                     <span
-                                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-sm ${
+                                      className={`flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-lg text-sm ${
                                         isRepBot
                                           ? "bg-indigo-600 text-white"
                                           : "bg-slate-100 border border-slate-200"
                                       }`}
                                     >
-                                      {rep.senderAvatar}
+                                      {renderUserAvatar(rep.senderAvatar)}
                                     </span>
                                     <span className="text-xs font-extrabold text-slate-900">
                                       {rep.senderName}

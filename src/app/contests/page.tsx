@@ -1051,8 +1051,23 @@ function ContestArenaContent() {
             <div className="rounded-2xl border-2 border-slate-300 bg-white p-5 shadow-sm space-y-4">
               {/* Candidate Details Box */}
               <div className="flex items-center gap-3 border-b border-slate-200 pb-3.5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 border border-slate-300 text-xl">
-                  {profile.avatar}
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-slate-100 border border-slate-300 text-xl">
+                  {profile.avatar?.startsWith("http") ||
+                  profile.avatar?.includes("googleusercontent.com") ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={
+                        profile.avatar.startsWith("http")
+                          ? profile.avatar
+                          : `https://${profile.avatar.replace(/^\/+/, "")}`
+                      }
+                      alt="Candidate"
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full rounded-xl object-cover"
+                    />
+                  ) : (
+                    profile.avatar || "🚀"
+                  )}
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-black text-slate-900 truncate">

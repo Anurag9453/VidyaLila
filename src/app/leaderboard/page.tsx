@@ -36,6 +36,40 @@ import {
 
 const TOP_DISPLAY_LIMIT = 15;
 
+function isImageAvatar(val?: string): boolean {
+  if (!val) return false;
+  return (
+    val.startsWith("http://") ||
+    val.startsWith("https://") ||
+    val.startsWith("//") ||
+    val.includes("googleusercontent.com")
+  );
+}
+
+function AvatarDisplay({
+  avatar,
+  fallback = "🚀",
+}: {
+  avatar?: string;
+  fallback?: string;
+}) {
+  if (isImageAvatar(avatar)) {
+    const src = avatar!.startsWith("http")
+      ? avatar!
+      : `https://${avatar!.replace(/^\/+/, "")}`;
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt="Avatar"
+        referrerPolicy="no-referrer"
+        className="h-full w-full rounded-[inherit] object-cover"
+      />
+    );
+  }
+  return <>{avatar || fallback}</>;
+}
+
 interface MonthlyTestItem {
   id: string;
   title: string;
@@ -693,8 +727,8 @@ function LeaderboardContent() {
       <section className="rounded-3xl border-2 border-sky-300 bg-gradient-to-r from-sky-50 via-white to-amber-50 p-4 sm:p-6 md:p-8 shadow-[0_8px_0_0_#bae6fd]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           <div className="lg:col-span-5 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
-            <div className="flex h-16 w-16 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-3xl bg-amber-400 border-2 border-amber-500 border-b-4 text-3xl sm:text-4xl shadow-md">
-              {profile.avatar}
+            <div className="flex h-16 w-16 sm:h-20 sm:w-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-amber-400 border-2 border-amber-500 border-b-4 text-3xl sm:text-4xl shadow-md">
+              <AvatarDisplay avatar={profile.avatar} />
             </div>
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
@@ -1163,7 +1197,9 @@ function LeaderboardContent() {
                         <span className="rounded-xl bg-indigo-600 px-2.5 py-1.5 text-xs font-black text-white">
                           #{row.rank}
                         </span>
-                        <span className="text-xl">{row.avatar}</span>
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sky-100 border border-sky-300 text-lg">
+                          <AvatarDisplay avatar={row.avatar} />
+                        </span>
                         <div>
                           <p className="text-xs font-black text-slate-900">
                             {row.name}{" "}
@@ -1205,7 +1241,9 @@ function LeaderboardContent() {
                       <span className="rounded-xl bg-indigo-600 px-2.5 py-1.5 text-xs font-black text-white">
                         #{row.rank}
                       </span>
-                      <span className="text-xl">{row.avatar}</span>
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sky-100 border border-sky-300 text-lg">
+                        <AvatarDisplay avatar={row.avatar} />
+                      </span>
                       <div>
                         <p className="text-xs font-black text-slate-900">
                           {row.name}
@@ -1307,8 +1345,8 @@ function LeaderboardContent() {
                     </td>
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
-                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100 border border-sky-300 text-base">
-                          {row.avatar}
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sky-100 border border-sky-300 text-base">
+                          <AvatarDisplay avatar={row.avatar} />
                         </span>
                         <div>
                           <p className="font-black text-slate-900">
@@ -1401,8 +1439,8 @@ function LeaderboardContent() {
                           </td>
                           <td className="py-3.5 px-4">
                             <div className="flex items-center gap-3">
-                              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white border border-amber-300 text-base">
-                                {row.avatar}
+                              <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white border border-amber-300 text-base">
+                                <AvatarDisplay avatar={row.avatar} />
                               </span>
                               <div>
                                 <div className="flex flex-wrap items-center gap-1.5">
@@ -1512,8 +1550,8 @@ function LeaderboardContent() {
                       </td>
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-3">
-                          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 border border-sky-300 text-lg">
-                            {row.avatar}
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-sky-100 border border-sky-300 text-lg">
+                            <AvatarDisplay avatar={row.avatar} />
                           </span>
                           <div>
                             <p className="font-black text-slate-900">
@@ -1596,8 +1634,8 @@ function LeaderboardContent() {
                             </td>
                             <td className="py-4 px-4">
                               <div className="flex items-center gap-3">
-                                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-amber-300 text-lg">
-                                  {row.avatar}
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white border border-amber-300 text-lg">
+                                  <AvatarDisplay avatar={row.avatar} />
                                 </span>
                                 <div>
                                   <div className="flex items-center gap-1.5">

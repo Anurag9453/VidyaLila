@@ -9,7 +9,7 @@
 
 # Topic 7: Human Ear aur Noise Pollution
 
-Pichle topic mein humne dekha ki sound ki duniya hamare sunne se kaafi badi hai. Insaan lagbhag 20 Hz se 20 kHz tak ki awaaz sun sakta hai (audible range). Usse zyada frequency wali ultrasound ko hum sun nahi paate, par chamgaadar, dolphin aur SONAR jaisi machine use sunti hain aur mapti hain. Usse kam frequency wali infrasound bhi hamare kaanon ke liye nahi hai.
+Pichhle topic mein humne dekha ki sound ki duniya hamare sunne se kaafi badi hai. Insaan lagbhag 20 Hz se 20 kHz tak ki awaaz sun sakta hai (audible range). Usse zyada frequency wali ultrasound ko hum sun nahi paate, par chamgadad aur dolphin use sun lete hain, aur SONAR jaisi machines usse doori naapti hain. Usse kam frequency wali infrasound bhi hamare kaanon ke liye nahi hai. Topic 6 ke ant mein humne kaha tha: jo awaaz sunai nahi deti, wo bhi sound hoti hai aur uske echoes se tasveer ban sakti hai: yahi sonography ka raaz hai.
 
 Ab ek sawaal bacha hai: **hum sunte kaise hain?** Hawa mein chalti hui sound wave hamare sir ke andar ek electric message mein kaise badalti hai, jise dimaag "awaaz" samajhta hai? Aur agar kaan itna nazuk yantra hai, to bahut tez shor (noise) se uska kya hota hai? Ye chapter ka aakhri topic hai, to end mein poore chapter ka wrap-up bhi hoga.
 
@@ -157,7 +157,7 @@ Is safar ki ek khaas baat dekho. Pinna se lekar cochlea ke taral tak sab kuch **
 
 ### Hum awaaz ki disha kaise jaante hain?
 
-Hamare **do kaan** hain, sir ke dono taraf. Agar awaaz ek taraf se aa rahi hai, to wo us taraf wale kaan tak **thodi pehle** pahunchti hai, aur doosre kaan tak thodi der se (wahan tak jaane mein sound ko kuch zyada doori tay karni padti hai, aur sir bhi beech mein rukaawat banata hai). Dimaag is bahut chhote time ke farak (aur dono kaanon mein awaaz ki halki ki alag taakat) ko pakadkar andaaza laga leta hai ki awaaz kis disha se aa rahi hai. Isliye ek kaan band karke disha pehchanna mushkil ho jaata hai. (Iska ek numerical example neeche hai.)
+Hamare **do kaan** hain, sir ke dono taraf. Agar awaaz ek taraf se aa rahi hai, to wo us taraf wale kaan tak **thodi pehle** pahunchti hai, aur doosre kaan tak thodi der se (wahan tak jaane mein sound ko kuch zyada doori tay karni padti hai, aur sir bhi beech mein rukaawat banata hai). Dimaag is bahut chhote time ke farak (aur dono kaanon mein awaaz ki halki si alag taakat) ko pakadkar andaaza laga leta hai ki awaaz kis disha se aa rahi hai. Isliye ek kaan band karke disha pehchanna mushkil ho jaata hai. (Iska ek numerical example neeche hai.)
 
 ---
 
@@ -208,7 +208,7 @@ Neeche sirf wo asar hain jo aam taur par maane jaate hain:
 
 ### Awaaz ka level (dB) aur uska asar
 
-Awaaz ki taakat (loudness) **decibel (dB)** mein naapi jaati hai. dB ke hisaab mein bahut chhoti badhat bhi bahut zyada awaaz ka matlab hoti hai, isliye 10 dB ki badhat sunne mein bahut tez lagti hai. (Ye Topic 5 mein dekha tha. Yahan hum koi calculation nahi karenge.)
+Awaaz ki taakat (loudness) **decibel (dB)** mein naapi jaati hai. Topic 5 mein dB ki table dekhi thi. Yahan bas itna yaad rakho ki dB ka scale aam ginti jaisa nahi hai: 10 dB ki badhat bhi awaaz ko kaafi zyada tez bana deti hai. (Iska hisaab aage ki class mein: yahan hum koi calculation nahi karenge.)
 
 | Awaaz ka strot | Lagbhag level (dB) | Asar (general guidance) |
 |---|---|---|
@@ -217,8 +217,8 @@ Awaaz ki taakat (loudness) **decibel (dB)** mein naapi jaati hai. dB ke hisaab m
 | Heavy traffic | lagbhag 80 dB | Bahut der rehne par thakaan aur chidchidapan |
 | Lambe samay tak (ghanton) 85 dB ya usse zyada | 85 dB aur upar | Sunne ko nuksaan pahunch sakta hai |
 | Rock concert | lagbhag 110 se 120 dB | Kuch hi minuton mein kaan ko nuksaan ho sakta hai |
-| Bahut tez dhamaka, jet engine ke paas | lagbhag 120 dB | Kaan mein dard ho sakta hai |
-| Pain threshold | lagbhag 140 dB | Tez dard; turant nuksaan ka khatra |
+| Bahut tez siren ya dhamaka, bilkul paas se | lagbhag 120 dB | Kaan mein dard shuru ho sakta hai |
+| Jet engine ke bahut paas | lagbhag 140 dB | Tez dard; turant nuksaan ka khatra |
 
 **Dhyan do:** ye sab **lagbhag (approximate)** aur **general guidance** hain. Asal mein nuksaan awaaz ke level aur **kitni der** sunne par nirbhar karta hai: jitna tez, utni kam der mein nuksaan.
 
@@ -332,7 +332,7 @@ Neeche teen log hain. Har ek ke liye batao: unke kaan ke liye ye stithi kitni su
 | C | Factory ki machine ke paas | lagbhag 90 dB | 8 ghante, bina ear plugs |
 
 - **A:** 40 dB bahut shaant hai: **safe**.
-- **B:** 80 dB, 85 dB ki seema se thoda neeche hai, par poora din rehna thakaan aur chidchidapan deta hai. Mostly **safe se thoda zyada pareshani**: dhyan rakhna chahiye.
+- **B:** 80 dB, 85 dB ki seema se thoda neeche hai, par poora din rehna thakaan aur chidchidapan deta hai. Ye **safe ke kareeb hai, par pareshani wala**: dhyan rakhna chahiye.
 - **C:** 90 dB, 85 dB se zyada hai aur 8 ghante tak: **unsafe**. Ear plugs lagane chahiye.
 
 Matlab: nuksaan **level** aur **time** dono par nirbhar karta hai.
@@ -414,7 +414,7 @@ Ped shor ka sirf **kuch hissa** sokhte hain. Poori tarah band nahi karte, isliye
 
 9. A sound of frequency 1000 Hz travels in air at 340 m/s. Find its wavelength in cm.
 
-10. The ear canal is 2.5 cm long. How long does a sound take to travel along it? (v = 340 m/s)
+10. The sound of a school bell reaches a student 0.25 s after it rings. How far is the student from the bell? (v = 340 m/s)
 
 11. A 250 Hz note is played for 6 s. How many times does the eardrum vibrate? Find also the time period of one vibration.
 
@@ -427,7 +427,7 @@ Ped shor ka sirf **kuch hissa** sokhte hain. Poori tarah band nahi karte, isliye
 15. State whether each statement is true or false, with a reason.
     (a) A level of 85 dB for many hours a day is generally safe.
     (b) Trees along a road absorb a part of the noise.
-    (c) The 60-60 rule is a general advice for earphones.
+    (c) The 60-60 rule is general advice for using earphones.
     (d) Cochlea is in the middle ear.
 
 16. A person works 8 hours a day near a machine of about 95 dB. Is this safe? Suggest two ways to protect his hearing.
@@ -455,8 +455,8 @@ Ped shor ka sirf **kuch hissa** sokhte hain. Poori tarah band nahi karte, isliye
 9. λ = v ÷ f = 340 m/s ÷ 1000 Hz = 0.34 m = **34 cm**.
    Jaanch: 1000 Hz × 0.34 m = 340 m/s ✅
 
-10. t = 0.025 m ÷ 340 m/s = **7.4 × 10⁻⁵ s** (lagbhag).
-    Jaanch: 340 × 7.4 × 10⁻⁵ = 0.02516 ≈ 0.025 m ✅
+10. d = v × t = 340 m/s × 0.25 s = **85 m**.
+    Jaanch: 85 m ÷ 340 m/s = 0.25 s ✅
 
 11. Vibrations = 250 Hz × 6 s = **1500**. T = 1 ÷ 250 Hz = **0.004 s**.
     Jaanch: 1500 × 0.004 s = 6 s ✅
@@ -475,7 +475,7 @@ Ped shor ka sirf **kuch hissa** sokhte hain. Poori tarah band nahi karte, isliye
 
 16. 95 dB, 85 dB se zyada hai aur 8 ghante rozana: **safe nahi hai**, kaan ko nuksaan ho sakta hai. Do upaay: ear plugs (ya ear muffs) lagana, aur beech beech mein shor se door aaraam ke breaks lena (ya machine ko soundproof karna).
 
-17. Eardrum bahut patli aur nazuk hoti hai, aur pin ya pencil se chhoot sakti hai ya chot kha sakti hai, jisse sunne ko nuksaan ho sakta hai. Kaan ka wax bhi use bachata hai.
+17. Eardrum bahut patli aur nazuk hoti hai, aur pin ya pencil se phat sakti hai ya chot kha sakti hai, jisse sunne ko nuksaan ho sakta hai. Kaan ka wax bhi use bachata hai.
 
 ---
 
@@ -528,8 +528,8 @@ Ab Ms. Arora ke school mein bachche saaf sunte hain, aur Veeraj ne sikha ki jis 
 | Characteristic | Kis par nirbhar karti hai | Example |
 |---|---|---|
 | Loudness | Amplitude (zyada amplitude, zyada loud) | Dhol zor se bajane par |
-| Pitch | Frequency (zyada frequency, zyada pitch) | Patli awaaz (high pitch) vs mooti awaaz (low pitch) |
-| Quality (timbre) | Wave ki shape, yaani mool awaaz ke saath mili hui doosri frequencies | Gitar aur flute ek hi note alag sunai dete hain |
+| Pitch | Frequency (zyada frequency, zyada pitch) | Patli awaaz (high pitch) vs bhaari awaaz (low pitch) |
+| Quality (timbre) | Waveform, yaani fundamental ke saath mile overtones | Bansuri aur violin ka ek hi note alag sunai deta hai |
 
 ### Sound ki speed alag alag medium mein (lagbhag)
 
@@ -537,7 +537,7 @@ Ab Ms. Arora ke school mein bachche saaf sunte hain, aur Veeraj ne sikha ki jis 
 |---|---|
 | Hawa (air) | 340 |
 | Paani (water) | 1500 |
-| Lohaa / steel (solid) | 5000 |
+| Lohaa (iron) | 5100 |
 | Vacuum | Sound nahi chalti |
 
 ---

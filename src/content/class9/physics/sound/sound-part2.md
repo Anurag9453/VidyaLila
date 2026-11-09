@@ -9,7 +9,7 @@
 
 # Topic 2: Sound Waves: Longitudinal aur Transverse
 
-Topic 1 mein humne dekha ki sound medium (jaise hawa) ke bina nahi chalti, aur ye bhi dekha ki hawa ke particles vibration ko **layer by layer aage pass** karte hain, khud source se kaan tak nahi aate. Topic 1 ka aakhri sawal tha: **sound kaise phailti hai?** Jawab hai: **tarang (wave)** ki tarah. Is topic mein hum dekhenge ki wave kya hoti hai, uske do type kaun se hain, aur sound in mein se kaunsi hai. Aage ke saare topics isi par tikte hain.
+Topic 1 mein humne dekha ki sound medium (jaise hawa) ke bina nahi chalti, aur ye bhi dekha ki Mr. Kanojia ki dholak ki vibrate karti khaal hawa ke particles ko dhakka deti hai, aur particles vibration ko **layer dar layer aage pass** karte hain, khud source se kaan tak nahi aate. Topic 1 ka aakhri sawal tha: **sound kaise phailti hai?** Jawab hai: **tarang (wave)** ki tarah. Is topic mein hum dekhenge ki wave kya hoti hai, uske do type kaun se hain, aur sound in mein se kaunsi hai. Aage ke saare topics isi par tikte hain.
 
 ---
 
@@ -48,7 +48,7 @@ Ms. Dalal muskuraayi, "Achha sawal hai. Isse hum topic ke aakhir mein solve kare
 
 ## Part A: Wave kya hoti hai?
 
-Pichhle topic ka drum yaad karo. Drum par haath maarne se uski jhilli hilti hai, uske paas ki hawa hilti hai, phir us se aage ki hawa hilti hai, aur is tarah hilna door tak chala jaata hai. Isi chalte hue hilne ko **wave** kehte hain.
+Pichhle topic ki dholak yaad karo. Dholak par haath maarne se uski khaal hilti hai, uske paas ki hawa hilti hai, phir us se aage ki hawa hilti hai, aur is tarah hilna door tak chala jaata hai. Isi chalte hue hilne ko **wave** kehte hain.
 
 > **Wave** = ek disturbance jo medium mein ek jagah se doosri jagah **aage badhta hai** aur apne saath **energy** le jaata hai, par **matter (medium ke particles) ko saath nahi le jaata**.
 
@@ -57,7 +57,7 @@ Medium ke particles bas apni **mean position** ke aas-paas hilte hain (oscillate
 Do aam example:
 
 - **Pond ki ripple.** Paani mein kankad phenko. Gol ripples bahar ki taraf phailte hain. Par agar paani par ek patta tair raha hai, to wo ripple ke saath bahar nahi bahta. Wo bas **upar-neeche hilta rehta hai** aur lagbhag usi jagah rehta hai. Ripple (energy) door chali gayi, paani aur patta nahi gaye.
-- **Stadium ki "Mexican wave".** Cricket match mein log baari-baari se khade hote hain aur baith jaate hain. Poore stadium mein ek "lehar" ghoomti dikhti hai. Par koi bhi insaan apni seat se doosri seat par nahi gaya. Har insaan bas apni jagah khada hua aur baith gaya. Chalti hui cheez **disturbance** hai, log nahi.
+- **Stadium ki "Mexican wave"** (Topic 1 mein iski jhalak dekhi thi). Cricket match mein log baari-baari se khade hote hain aur baith jaate hain. Poore stadium mein ek "lehar" ghoomti dikhti hai. Par koi bhi insaan apni seat se doosri seat par nahi gaya. Har insaan bas apni jagah khada hua aur baith gaya. Chalti hui cheez **disturbance** hai, log nahi.
 
 > **Yaad rakho:** wave **energy** transfer karti hai, **matter** nahi.
 
@@ -161,7 +161,7 @@ Hawa ka har particle bas apni jagah ke paas **aage-peeche** hilta hai, wahi dish
 
 > **Figure 2.3** – Upar: hawa ke particles (dots). C par dots paas-paas hain (compression), R par door-door (rarefaction). Neeche: pressure ka graph. Compression par pressure normal se zyada (graph ki choti), rarefaction par normal se kam (graph ka gaddha).
 
-Graph ko seedhe padho: jahan dots ki bheed hai wahan graph upar jaata hai (zyada pressure), jahan dots door-door hain wahan graph neeche jaata hai (kam pressure). Bich ki seedhi line normal (sahi hawa wala) pressure hai.
+Graph ko seedhe padho: jahan dots ki bheed hai wahan graph upar jaata hai (zyada pressure), jahan dots door-door hain wahan graph neeche jaata hai (kam pressure). Beech ki seedhi line normal pressure hai (jab hawa mein koi sound na ho).
 
 **Sound ko medium kyun chahiye?** Longitudinal wave banane ke liye particles **compress** hone chahiye aur phir phail jaane chahiye. Vacuum mein particles hi nahi hain, to kuch compress hone ko hai hi nahi. Isliye vacuum mein sound nahi chalti (Topic 1 ka wahi naata).
 
@@ -368,4 +368,4 @@ Nahi. Medium apni jagah rehta hai aur sirf hilta hai. Wave medium ke andar se gu
 
 Ab Ishvi ko bata sakte ho: slinky ko aage-peeche dhakelne se bani bheed wali wave hi sound jaisi hai, aur dono mein particles apni jagah ke paas hi hilte hain, sirf energy chalti hai.
 
-**Aage kya?** Hum ne kaha ki compression aur rarefaction baar-baar aate hain, par kitni jaldi? Aur ek compression se agle compression ki doori kitni hoti hai? Wave kitni "zor" se hilti hai? Ye sab dekhenge Topic 3 mein: **tarang ko naapne ke paane: wavelength, frequency aur amplitude**.
+**Aage kya?** Hum ne kaha ki compression aur rarefaction baar-baar aate hain, par kitni jaldi? Aur ek compression se agle compression ki doori kitni hoti hai? Wave kitni "zor" se hilti hai? Ye sab dekhenge Topic 3 mein: **tarang ko naapne ke paimaane: wavelength, frequency aur amplitude**.

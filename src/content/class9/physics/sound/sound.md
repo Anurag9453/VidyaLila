@@ -78,7 +78,7 @@ Ab isse apni aankhon aur haathon se check karte hain. Ghar mein ye sab kar sakte
 1. **Tuning fork aur paani.** Ek tuning fork (U-shape ki dhaatu ki chhadi) ko rubber pad par maaro. Wo "tiiiin" ki awaaz degi. Ab uski bhujaa ko paani ki katori ke upar ya chhune ke liye laao: paani **chhapaak se uchhalta** hai. Matlab bhujaa tezi se hil rahi hai. Ya phir tuning fork ko ek latakti hui **ping-pong ball** se chhuao: ball ek dum door uchhal jaati hai.
 2. **Ghitar ki taar ya ruler.** Ghitar ki taar ko kheench kar chhodo: wo **dhundhli aur moti** dikhti hai (kyunki bahut tezi se hil rahi hai) aur awaaz aati hai. Ek ruler ko mez ke kinare se nikal kar uska ek sira dabao aur doosra sira kheench kar chhodo: wo upar-neeche hota hai aur "thhrrr" ki awaaz aati hai.
 3. **Gale par haath.** Apni ungliyaan gale (neck) par rakho aur "aaaa" bolo. **Halki si jhanjhanahat** mehsoos hogi. Ye hamare **vocal cords** ka vibration hai. Chup ho jao to jhanjhanahat bhi band.
-4. **Rubber band.** Ek rubber band ko kheench kar chhedo: wo hilti hai aur "tungg" ki awaaz karti hai.
+4. **Rubber band.** Ek rubber band ko kheench kar chhodo: wo hilti hai aur "tungg" ki awaaz karti hai.
 5. **Ghanti.** Ghanti bajane ke baad haath se chhoo kar dekho: halki kapkapi mehsoos hogi. Haath se pakad lo to awaaz **turant band**.
 6. **Dholak (chawal ke dane).** Hamari kahani wala experiment. Isse hum thodi der mein solve karenge.
 7. **Speaker par balloon.** Ek speaker par hawa se bhara balloon rakho aur gaana chalao. Balloon par haath rakho: **jhanjhanahat** aayegi. Speaker ka cone vibrate kar raha hai, aur wahi balloon ko hila raha hai.
@@ -86,15 +86,14 @@ Ab isse apni aankhon aur haathon se check karte hain. Ghar mein ye sab kar sakte
 ```
   Tuning fork aur ping-pong ball
 
-      ┌─ dhaaga
-      │
-      ○  <- ping-pong ball (door uchhal jaati hai)
-     ╱
-   ╲ ╱ ╱
-    ╲│╱     <- tuning fork ki bhujaayein (tezi se hil rahi hain)
-     │
-     │
-    ═╧═
+          │   <- dhaaga
+          │
+   ║     ║○   <- ping-pong ball (bhujaa ko chhoote hi door uchhal jaati hai)
+   ║     ║
+   ║     ║    <- tuning fork ki do bhujaayein (tezi se hil rahi hain)
+   ╚══╦══╝
+      ║       <- handle
+      ║
 ```
 
 > **Figure 1.1** – Vibrate karti tuning fork ball ko chhute hi ball door uchhal jaati hai: ye batata hai ki fork sach mein hil rahi hai.

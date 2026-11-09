@@ -36,7 +36,7 @@ Mr. Karma ne kaha, "Bilkul. Aur shaam ko jab baarish aayegi, to bijli ki chamak 
 | Shabd | Matlab (simple bhasha mein) | Example |
 |---|---|---|
 | **Speed of sound (v)** | Sound ek second mein kitni doori tay karti hai | Hawa mein lagbhag 340 m/s |
-| **Reflection (parawartan)** | Sound ka kisi surface se takrakar wapas lautna | Ghati ki deewar se awaaz ka wapas aana |
+| **Reflection (paravartan)** | Sound ka kisi surface se takrakar wapas lautna | Ghati ki deewar se awaaz ka wapas aana |
 | **Echo (goonj)** | Wapas lautkar aayi wo awaaz jo original awaaz se alag, saaf sunayi deti hai | "Hello" bolo aur kuch der baad "hello" wapas sunayi de |
 | **Persistence of hearing** | Kaan mein kisi awaaz ka asar lagbhag 0.1 s tak bana rehta hai | Isiliye 0.1 s se kam gap wali do awaazein alag nahi sunayi deti |
 | **Reverberation** | Band ya bade hall mein baar-baar reflection ki wajah se awaaz ka source band hone ke baad bhi kuch der tak gunjte rehna | Khali bade hall ya mandir mein bolne par awaaz ka gunjna |
@@ -51,7 +51,7 @@ Mr. Karma ne kaha, "Bilkul. Aur shaam ko jab baarish aayegi, to bijli ki chamak 
 
 Sound ki speed hawa mein lagbhag 340 m/s hai. Ye kaafi tez lagti hai: 340 m/s = 340 × 3600 ÷ 1000 = 1224 km/h. Par roshni (light) iske saamne bahut tez hai: lagbhag 3 × 10⁸ m/s (30 crore m/s). Yani roshni ek second mein lagbhag 3 lakh km chalti hai. (Roshni ke baare mein aage ke chapters mein padhenge.)
 
-Isiliye jab baadal mein bijli chamakti hai, to **chamak hume lagbhag turant dikhti hai, aur gadgadahat (thunder) baad mein sunayi deti hai**, jabki dono ek hi jagah, ek hi pal mein bane the. Bijli 2 km door ho, to roshni ko wahan se aane mein sirf 2000 m ÷ (3 × 10⁸ m/s) ≈ 0.0000068 s lagta hai, yani itna kam ki hum ise zero hi maan sakte hain. Sound ko wahi 2 km aane mein kai second lagte hain.
+Isiliye jab baadal mein bijli chamakti hai, to **chamak hume lagbhag turant dikhti hai, aur gadgadahat (thunder) baad mein sunayi deti hai**, jabki dono ek hi jagah, ek hi pal mein bane the. Bijli 2 km door ho, to roshni ko wahan se aane mein sirf 2000 m ÷ (3 × 10⁸ m/s) ≈ 0.0000067 s lagta hai, yani itna kam ki hum ise zero hi maan sakte hain. Sound ko wahi 2 km aane mein kai second lagte hain.
 
 ### Zia ka storm wala sawal
 
@@ -122,14 +122,14 @@ Ek hi medium (aur ek hi temperature) mein sound ki speed **awaaz ke tez ya dheer
 
 ## Part C: Alag-alag medium aur temperature ke solved examples
 
-**Example 1 (hawa, paani aur lohe mein samay):** Ek sound ko 1.7 km door jaana hai. Hawa mein (340 m/s), paani mein (1500 m/s) aur lohe mein (5100 m/s) kitna time lagega?
+**Example 1 (hawa, paani aur lohe mein samay):** Ek sound ko 3.06 km door jaana hai. Hawa mein (340 m/s), paani mein (1500 m/s) aur lohe mein (5100 m/s) kitna time lagega?
 
-- d = 1.7 km = 1.7 × 1000 = 1700 m
-- Hawa: t = d ÷ v = 1700 m ÷ 340 m/s = **5 s**
-- Paani: t = 1700 m ÷ 1500 m/s = **1.13 s** (lagbhag)
-- Lohe: t = 1700 m ÷ 5100 m/s = **0.33 s** (lagbhag)
+- d = 3.06 km = 3.06 × 1000 = 3060 m
+- Hawa: t = d ÷ v = 3060 m ÷ 340 m/s = **9 s**
+- Paani: t = 3060 m ÷ 1500 m/s = **2.04 s**
+- Lohe: t = 3060 m ÷ 5100 m/s = **0.6 s**
 
-**Jaanch:** 340 × 5 = 1700 m ✅. 1500 × 1.133 = 1700 m ✅. 5100 × 0.333 = 1700 m ✅. Hawa mein sabse zyada samay, lohe mein sabse kam.
+**Jaanch:** 340 m/s × 9 s = 3060 m ✅. 1500 m/s × 2.04 s = 3060 m ✅. 5100 m/s × 0.6 s = 3060 m ✅. Hawa mein sabse zyada samay, lohe mein sabse kam.
 
 **Example 2 (bandook ki awaaz):** Ek shikari ne bandook chalayi. Koi vyakti uske 1.02 km door hai. Use goli ki awaaz kitni der baad sunayi degi? (v = 340 m/s)
 
@@ -380,7 +380,7 @@ Nahi. Surface source se kam se kam lagbhag 17 m door honi chahiye (v = 340 m/s).
 
 ## Practice Questions
 
-1. A thunder is heard 4 s after a lightning flash is seen. How far away is the lightning? (Take the speed of sound in air as 340 m/s and ignore the time taken by light.)
+1. A thunder is heard 7 s after a lightning flash is seen. How far away is the lightning? (Take the speed of sound in air as 340 m/s and ignore the time taken by light.)
 
 2. A sound has to travel 2.55 km. Find the time taken (a) in air (340 m/s) and (b) in water (1500 m/s).
 
@@ -406,14 +406,14 @@ Nahi. Surface source se kam se kam lagbhag 17 m door honi chahiye (v = 340 m/s).
 
 11. What is reverberation? How is it different from an echo? Name two ways to reduce reverberation in a hall.
 
-12. The speed of sound in iron is 5100 m/s. How long does a hammer-tap sound take to travel through a 2.55 km long iron rail? How long would it take through air at 340 m/s?
+12. The speed of sound in iron is 5100 m/s. How long does a hammer-tap sound take to travel through a 1.53 km long iron rail? How long would it take through air at 340 m/s?
 
 13. In the valley story, suppose Zia had heard her echo after 3.5 s instead of 2.5 s. How far would the opposite wall be? (v = 340 m/s)
 
 ### Answers
 
-1. d = v × t = 340 m/s × 4 s = **1360 m** (lagbhag 1.36 km).
-   Jaanch: 1360 m ÷ 340 m/s = 4 s ✅
+1. d = v × t = 340 m/s × 7 s = **2380 m** (lagbhag 2.38 km).
+   Jaanch: 2380 m ÷ 340 m/s = 7 s ✅
 
 2. d = 2.55 km = 2550 m. (a) Hawa mein: t = 2550 m ÷ 340 m/s = **7.5 s**. (b) Paani mein: t = 2550 m ÷ 1500 m/s = **1.7 s**.
    Jaanch: 340 × 7.5 = 2550 m ✅; 1500 × 1.7 = 2550 m ✅
@@ -446,8 +446,8 @@ Nahi. Surface source se kam se kam lagbhag 17 m door honi chahiye (v = 340 m/s).
 
 11. Reverberation: hall jaisi band jagah mein deewaron, chhat aur farsh se baar-baar reflection ki wajah se source band hone ke baad bhi awaaz ka gunjte rehna. Echo ek door ki surface se aayi alag, saaf repeat hoti hai, jabki reverberation mein kai reflections mil jaate hain. Kam karne ke tareeke: parde, carpet, gadde-dar kursiyan, perforated board lagana (ya curved chhat aur soundboard banana).
 
-12. d = 2.55 km = 2550 m. Lohe mein: t = 2550 m ÷ 5100 m/s = **0.5 s**. Hawa mein: t = 2550 m ÷ 340 m/s = **7.5 s**.
-    Jaanch: 5100 × 0.5 = 2550 m ✅; 340 × 7.5 = 2550 m ✅
+12. d = 1.53 km = 1530 m. Lohe mein: t = 1530 m ÷ 5100 m/s = **0.3 s**. Hawa mein: t = 1530 m ÷ 340 m/s = **4.5 s**.
+    Jaanch: 5100 m/s × 0.3 s = 1530 m ✅; 340 m/s × 4.5 s = 1530 m ✅
 
 13. d = 340 m/s × 3.5 s ÷ 2 = 1190 m ÷ 2 = **595 m**.
     Jaanch: 595 × 2 = 1190 m, 1190 ÷ 340 = 3.5 s ✅

@@ -21,7 +21,7 @@ Hospital ke sonography room mein Dr. Sandhya apni machine ke saamne baithi thi. 
 
 Dr. Sandhya ne mummy ke pet par thoda sa **gel** lagaya aur ek chhoti, haath mein aane wali **probe** ko dheere-dheere skin par ghumana shuru kiya. Saamne screen par ek hilti-dulti **grey tasveer** ubhar aayi: kuch gol, kuch lambe dhabbe, aur beech mein ek bean ke aakar ki cheez.
 
-"Ye tumhari mummy ka kidney hai," Dr. Sandhya ne muskurate hue kaha. "Bilkul theek hai."
+"Ye tumhari mummy ki kidney hai," Dr. Sandhya ne muskurate hue kaha. "Bilkul theek hai."
 
 Jivika screen ke paas aayi, aankhein badi-badi karke boli, "Doctor aunty, aapne to koi camera andar nahi daala, na koi cut lagaya. Mummy ko dard bhi nahi hua. Mera sawal ye hai: aap kehti hain ki is probe se **ultrasound** nikalta hai, yaani ek aisi awaaz jo koi sun hi nahi sakta. To **jo awaaz sunai hi nahi deti, wo tasveer kaise bana sakti hai?**"
 
@@ -113,7 +113,7 @@ Itni lambi wavelength wali waves ko aam rukawatein (imaarat, ped, chhoti pahadiy
 
 ## Part C: Ultrasound: bahut oonchi frequency
 
-20 kHz se upar ki sound ultrasound hai. Aam taur par medical aur industry mein 1 MHz se 10 MHz tak ke ultrasound kaam aate hain. Iske **gun (properties)**:
+20 kHz se upar ki sound ultrasound hai. Medical scan mein aam taur par 1 MHz se 10 MHz tak ke ultrasound kaam aate hain, aur safai jaise industrial kaamon mein lagbhag 20 kHz se 40 kHz ke. Iske **gun (properties)**:
 
 1. **High frequency, chhoti wavelength.** 40 kHz ke ultrasound ki hawa mein wavelength: λ = 340 m/s ÷ 40000 Hz = 0.0085 m = **8.5 mm**.
 2. **Seedhi line mein, ek patli beam ki tarah chalta hai.** Chhoti wavelength ki wajah se ye idhar-udhar faila nahi, torch ki patli roshni ki tarah jaata hai. Aap ise ek disha mein bhej sakte ho.
@@ -140,7 +140,7 @@ dekh sakte hain.
 
 Kaise? Probe sharir mein ultrasound ki chhoti-chhoti pulse bhejti hai. Ye pulse tissue se guzarti hai. Jahan do alag tissues ki seema aati hai (jaise kidney aur uske aas-paas ka hissa), wahan pulse ka thoda hissa **echo banke wapas** aa jaata hai. Probe ye echo pakadti hai, aur machine har echo ke aane ka time napti hai, aur doori nikalti hai (wahi d = v t / 2 jo Topic 4 mein tha). Ye saari echoes mil kar screen par ek grey tasveer ban jaati hain.
 
-Ye **surakshit** hai: ultrasound mein **X-ray jaisi radiation nahi** hoti (X-ray ek tarah ki high-energy radiation hai jisse zyada baar kaam lena theek nahi). Ultrasound sirf sound waves hain. Isliye pregnancy mein bachche ki scan ke liye bhi iska upyog hota hai.
+Ye **surakshit** hai: ultrasound mein **X-ray jaisi ionising radiation nahi** hoti (X-ray ek tarah ki high-energy, ionising radiation hai jisse zyada baar kaam lena theek nahi). Ultrasound sirf sound waves hain. Isliye pregnancy mein bachche ki scan ke liye bhi iska upyog hota hai.
 
 Medical mein aur bhi: **ultrasonic physiotherapy** (dard wali jagah par ultrasound se sekai) aur **kidney stone** ko todna (iski technique **lithotripsy** kehlati hai, jisme tez ultrasound jaisi waves stone ko chhote tukdon mein tod deti hain taaki wo sharir se nikal jaye).
 
@@ -161,9 +161,9 @@ Aadha kyun? Kyunki t mein pulse **jaane aur wapas aane**, dono ka time hai: door
 
 ```
    Jahaz (SONAR)
-   ┌──────────┐ 
+   ┌──────────┐
    │ T    D   │   T = transmitter (pulse bheje)
-   └──┬────┬──┘   D = detector (echo pakde)
+   └──┬──────┬┘   D = detector (echo pakde)
       │ ↓  ↑ │
       │ ↓  ↑ │    pulse neeche jaati hai (↓)
       │ ↓  ↑ │    aur echo ban kar upar aati hai (↑)
@@ -199,7 +199,7 @@ Dr. Sandhya ne Jivika ko samjhaya, "Dekho beta. Is probe se lagbhag **3 MHz** ka
 
 "Sharir ke andar ultrasound ki speed lagbhag **1540 m/s** hoti hai (sharir ka tissue ek tarah ka paani-jaisa hota hai)." Isliye uski wavelength:
 
-> λ = v ÷ f = 1540 m/s ÷ (3 × 10⁶ Hz) = 0.000513 m ≈ **0.5 mm**
+> λ = v ÷ f = 1540 m/s ÷ (3 × 10⁶ Hz) = 0.000513 m ≈ **0.51 mm** (lagbhag aadha mm)
 
 "Itni chhoti wavelength ki wajah se ye sharir ke andar ki **chhoti-chhoti cheezon** se bhi reflect ho jaati hai, aur ek patli beam ki tarah chalti hai. Jahan do tissues ki seema aati hai, wahan se echo wapas aati hai. Probe us echo ko pakadti hai. Machine har echo ke aane ka time napti hai. Jaise agar echo 65 µs (microsecond) baad aaye to:"
 
@@ -247,14 +247,13 @@ Audible range: 20 Hz se 20 kHz (= 20000 Hz).
 
 **Jaanch:** Saari frequencies ko Hz mein badla aur 20 Hz aur 20000 Hz se milaya: 10 (neeche), 50 (beech mein), 15000 (beech mein), 25000 (upar), 100000 (upar) ✅
 
-**Example 2 (wavelength, hawa mein):** 20 Hz, 20 kHz, 40 kHz aur 10 Hz ki sound ki wavelength nikalo. λ = v ÷ f.
+**Example 2 (wavelength, hawa mein):** Topic 3 (Example 5) mein audible range ke kinaron ki wavelength nikali thi: 20 Hz par 17 m aur 20 kHz par 1.7 cm. Ab range ke bahar ki teen sound lo: 17 Hz, 34 kHz aur 85 kHz. Inki wavelength nikalo. λ = v ÷ f.
 
-- 20 Hz: λ = 340 m/s ÷ 20 Hz = **17 m**
-- 20 kHz = 20000 Hz: λ = 340 m/s ÷ 20000 Hz = 0.017 m = **17 mm**
-- 40 kHz = 40000 Hz: λ = 340 m/s ÷ 40000 Hz = 0.0085 m = **8.5 mm**
-- 10 Hz: λ = 340 m/s ÷ 10 Hz = **34 m**
+- 17 Hz: λ = 340 m/s ÷ 17 Hz = **20 m**
+- 34 kHz = 34000 Hz: λ = 340 m/s ÷ 34000 Hz = 0.01 m = **10 mm**
+- 85 kHz = 85000 Hz: λ = 340 m/s ÷ 85000 Hz = 0.004 m = **4 mm**
 
-**Jaanch:** f × λ wapas: 20 Hz × 17 m = 340 m/s ✅; 20000 Hz × 0.017 m = 340 m/s ✅; 40000 Hz × 0.0085 m = 340 m/s ✅; 10 Hz × 34 m = 340 m/s ✅. Ye bhi dekho: infrasound ki wavelength metre mein, ultrasound ki millimetre mein. Frequency jitni zyada, wavelength utni chhoti.
+**Jaanch:** f × λ wapas: 17 Hz × 20 m = 340 m/s ✅; 34000 Hz × 0.01 m = 340 m/s ✅; 85000 Hz × 0.004 m = 340 m/s ✅. Ye bhi dekho: infrasound ki wavelength metre mein, ultrasound ki millimetre mein. Frequency jitni zyada, wavelength utni chhoti.
 
 **Example 3 (samundar ki gehrai):** SONAR se ek jahaz neeche ultrasound bhejta hai. Echo (a) 1.2 s, (b) 4 s, (c) 0.5 s baad milta hai. Samundar ki gehrai?
 
@@ -314,12 +313,12 @@ d = v t / 2, v = 1500 m/s.
 
 **Jaanch:** d = v t / 2 = 1500 m/s × 1 s ÷ 2 = 750 m ✅. Ye hawa ki speed (340 m/s) se lagbhag 4.4 guna zyada hai: 1500 ÷ 340 ≈ 4.4.
 
-**Example 11 (Jivika wali scan):** Sonography ki probe 3 MHz ka ultrasound bhejti hai. Tissue mein v = 1540 m/s. Wavelength?
+**Example 11 (Jivika wali scan, doosri seema):** Jivika ki mummy ki scan mein ek doosri seema probe se 7.7 cm andar hai. Tissue mein v = 1540 m/s. Is seema ka echo kitni der baad aayega?
 
-- f = 3 MHz = 3 × 10⁶ Hz
-- λ = v ÷ f = 1540 m/s ÷ (3 × 10⁶ Hz) = 5.13 × 10⁻⁴ m ≈ 0.5 mm
+- d = 7.7 cm = 7.7 ÷ 100 m = 0.077 m
+- t = 2d ÷ v = 2 × 0.077 m ÷ 1540 m/s = 0.154 m ÷ 1540 m/s = 1 × 10⁻⁴ s = **100 µs**
 
-**Jaanch:** 3 × 10⁶ Hz × 5.13 × 10⁻⁴ m = 1539 m/s ≈ 1540 m/s ✅
+**Jaanch:** d = v t / 2 = 1540 m/s × 100 × 10⁻⁶ s ÷ 2 = 0.154 m ÷ 2 = 0.077 m = 7.7 cm ✅. Ye 5 cm wali seema (65 µs) se zyada gehri hai, isliye iska echo der se aaya ✅
 
 ---
 
@@ -349,7 +348,7 @@ SONAR **ultrasound (sound)** use karta hai, aksar paani ke neeche. Radar **radio
 
 **Galti 5: "Ultrasound scan bhi X-ray ki tarah radiation deti hai"**
 
-Nahi. Ultrasound sirf sound waves hain, jisme X-ray jaisi radiation nahi hoti. Isiliye bachche ki scan mein ise surakshit mana jaata hai.
+Nahi. Ultrasound sirf sound waves hain, jisme X-ray jaisi ionising radiation nahi hoti. Isiliye bachche ki scan mein ise surakshit mana jaata hai.
 
 **Galti 6: Samundar mein bhi 340 m/s use karna**
 
@@ -390,7 +389,7 @@ Samundar ke paani mein sound ki speed lagbhag **1500 m/s** hai. Agar 340 m/s let
 
 8. A dolphin produces a 120 kHz sound in sea water. Find its wavelength. (v = 1500 m/s)
 
-9. An ultrasonic flaw detector is used on a steel block, in which the speed of ultrasound is 5000 m/s. An extra echo from a flaw arrives after 30 µs. How deep is the flaw?
+9. An ultrasonic flaw detector is used on a metal block, in which the speed of ultrasound is 5000 m/s. An extra echo from a flaw arrives after 30 µs. How deep is the flaw?
 
 10. An elephant makes a call of 15 Hz. (a) Is it audible to humans? (b) Find its wavelength in air. (v = 340 m/s)
 
@@ -402,7 +401,7 @@ Samundar ke paani mein sound ki speed lagbhag **1500 m/s** hai. Agar 340 m/s let
 
 12. Give three reasons why ultrasound, and not audible sound, is used in SONAR.
 
-13. A student finds the depth of the sea from an echo time of 4 s using 340 m/s and gets 680 m. What mistake has he made? Find the correct depth.
+13. A student finds the depth of the sea from an echo time of 3 s using 340 m/s and gets 510 m. What mistake has he made? Find the correct depth.
 
 14. In the hospital story, how does the probe form a picture of the kidney even though the ultrasound cannot be heard? Answer in three or four lines.
 
@@ -446,8 +445,8 @@ Samundar ke paani mein sound ki speed lagbhag **1500 m/s** hai. Agar 340 m/s let
 
 12. (i) Ultrasound ki patli beam hoti hai, to wo ek hi disha mein sahi nishane par jaati hai. (ii) Chhoti wavelength ke karan wo chhoti cheezon se bhi reflect hoti hai. (iii) Insaan ise sun nahi sakte, to jahaz par tez awaaz se pareshani nahi hoti.
 
-13. Usne samundar mein 340 m/s (hawa ki speed) use ki. Samundar mein speed lagbhag 1500 m/s hai. Sahi: d = 1500 m/s × 4 s ÷ 2 = **3000 m**.
-    Jaanch: 2 × 3000 m = 6000 m = 1500 m/s × 4 s ✅
+13. Usne samundar mein 340 m/s (hawa ki speed) use ki. Samundar mein speed lagbhag 1500 m/s hai. Sahi: d = 1500 m/s × 3 s ÷ 2 = 4500 m ÷ 2 = **2250 m**.
+    Jaanch: 2 × 2250 m = 4500 m = 1500 m/s × 3 s ✅
 
 14. Probe ultrasound ki pulse sharir mein bhejti hai. Jahan do tissues ki seema aati hai, wahan se echo wapas aata hai. Probe echo pakadti hai aur machine har echo ke time se d = v t / 2 se doori nikalti hai. Saari doorion ko jod kar screen par tasveer banti hai. Awaaz sunai nahi deti, par uske echoes ki jaankari se tasveer ban jaati hai.
 

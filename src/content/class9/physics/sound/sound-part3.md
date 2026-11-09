@@ -9,7 +9,7 @@
 
 # Topic 3: Wave ke Parameters: Frequency, Wavelength, Amplitude aur v = f λ
 
-Pichhle topic mein humne dekha ki hawa mein sound ek wave ki tarah chalti hai: kahin hawa ke kan pass-pass aa jaate hain (compression), kahin door-door ho jaate hain (rarefaction), aur ye pattern aage badhta jaata hai. Wave energy ko aage le jaati hai, hawa ke kan khud aage nahi bhaagte. Ab sawal ye hai ki is wave ko **numbers mein kaise bataya jaye**? Do sounds ko alag-alag kaise pehchana jaye? Is topic mein hum wave ke teen number seekhenge, aur ek chhota sa formula **v = f λ** khud banayenge.
+Pichhle topic mein humne dekha ki hawa mein sound ek wave ki tarah chalti hai: kahin hawa ke kan paas-paas aa jaate hain (compression), kahin door-door ho jaate hain (rarefaction), aur ye pattern aage badhta jaata hai. Wave energy ko aage le jaati hai, hawa ke kan khud aage nahi bhaagte. Ab sawal ye hai ki is wave ko **numbers mein kaise bataya jaye**? Do sounds ko alag-alag kaise pehchana jaye? Is topic mein hum wave ke teen number seekhenge, aur ek chhota sa formula **v = f λ** khud banayenge.
 
 **Is poore topic mein: sound ki speed hawa mein v = 340 m/s maanenge.** (Alag-alag medium mein speed kyun alag hoti hai, wo agle topic mein.)
 
@@ -58,11 +58,11 @@ Pehle **distance ke saath** graph dekho: ek hi pal ki "tasveer", jisme alag-alag
     │              *          *
  -A ┤                * *   * *
     │
-    │   ├────────── λ ──────────┤
+    │       ├─────────── λ ──────────┤
     │   (ek wave ki lambai: peak se agle peak tak)
 ```
 
-> **Figure 3.1** – Distance ke saath wave ka graph. Ooncha point (peak) = compression, neecha point (trough) = rarefaction. Do lagataar peaks ke beech ki doori = wavelength λ. Beech wali rekha (0) se peak tak ki unchai = amplitude A.
+> **Figure 3.1** – Distance ke saath wave ka graph. Pressure ke graph mein ooncha point (peak) = compression aur neecha point (trough) = rarefaction. Do lagataar peaks ke beech ki doori = wavelength λ. Beech wali rekha (0) se peak tak ki unchai = amplitude A.
 
 Ab **samay ke saath** graph dekho: ek hi jagah ka kan, samay ke saath kaise hil raha hai.
 
@@ -74,7 +74,7 @@ Ab **samay ke saath** graph dekho: ek hi jagah ka kan, samay ke saath kaise hil 
     │              *          *
  -A ┤                * *   * *
     │
-    │   ├────────── T ──────────┤
+    │       ├─────────── T ──────────┤
     │   (ek poori vibration mein lagne wala samay)
 ```
 
@@ -90,7 +90,7 @@ Dono graph dikhne mein ek jaise hain, par ek mein x-axis par **doori** hai aur d
 - Amplitude jitna bada, sound utni **loud** (zyada tez). Amplitude chhota, sound dheemi.
 - Sound mein ye displacement bahut chhota hota hai: aam baat-cheet mein kan sirf mm ke bhi bahut chhote hisse jitna hilte hain.
 
-Kyra ne moti taar ko zor se chheda to taar ka amplitude zyada hua, hawa mein pressure ke badlaav bhi zyada hue, aur sound loud sunayi di. (Loudness ki poori kahani Topic 5 mein.)
+Mr. Alvares ne moti taar ko zor se chheda to taar ka amplitude zyada hua, hawa mein pressure ke badlaav bhi zyada hue, aur sound loud sunayi di. (Loudness ki poori kahani Topic 5 mein.)
 
 ### 2. Wavelength (λ): ek wave kitni lambi hai
 
@@ -101,11 +101,11 @@ Kyra ne moti taar ko zor se chheda to taar ka amplitude zyada hua, hawa mein pre
 ```
  Hawa ke kan (har ":" ek kan hai)
 
- :  :  :     :     :  :  :     :     :  :  :     :
- ├─ compression ─┤       ├─ compression ─┤
- ◄─────── λ ───────►
+  : : :     :     :     : : :     :     :     : : :
+    C          R          C          R          C
+    ◄───────── λ ─────────►
 
- (kan pass-pass = compression, kan door-door = rarefaction)
+ (C = compression: kan paas-paas, R = rarefaction: kan door-door)
 ```
 
 > **Figure 3.3** – Hawa mein do lagataar compressions ke beech ki doori wavelength λ hai.
@@ -189,7 +189,7 @@ Yaani unchi frequency ki sound ki wavelength chhoti hoti hai, aur neechi frequen
 
 ### Table 2: Same frequency, alag medium
 
-Ek 440 Hz ka tuning fork (ek Y-shape ki dhaatu ki chhadi jo ek fixed frequency par hilti hai) ek baar hawa mein aur ek baar paani mein bajaya gaya. Hawa mein v = 340 m/s aur paani mein v = 1500 m/s maano. (Ye alag speeds kyun hoti hain, wo Topic 4 mein.)
+Ek 440 Hz ka tuning fork (Topic 1 wali U-shape ki dhaatu ki chhadi, jo ek fixed frequency par hilti hai) ek baar hawa mein aur ek baar paani mein bajaya gaya. Hawa mein v = 340 m/s aur paani mein v = 1500 m/s maano. (Ye alag speeds kyun hoti hain, wo Topic 4 mein.)
 
 | Medium | v (m/s) | f (Hz) | λ = v ÷ f |
 |---|---|---|---|
@@ -211,7 +211,7 @@ Dono ki poori kahani Topic 5 mein aayegi. Abhi bas itna yaad rakho.
 
 ## Wapas music room mein: kahani ka hal
 
-Mr. Alvares ne Kyra se kaha, "Patli taar chhoti aur halki hoti hai, isliye wo **jaldi-jaldi** hilti hai. Moti taar bhaari aur lambi hoti hai, wo **dheere-dheere** hilti hai."
+Mr. Alvares ne Kyra se kaha, "Patli taar chhoti aur halki hoti hai, isliye wo **jaldi-jaldi** hilti hai. Moti taar bhaari hoti hai, wo **dheere-dheere** hilti hai."
 
 Maan lo patli taar ki frequency **880 Hz** hai aur moti taar ki **110 Hz**. Hawa mein v = 340 m/s:
 
@@ -220,7 +220,7 @@ Maan lo patli taar ki frequency **880 Hz** hai aur moti taar ki **110 Hz**. Hawa
 
 Jaanch: 880 Hz × 0.386 m = 339.7 m/s ≈ 340 m/s ✅, aur 110 Hz × 3.09 m = 339.9 m/s ≈ 340 m/s ✅ (chhota sa farak rounding ki wajah se hai).
 
-Mr. Alvares bole, "Dekha Kyra? Patli taar: **zyada frequency, chhoti wavelength, unchi pitch**. Moti taar: **kam frequency, lambi wavelength, neechi pitch**. Aur jab tumne zor se chheda, to **amplitude** badha, frequency wahi rahi, isliye sirf aawaaz loud hui."
+Mr. Alvares bole, "Dekha Kyra? Patli taar: **zyada frequency, chhoti wavelength, unchi pitch**. Moti taar: **kam frequency, lambi wavelength, neechi pitch**. Aur jab maine zor se chheda, to **amplitude** badha, frequency wahi rahi, isliye sirf aawaaz loud hui."
 
 Kyra bahut khush hui: "Yaani ek hi taar se bhi teeno numbers samajh aa gaye: A, f aur λ!"
 

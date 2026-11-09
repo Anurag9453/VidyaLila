@@ -9,7 +9,7 @@
 
 # Topic 5: Sound ki Characteristics: Loudness, Pitch aur Quality
 
-Pichhle topic mein humne dekha ki sound hawa mein lagbhag 340 m/s ki speed se chalti hai, aur ye speed medium aur temperature par depend karti hai: awaaz tez ho ya dheemi, patli ho ya mote, speed wahi rehti hai. Par ek baat abhi baaki hai. Sab awaazein ek jaisi nahi lagti: kuch tez, kuch patli, kuch mitthi. **Dhol ki awaaz aur bansuri ki awaaz mein farak kya hai? Ek chhote bachche ki awaaz aur uske papa ki awaaz mein farak kya hai?** Is topic mein hum sound ki teen characteristics seekhenge: **loudness, pitch aur quality**, aur dekhenge ki hamara kaan inhi teen cheezon se har awaaz ko pehchanta hai.
+Pichhle topic mein humne dekha ki sound hawa mein lagbhag 340 m/s ki speed se chalti hai, aur ye speed medium aur temperature par depend karti hai: awaaz tez ho ya dheemi, patli ho ya moti, speed wahi rehti hai. Par ek baat abhi baaki hai. Sab awaazein ek jaisi nahi lagti: kuch tez, kuch patli, kuch mitthi. **Dhol ki awaaz aur bansuri ki awaaz mein farak kya hai? Ek chhote bachche ki awaaz aur uske papa ki awaaz mein farak kya hai?** Is topic mein hum sound ki teen characteristics seekhenge: **loudness, pitch aur quality**, aur dekhenge ki hamara kaan inhi teen cheezon se har awaaz ko pehchanta hai.
 
 Prior knowledge: amplitude A (vibration ka maximum displacement), frequency f (1 second mein kitne vibration, unit Hz) aur wavelength λ (ek poore wave ki lambai) ke baare mein [sound-part3.md](sound-part3.md) mein padha tha. Hum unhi ka use karenge. **Is poore topic mein: hawa mein sound ki speed v = 340 m/s.**
 
@@ -111,7 +111,7 @@ Loudness **decibel (dB)** mein naapi jaati hai. Yahan sirf ye table dekhni hai: 
 | Bhaari traffic | 80 dB |
 | Tez factory ya power tool (drill) | 90 se 100 dB |
 | Rock concert, ya kaan ke paas siren | 110 se 120 dB |
-| Dard ki seema (jet engine ke paas) | 140 dB |
+| Jet engine ke bahut paas (tez dard) | 140 dB |
 
 ```
  Lagbhag loudness (har # = 5 dB)
@@ -127,7 +127,7 @@ Loudness **decibel (dB)** mein naapi jaati hai. Yahan sirf ye table dekhni hai: 
 
 > **Figure 5.2** – Awaaz jitni tez, bar utna lamba (sab values approximate).
 
-**Sunne ki suraksha:** lagbhag 120 dB ya usse tez awaaz hamare kaan ko **nuksaan** pahuncha sakti hai. Isiliye bahut tez music ya siren ke bahut paas rehna theek nahi. Iska poora vishay Topic 7 mein.
+**Sunne ki suraksha:** lagbhag 120 dB ke aas-paas se kaan mein **dard** shuru ho sakta hai, aur itni tez awaaz hamare kaan ko **nuksaan** pahuncha sakti hai. Isiliye bahut tez music ya siren ke bahut paas rehna theek nahi. Iska poora vishay Topic 7 mein.
 
 ---
 
@@ -142,9 +142,9 @@ Kuch awaazein **patli, oonchi (shrill)** lagti hain, jaise chidiya ki chahchahat
 > **Frequency jitni zyada, pitch utni oonchi (shriller). Frequency jitni kam, pitch utni neechi.**
 
 Roz ki zindagi ke example:
-- **Mosquito ki bhinbhinahat** oonchi pitch ki hai (uske pankh bahut tezi se hilte hain), aur **bhanware (bee) ki gunjan** neechi pitch ki hai.
+- **Mosquito ki bhinbhinahat** oonchi pitch ki hai (uske pankh bahut tezi se hilte hain), aur **madhumakkhi (bee) ki gunjan** neechi pitch ki hai.
 - **Chidiya ki chahchahat** oonchi, **sher ki dahaad** neechi.
-- **Mahila ya bachche ki awaaz** aam taur par oonchi pitch ki hoti hai, aur **aadmi ki awaaz** neechi. Iska karan ye hai ki unke vocal cords (awaaz ki nalikaon ki jhilli) alag tarah se vibrate karte hain: bachchon aur mahilaon ke vocal cords aam taur par chhote aur patle hote hain, to unki frequency zyada hoti hai.
+- **Mahila ya bachche ki awaaz** aam taur par oonchi pitch ki hoti hai, aur **aadmi ki awaaz** neechi. Iska karan ye hai ki unke vocal cords (gale ke andar ki awaaz banane wali jhilliyan) alag tarah se vibrate karte hain: bachchon aur mahilaon ke vocal cords aam taur par chhote aur patle hote hain, to unki frequency zyada hoti hai.
 
 Topic 3 ki guitar wali baat yaad karo: **patli taar ki frequency zyada hoti hai, to uski pitch oonchi**, aur **moti taar ki frequency kam, to pitch neechi**.
 
@@ -213,7 +213,7 @@ Do sur yaad rakhne layak hain:
 | Middle C (beech ka Sa / Do) | 262 Hz |
 | A (La): tuning ka standard | 440 Hz |
 
-Upar ki table mein La 437 Hz aaya, jo 440 Hz ke bahut paas hai (ratio sirf lagbhag hain). Aur dhyan do: **upar wala Sa ka frequency neeche wale Sa se theek double (ratio 2)** hota hai: isi ko **octave** kehte hain. Isiliye ek hi sur neeche aur upar wale octave mein "same sur" jaisa lagta hai, bas ek oonchi pitch ka.
+Upar ki table mein La 437 Hz aaya, jo 440 Hz ke bahut paas hai. Farak isliye hai ki ye ratio wali list aur aaj ki standard tuning thodi si alag hoti hain, isliye table ki saari frequencies **lagbhag** hain. Aur dhyan do: **upar wala Sa ka frequency neeche wale Sa se theek double (ratio 2)** hota hai: isi ko **octave** kehte hain. Isiliye ek hi sur neeche aur upar wale octave mein "same sur" jaisa lagta hai, bas ek oonchi pitch ka.
 
 ---
 
@@ -259,7 +259,7 @@ Jab koi instrument ek note bajata hai, to wo sirf ek hi vibration nahi karta. Us
 
 ### Roz ki zindagi mein quality
 
-- **Phone par dost ki awaaz pehchan lena:** aap bina naam bataye pehchan lete ho ki "ye Rohan hai". Kyunki har insaan ki awaaz ki quality (waveform) alag hoti hai. Do log same sur mein, same tezi se bolein, to bhi unki awaaz alag lagti hai.
+- **Phone par dost ki awaaz pehchan lena:** aap bina naam bataye pehchan lete ho ki "ye Sparsh hai". Kyunki har insaan ki awaaz ki quality (waveform) alag hoti hai. Do log same sur mein, same tezi se bolein, to bhi unki awaaz alag lagti hai.
 - **Piano aur sitar:** same note bajane par bhi alag.
 - **Dhol, tabla aur harmonium:** teeno ko aankhein band karke pehchan lete hain.
 
@@ -315,14 +315,14 @@ Nysa ne taali bajayi, "Matlab main kisi bhi dost ki awaaz phone par isi liye peh
 
 **Jaanch:** 256 Hz × 1.25 = 320 Hz ✅. (Ye ratio 5/4 wahi hai jo Sa aur Ga ke beech ka tha.)
 
-**Example 3 (440 Hz ke note ki wavelength):** Hawa mein v = 340 m/s. 440 Hz ke note ki wavelength kitni hai? Uske octave (880 Hz) ki wavelength kitni hai?
+**Example 3 (Middle C ki wavelength):** Hawa mein v = 340 m/s. Middle C (262 Hz) ki wavelength kitni hai? Uske octave (524 Hz) ki wavelength kitni hai?
 
 Formula (Topic 3): v = f × λ, to **λ = v ÷ f**
 
-- 440 Hz: λ = 340 m/s ÷ 440 Hz = 340 m/s ÷ 440 (1/s) = **0.773 m ≈ 0.77 m**
-- 880 Hz: λ = 340 m/s ÷ 880 Hz = **0.386 m ≈ 0.39 m**
+- 262 Hz: λ = 340 m/s ÷ 262 Hz = **1.298 m ≈ 1.30 m**
+- 524 Hz: λ = 340 m/s ÷ 524 Hz = **0.649 m ≈ 0.65 m**
 
-**Jaanch:** 0.773 m × 440 Hz = 340.1 m/s ≈ 340 m/s ✅. 0.386 m × 880 Hz = 339.7 m/s ≈ 340 m/s ✅. Aur 0.773 ÷ 0.386 ≈ 2, yaani frequency double hui to wavelength aadhi. Speed (340 m/s) same rahi: pitch badalne se speed nahi badalti (Topic 4).
+**Jaanch:** 1.298 m × 262 Hz = 340.1 m/s ≈ 340 m/s ✅. 0.649 m × 524 Hz = 340.1 m/s ≈ 340 m/s ✅. Aur 1.298 m ÷ 0.649 m = 2, yaani frequency double hui to wavelength aadhi. Speed (340 m/s) same rahi: pitch badalne se speed nahi badalti (Topic 4).
 
 **Example 4 (amplitude double karne ka asar):** 440 Hz ka tuning fork halke se maara gaya. Phir usi fork ko aise maara ki amplitude double ho gaya. Pitch aur loudness par kya asar hua?
 
@@ -359,9 +359,9 @@ Order (kam se zyada): fusfusahat 20 dB, shaant kamra 45 dB, normal baat-cheet 60
 | 7 | Door se aati dhol ki awaaz | Loudness (kam) | Door jaane par energy phailti hai. Pitch wahi rehti hai |
 | 8 | Ek hi gaana do alag singers se | Quality | Sur wahi, par waveform alag |
 | 9 | Taar ko kasna (tight karna) | Pitch (oonchi hui) | Frequency badhi |
-| 10 | Bansuri vs seeti (whistle) | Quality (agar same note bajayein). Aam taur par seeti ki pitch bhi zyada hoti hai | Waveform alag |
+| 10 | Bansuri vs seeti (whistle), same note aur same loudness par | Quality | Waveform alag |
 
-**Jaanch (row 2 ka):** taar chhoti karne par frequency badhti hai, aur zyada frequency ka matlab oonchi pitch ✅. (Rows 5 aur 10 mein bhi pitch ya quality ka farak ek hi cheez se nahi, aksar do cheezon se aata hai: yahan humne mukhya karan liya.)
+**Jaanch:** Row 2: taar chhoti karne par frequency badhti hai, aur zyada frequency ka matlab oonchi pitch ✅. Row 10: frequency same hai (to pitch same) aur loudness bhi same, to farak sirf waveform ka bacha, yaani quality ✅.
 
 **Example 8 (cheezein dhyan se):** Do awaazein hain: A ki frequency 300 Hz aur amplitude 2 cm, B ki frequency 600 Hz aur amplitude 1 cm. Kiski pitch oonchi hai? Loudness kiski zyada hogi?
 
@@ -404,7 +404,7 @@ Amplitude badhane par sirf **loudness** badhti hai. Pitch frequency par depend k
 
 - Sound ki teen characteristics: **loudness, pitch, quality**.
 - **Loudness** = awaaz ki tezi ka ehsaas. Mukhya roop se **amplitude** par depend karti hai (bada amplitude = zyada energy = zyada tez). Doori badhne par kam hoti hai (energy phailti hai); surface ke area aur kaan ki sensitivity par bhi depend karti hai.
-- Loudness ka unit **decibel (dB)**: 0 dB sabse halki, 20 dB whisper, 60 dB baat-cheet, 80 dB traffic, 110 se 120 dB concert, 140 dB dard ki seema (sab approximate). Lagbhag 120 dB kaan ko nuksaan pahuncha sakti hai.
+- Loudness ka unit **decibel (dB)**: 0 dB sabse halki, 20 dB whisper, 60 dB baat-cheet, 80 dB traffic, 110 se 120 dB concert, 140 dB jet engine ke paas (sab approximate). Lagbhag 120 dB se kaan mein dard shuru ho sakta hai, aur aisi awaaz kaan ko nuksaan pahuncha sakti hai.
 - **Intensity** physical quantity hai (energy per second per unit area); **loudness** uska ehsaas hai.
 - **Pitch** = oonchi ya neechi hone ka ehsaas. **Frequency** par depend karti hai: zyada frequency = oonchi pitch.
 - Taar jitni **chhoti, patli, aur kasi hui**, utni oonchi pitch.
@@ -426,7 +426,7 @@ Amplitude badhane par sirf **loudness** badhti hai. Pitch frequency par depend k
 
 4. Find the wavelength in air of a note of frequency 320 Hz. (Speed of sound in air = 340 m/s.)
 
-5. A sound wave in air has a wavelength of 0.5 m. Find its frequency. (Speed of sound = 340 m/s.)
+5. A sound wave in air has a wavelength of 0.4 m. Find its frequency. (Speed of sound = 340 m/s.)
 
 6. A drummer hits a drum first gently and then hard. (a) What changes: loudness, pitch or quality? (b) What stays the same? Give a reason.
 
@@ -464,8 +464,8 @@ Amplitude badhane par sirf **loudness** badhti hai. Pitch frequency par depend k
 4. λ = v ÷ f = 340 m/s ÷ 320 Hz = **1.06 m** (lagbhag; 1.0625 m).
    Jaanch: 1.0625 m × 320 Hz = 340 m/s ✅
 
-5. f = v ÷ λ = 340 m/s ÷ 0.5 m = **680 Hz**.
-   Jaanch: 0.5 m × 680 Hz = 340 m/s ✅
+5. f = v ÷ λ = 340 m/s ÷ 0.4 m = **850 Hz**.
+   Jaanch: 0.4 m × 850 Hz = 340 m/s ✅
 
 6. (a) **Loudness** badli: zor se maarne par amplitude bada, to awaaz tez hui. (b) **Pitch** wahi rahi, kyunki drum ki jhilli ki frequency uski banawat aur kasaav se tay hoti hai, amplitude se nahi. Quality bhi lagbhag same rahegi (drum wahi hai).
 

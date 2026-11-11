@@ -29,45 +29,58 @@ import {
 } from "lucide-react";
 
 function formatPlanBadge(
-  plan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | null,
+  plan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE" | null | undefined,
   dailyLeft: number,
   compLeft: number
 ) {
-  const totalLeft = dailyLeft + compLeft;
+  const approxCredits = dailyLeft * 20 || 300;
+  if (plan === "COMPREHENSIVE" || dailyLeft >= 200) {
+    return {
+      label: "👑 Comprehensive Class Pack (₹1,999)",
+      creditsText: `All Class Chapters + 🪙 ~${approxCredits.toLocaleString()} Cr`,
+      pillClass: "bg-emerald-100 border-emerald-400 text-emerald-950",
+      tierWeight: 4,
+    };
+  }
   if (plan === "MONTHLY") {
     return {
-      label: "👑 Pro Pass (₹499)",
-      creditsText: `${dailyLeft} Daily + ${compLeft} Weekly (${totalLeft} left)`,
-      pillClass: "bg-emerald-100 border-emerald-300 text-emerald-900",
+      label: "💎 Scholar Pack (₹999)",
+      creditsText: `🪙 ~${approxCredits.toLocaleString()} Vidya Credits`,
+      pillClass: "bg-indigo-100 border-indigo-300 text-indigo-900",
       tierWeight: 3,
     };
   }
   if (plan === "WEEKLY") {
     return {
-      label: "💎 VIP Pass (₹149)",
-      creditsText: `${dailyLeft} Daily + ${compLeft} Weekly (${totalLeft} left)`,
-      pillClass: "bg-indigo-100 border-indigo-300 text-indigo-900",
+      label: "📘 Subject Pack (₹499)",
+      creditsText: `🪙 ~${approxCredits.toLocaleString()} Vidya Credits`,
+      pillClass: "bg-sky-100 border-sky-300 text-sky-900",
       tierWeight: 2,
     };
   }
   if (plan === "ONE_DAY") {
     return {
-      label: "⚡ Basic Pass (₹49)",
-      creditsText: `${dailyLeft} Daily Credits left`,
+      label: "🪙 Starter Pack (₹199)",
+      creditsText: `🪙 ~${approxCredits.toLocaleString()} Vidya Credits`,
       pillClass: "bg-amber-100 border-amber-300 text-amber-900",
       tierWeight: 1,
     };
   }
   return {
-    label: "Free Account (No Pass)",
-    creditsText: "0 Paid Quiz Credits",
+    label: "Free Starter (🪙 300 Welcome)",
+    creditsText: "🪙 300 Free Welcome Credits",
     pillClass: "bg-slate-100 border-slate-200 text-slate-600",
     tierWeight: 0,
   };
 }
 
 export default function AdminPortalPage() {
-  const { profile, isAuthenticated } = useApp();
+  const { profile, isAuthenticated, refundOrGrantCredits } = useApp();
+  const [refundTargetStudent, setRefundTargetStudent] = useState("");
+  const [refundAmount, setRefundAmount] = useState<number>(100);
+  const [refundReason, setRefundReason] = useState(
+    "Exam Technical Issue — Instant Credit Refund (No Cash Refund)"
+  );
   const [serverStudents, setServerStudents] = useState<AdminStudentRecord[]>(
     []
   );
@@ -1152,6 +1165,34 @@ export default function AdminPortalPage() {
                         <p className="text-[11px] font-bold text-slate-500 mt-1">
                           {planInfo.creditsText}
                         </p>
+                        <div className="flex flex-wrap items-center gap-1 mt-1.5">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              refundOrGrantCredits(
+                                20,
+                                `Admin Refund (+20 Cr) for ${student.username}`,
+                                student.email || student.username
+                              )
+                            }
+                            className="rounded-lg bg-amber-50 hover:bg-amber-100 border border-amber-300 px-2 py-0.5 text-[10px] font-extrabold text-amber-900 transition cursor-pointer"
+                          >
+                            +20 Cr Refund
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              refundOrGrantCredits(
+                                100,
+                                `Admin Refund (+100 Cr) for ${student.username}`,
+                                student.email || student.username
+                              )
+                            }
+                            className="rounded-lg bg-indigo-50 hover:bg-indigo-100 border border-indigo-300 px-2 py-0.5 text-[10px] font-extrabold text-indigo-900 transition cursor-pointer"
+                          >
+                            +100 Cr Refund
+                          </button>
+                        </div>
                       </td>
 
                       {/* Daily Streak */}
@@ -1220,6 +1261,95 @@ export default function AdminPortalPage() {
             </table>
           </div>
         )}
+      </section>
+
+      {/* ====================================================================
+          UPWORK-STYLE INSTANT CREDIT REFUND & SCHOLARSHIP GRANT CONSOLE
+         ==================================================================== */}
+      <section className="rounded-3xl border-2 border-amber-300 bg-gradient-to-r from-amber-50/80 via-white to-indigo-50/50 p-6 sm:p-8 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/70 pb-4">
+          <div className="space-y-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 border border-amber-300 px-3 py-0.5 text-[11px] font-extrabold text-amber-900 uppercase tracking-wider">
+              <span>🪙</span>
+              <span>Upwork-Style Credit Refund &amp; Grant Tool</span>
+            </span>
+            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
+              Issue Instant Vidya Credit Refunds (Zero Cash Refund Liability)
+            </h2>
+            <p className="text-xs font-semibold text-slate-600">
+              Need to refund a student for a cancelled test, accidental chapter unlock, or technical glitch? Credit their Vidya Credit Wallet directly in 1 click.
+            </p>
+          </div>
+          <div className="rounded-2xl bg-white border border-amber-200 px-4 py-2.5 text-xs font-bold text-slate-700 shrink-0">
+            <p>📖 Chapter Unlock = <strong>100 Credits</strong></p>
+            <p>⚡ Daily = <strong>20 Cr</strong> • Weekly = <strong>50 Cr</strong> • Monthly = <strong>100 Cr</strong></p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+          <div>
+            <label className="block text-xs font-extrabold text-slate-700 mb-1">
+              Student @Username or Email
+            </label>
+            <input
+              type="text"
+              value={refundTargetStudent}
+              onChange={(e) => setRefundTargetStudent(e.target.value)}
+              placeholder={profile.username || "@scholar or email (blank = current)"}
+              className="w-full rounded-xl border-2 border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-900 focus:border-indigo-500 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-extrabold text-slate-700 mb-1">
+              Credits to Refund / Grant (🪙)
+            </label>
+            <div className="flex items-center gap-1.5">
+              {[20, 50, 100, 500].map((amt) => (
+                <button
+                  key={amt}
+                  type="button"
+                  onClick={() => setRefundAmount(amt)}
+                  className={`rounded-xl border-2 px-3 py-2 text-xs font-extrabold transition cursor-pointer ${
+                    refundAmount === amt
+                      ? "border-amber-500 bg-amber-400 text-slate-950"
+                      : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                  }`}
+                >
+                  +{amt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-extrabold text-slate-700 mb-1">
+              Refund / Grant Reason
+            </label>
+            <input
+              type="text"
+              value={refundReason}
+              onChange={(e) => setRefundReason(e.target.value)}
+              placeholder="e.g. Daily Quiz Refund / Bonus Credits"
+              className="w-full rounded-xl border-2 border-slate-200 bg-white px-3.5 py-2.5 text-xs font-bold text-slate-900 focus:border-indigo-500 focus:outline-none"
+            />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              refundOrGrantCredits(
+                refundAmount,
+                refundReason,
+                refundTargetStudent.trim() || undefined
+              );
+            }}
+            className="btn-3d-emerald py-2.5 px-4 text-xs font-extrabold flex items-center justify-center gap-1.5 cursor-pointer"
+          >
+            <span>🪙</span>
+            <span>Credit +{refundAmount} Credits to Wallet</span>
+          </button>
+        </div>
       </section>
     </div>
   );

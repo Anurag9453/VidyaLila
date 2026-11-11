@@ -56,6 +56,7 @@ function ContestArenaContent() {
     contests,
     activateProPass,
     consumePassForContest,
+    getContestCreditCost,
     submitContestResult,
   } = useApp();
 
@@ -1250,8 +1251,9 @@ function ContestArenaContent() {
 
   const renderQuizCard = (contest: QuizContest) => {
     const isUnlocked = profile.unlockedContestIds.includes(contest.id);
-    const canUseWalletPass =
-      contest.type === "DAILY" ? dailyPassesLeft > 0 : compPassesLeft > 0;
+    const creditCost = getContestCreditCost(contest.type);
+    const availableCredits = profile.credits ?? 300;
+    const canUseWalletCredits = availableCredits >= creditCost;
     const isSelectedChapters = contest.syllabusScope === "SELECTED_CHAPTERS";
     const totalMarks = contest.questions.length * 4;
 
@@ -1289,6 +1291,10 @@ function ContestArenaContent() {
                 {isSelectedChapters
                   ? "📌 SELECTED CHAPTERS"
                   : "🌍 FULL SYLLABUS"}
+              </span>
+
+              <span className="rounded-lg bg-amber-100 border border-amber-300 px-2.5 py-1 text-[10px] font-extrabold text-amber-900">
+                🪙 {creditCost} Credits Entry
               </span>
             </div>
 
@@ -1373,14 +1379,13 @@ function ContestArenaContent() {
               <span className="font-black text-emerald-700">
                 ✓ {contest.isLive ? "Admit Pass Active" : "Registered"}
               </span>
-            ) : canUseWalletPass ? (
+            ) : canUseWalletCredits ? (
               <span className="font-black text-indigo-700">
-                1 Pass Credit Available
+                🪙 {creditCost} Credits (Wallet: {availableCredits.toLocaleString()})
               </span>
             ) : (
-              <span className="font-bold text-slate-500">
-                1 {contest.type === "DAILY" ? "Daily" : "Competition"} Pass
-                Required
+              <span className="font-bold text-rose-600">
+                Need 🪙 {creditCost} Credits (You have {availableCredits})
               </span>
             )}
           </div>
@@ -1388,8 +1393,8 @@ function ContestArenaContent() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <button
               onClick={() => handleEnterContest(contest)}
-              className={`sm:col-span-2 rounded-xl py-3 px-4 text-xs font-black text-white shadow-sm transition flex items-center justify-center gap-2 ${
-                isUnlocked || canUseWalletPass
+              className={`sm:col-span-2 rounded-xl py-3 px-4 text-xs font-black text-white shadow-sm transition flex items-center justify-center gap-2 cursor-pointer ${
+                isUnlocked || canUseWalletCredits
                   ? "bg-emerald-600 hover:bg-emerald-700"
                   : "bg-indigo-600 hover:bg-indigo-700"
               }`}
@@ -1401,19 +1406,19 @@ function ContestArenaContent() {
                     ? "Enter CBT Examination Hall"
                     : `Registered • Opens at ${contest.scheduledTimeSlot}`}
                 </>
-              ) : canUseWalletPass ? (
+              ) : canUseWalletCredits ? (
                 <>
                   <ShieldCheck className="h-4 w-4" />
                   {contest.isLive
-                    ? "Unlock & Enter Exam Hall"
-                    : "Use 1 Pass & Pre-Register"}
+                    ? `Enter Exam (🪙 ${creditCost} Credits)`
+                    : `Pre-Register (🪙 ${creditCost} Credits)`}
                 </>
               ) : (
                 <>
                   <Lock className="h-4 w-4" />
                   {contest.isLive
-                    ? "Add Pass to Enter Exam"
-                    : "Add Pass to Register"}
+                    ? `Buy Credits to Enter (🪙 ${creditCost})`
+                    : `Buy Credits to Register (🪙 ${creditCost})`}
                 </>
               )}
             </button>
@@ -1494,61 +1499,50 @@ function ContestArenaContent() {
             </p>
           </div>
 
-          {/* Student's Available Pass Wallet */}
+          {/* Student's Available Vidya Credit Wallet */}
           <div className="lg:col-span-5">
-            <div className="rounded-2xl border-2 border-slate-200 bg-slate-50 p-4 sm:p-5 space-y-3">
+            <div className="rounded-2xl border-2 border-amber-300 bg-gradient-to-br from-amber-50/80 via-white to-indigo-50/40 p-4 sm:p-5 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
-                  Your Examination Pass Credits
+                <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-900 flex items-center gap-1">
+                  <span>🪙</span>
+                  <span>Vidya Credit Wallet</span>
                 </span>
                 <button
                   onClick={() => {
                     setDefaultModalPkg("WEEKLY");
                     setShowPassModal(true);
                   }}
-                  className="btn-3d-amber px-3.5 py-1.5 text-xs inline-flex items-center gap-1"
+                  className="btn-3d-amber px-3.5 py-1.5 text-xs inline-flex items-center gap-1 cursor-pointer"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  <span>
-                    {dailyPassesLeft + compPassesLeft === 0 && profile.proPassPlan
-                      ? "Recharge Passes"
-                      : "+ Add Passes"}
-                  </span>
+                  <span>+ Buy Credits</span>
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="rounded-xl bg-white border border-slate-200 p-3">
-                  <p className="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 text-indigo-600" /> Daily
-                    Test Passes
+              <div className="rounded-xl bg-white border-2 border-amber-200 p-3.5 flex items-center justify-between">
+                <div>
+                  <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                    Available Balance
                   </p>
-                  <p className="text-2xl font-extrabold text-slate-900 mt-1">
-                    {dailyPassesLeft}
-                  </p>
-                  <p className="text-[10px] font-bold text-slate-400">
-                    1 pass = 1 Daily Test
+                  <p className="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">
+                    🪙 {(profile.credits ?? 300).toLocaleString()}{" "}
+                    <span className="text-xs font-bold text-slate-500">
+                      Credits
+                    </span>
                   </p>
                 </div>
-
-                <div className="rounded-xl bg-white border border-slate-200 p-3">
-                  <p className="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-                    <Award className="h-3.5 w-3.5 text-amber-600" /> Weekly
-                    Test Passes
-                  </p>
-                  <p className="text-2xl font-extrabold text-slate-900 mt-1">
-                    {compPassesLeft}
-                  </p>
-                  <p className="text-[10px] font-bold text-slate-400">
-                    1 pass = 1 Weekly Test
-                  </p>
+                <div className="text-right text-[11px] font-bold text-slate-600 space-y-0.5">
+                  <p>⚡ Daily Test: <strong>20 Cr</strong></p>
+                  <p>💎 Weekly Test: <strong>50 Cr</strong></p>
+                  <p>👑 Monthly Exam: <strong>100 Cr</strong></p>
                 </div>
               </div>
 
-              <p className="text-[11px] font-bold text-slate-500 leading-snug">
-                💡 Passes are <strong>test-wise</strong> (⚡ Basic ₹49 = 2 Daily,
-                💎 VIP ₹149 = 7 Daily + 1 Weekly, 👑 Pro ₹499 = 30 Daily + 4
-                Weekly).
+              <p className="text-[11px] font-bold text-slate-600 leading-snug">
+                🛡️ <strong>Upwork-Style Credit Refund Policy:</strong> Use
+                credits on any Chapter (100 Cr) or Live Test. Any refund for a
+                cancelled/rescheduled test is credited 100% back into your Vidya
+                Credit Wallet.
               </p>
             </div>
           </div>
@@ -1645,49 +1639,48 @@ function ContestArenaContent() {
           </div>
         </div>
 
-        {/* Merit Scholarship Passes Banner */}
+        {/* Merit Scholarship Credits Banner */}
         <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-2.5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="text-xs sm:text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
               <Trophy className="h-4 w-4 text-amber-500" />
               <span>
-                Merit Scholarship Rewards: Top Rankers Win Free Examination
-                Passes!
+                Merit Scholarship Rewards: Top Rankers Win Free Vidya Credits (🪙)!
               </span>
             </p>
             <span className="rounded-md bg-emerald-100 px-2.5 py-0.5 text-[10px] font-extrabold uppercase text-emerald-900">
-              Auto-Credited Upon Evaluation
+              Auto-Credited to Wallet Upon Evaluation
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
             <div className="rounded-xl bg-white border border-slate-200 p-3">
               <p className="font-extrabold text-slate-900">
-                ⚡ Daily Test Top Rankers
+                ⚡ Daily Test Top Rankers (Entry: 20 Cr)
               </p>
               <p className="text-[11px] font-semibold text-slate-600 mt-0.5">
-                <strong>Top 3:</strong> Free <strong>⚡ Basic Pass</strong> (2
-                Tests • ₹49) • <strong>Top 10:</strong> +1 Free Daily Test Pass
+                <strong>Top 3:</strong> Win <strong>🪙 +50 Free Credits</strong> •{" "}
+                <strong>Top 10:</strong> Win <strong>🪙 +20 Credits</strong> (100% Entry Refund!)
               </p>
             </div>
 
             <div className="rounded-xl bg-white border border-slate-200 p-3">
               <p className="font-extrabold text-slate-900">
-                💎 Weekly Test Top Rankers
+                💎 Weekly Test Top Rankers (Entry: 50 Cr)
               </p>
               <p className="text-[11px] font-semibold text-slate-600 mt-0.5">
-                <strong>Top 3:</strong> Free <strong>💎 VIP Pass</strong> (8
-                Tests • ₹149) • <strong>Top 10:</strong> Free ⚡ Basic Pass
+                <strong>Top 3:</strong> Win <strong>🪙 +200 Free Credits</strong> (2 Chapters!) •{" "}
+                <strong>Top 10:</strong> Win <strong>🪙 +60 Free Credits</strong>
               </p>
             </div>
 
             <div className="rounded-xl bg-white border border-slate-200 p-3">
               <p className="font-extrabold text-slate-900">
-                👑 Monthly Test Top Rankers
+                👑 Monthly Championship (Entry: 100 Cr)
               </p>
               <p className="text-[11px] font-semibold text-slate-600 mt-0.5">
-                <strong>Top 3:</strong> Free <strong>👑 Pro Pass</strong> (34
-                Tests • ₹499) • <strong>Top 10:</strong> Free 💎 VIP Pass
+                <strong>Top 3:</strong> Win <strong>🪙 +500 Free Credits</strong> (Starter Pack!) •{" "}
+                <strong>Top 10:</strong> Win <strong>🪙 +200 Free Credits</strong>
               </p>
             </div>
           </div>

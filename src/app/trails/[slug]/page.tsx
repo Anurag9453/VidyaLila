@@ -29,11 +29,13 @@ import {
   Bot,
   MessageSquare,
   Lock,
+  Unlock,
   LogIn,
   UserPlus,
 } from "lucide-react";
 import { DoubtDrawer } from "@/components/DoubtDrawer";
 import { QuestionReference } from "@/lib/discussions-data";
+import { PaymentModal, PassPackageType } from "@/components/PaymentModal";
 
 /**
  * Calculates remaining marks for a single 10-mark question based on wrong attempts:
@@ -2690,8 +2692,15 @@ function TrailDetailContent({ slug }: { slug: string }) {
     setContentLanguage,
     submitContentReport,
     signInWithGoogle,
+    isChapterFreeStarter,
+    isChapterUnlocked,
+    unlockChapterWithCredits,
+    activateProPass,
   } = useApp();
   const mod = modules.find((m) => m.slug === slug) || modules[0];
+  const chapterUnlocked = isChapterUnlocked(mod.id);
+  const chapterIsFreeStarter = isChapterFreeStarter(mod.id);
+  const [showChapterCreditModal, setShowChapterCreditModal] = useState(false);
 
   const [activeUnitIdx, setActiveUnitIdx] = useState<number>(
     Math.min(Math.max(0, parsedUnitIdx), mod.units.length - 1)
@@ -2953,10 +2962,168 @@ function TrailDetailContent({ slug }: { slug: string }) {
       </div>
 
       {/* ====================================================================
-          VIEW 1: CHAPTER FULL UNIT LIST (When user clicks Chapter Name or View All)
+          CHAPTER CREDIT UNLOCK GATE (Shown when Chapter 3+ is not yet unlocked)
          ==================================================================== */}
-      {!hasSelectedUnit ? (
-        <div className="rounded-3xl bg-white border-2 border-slate-200 shadow-[0_6px_0_0_#e2e8f0] p-6 sm:p-8">
+      {!chapterUnlocked ? (
+        <div className="rounded-3xl bg-white border-2 border-amber-300 shadow-[0_8px_0_0_#f59e0b] p-6 sm:p-10 space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-100 pb-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-amber-100 border-2 border-amber-300 text-3xl shadow-xs">
+                🔒
+              </div>
+              <div className="space-y-1.5">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 border border-amber-300 px-3 py-0.5 text-[11px] font-extrabold text-amber-900 uppercase tracking-wider">
+                  <span>🪙 100 Vidya Credits Required</span>
+                </div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                  {mod.title}
+                </h1>
+                <p className="text-sm text-slate-600 font-medium">
+                  {mod.subtitle} • {mod.units.length} Interactive Units &amp; Practice Tests (+{mod.totalXp} GP)
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl bg-indigo-50 border-2 border-indigo-200 px-5 py-3.5 text-center shrink-0">
+              <p className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-600">
+                Your Available Wallet
+              </p>
+              <p className="text-2xl font-black text-indigo-950 mt-0.5">
+                🪙 {(profile.credits ?? 300).toLocaleString()} Credits
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left: Units Preview inside this chapter */}
+            <div className="lg:col-span-7 space-y-3">
+              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                What You Unlock Inside &ldquo;{mod.title}&rdquo; ({mod.units.length} Units):
+              </h3>
+              <div className="space-y-2.5">
+                {mod.units.map((u, idx) => (
+                  <div
+                    key={u.id}
+                    className="flex items-center justify-between gap-3 rounded-2xl bg-slate-50 border border-slate-200 px-4 py-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-xs font-extrabold text-indigo-800">
+                        {idx + 1}
+                      </span>
+                      <div>
+                        <p className="text-sm font-extrabold text-slate-900">
+                          {u.title}
+                        </p>
+                        <p className="text-xs text-slate-500 font-medium line-clamp-1">
+                          {u.summary}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-xs font-bold text-slate-400 shrink-0">
+                      🔒 {u.durationMinutes}m
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: 1-Click Credit Unlock Box */}
+            <div className="lg:col-span-5 rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 text-white p-6 space-y-5 shadow-lg">
+              <div className="space-y-1.5">
+                <span className="inline-block rounded-lg bg-amber-400/20 border border-amber-300/40 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-300 uppercase tracking-wider">
+                  Lifetime Chapter Access
+                </span>
+                <h3 className="text-xl font-extrabold">
+                  Unlock Full Chapter for 🪙 100 Credits
+                </h3>
+                <p className="text-xs text-indigo-200 leading-relaxed">
+                  First 2 chapters of every subject are 100% Free. Unlocking{" "}
+                  <strong>{mod.title}</strong> gives you permanent access to all{" "}
+                  {mod.units.length} story-driven units, worked examples, and
+                  interactive 100-mark unit tests.
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-white/10 border border-white/15 p-3.5 space-y-1.5 text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-indigo-200 font-semibold">Your Current Balance:</span>
+                  <span className="font-extrabold text-white">
+                    🪙 {(profile.credits ?? 300).toLocaleString()} Credits
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-indigo-200 font-semibold">Chapter Unlock Cost:</span>
+                  <span className="font-extrabold text-amber-300">
+                    - 🪙 100 Credits
+                  </span>
+                </div>
+                <div className="border-t border-white/15 pt-1.5 flex items-center justify-between">
+                  <span className="text-indigo-200 font-semibold">Balance After Unlock:</span>
+                  <span className="font-black text-emerald-300">
+                    {(profile.credits ?? 0) >= 100
+                      ? `🪙 ${((profile.credits ?? 0) - 100).toLocaleString()} Credits`
+                      : "Top Up Needed"}
+                  </span>
+                </div>
+              </div>
+
+              {(profile.credits ?? 0) >= 100 ? (
+                <button
+                  type="button"
+                  onClick={() => unlockChapterWithCredits(mod.id)}
+                  className="w-full btn-3d-amber py-3.5 text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Unlock className="h-4 w-4" />
+                  <span>Unlock Chapter Now (Spend 🪙 100 Credits)</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowChapterCreditModal(true)}
+                  className="w-full btn-3d-emerald py-3.5 text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  <span>Buy Vidya Credits (From ₹199 • 400 Credits)</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setShowChapterCreditModal(true)}
+                className="w-full rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 py-2.5 px-3 text-xs font-extrabold text-emerald-200 transition cursor-pointer"
+              >
+                👑 Or Unlock ALL Class {mod.classGrade} PCM Chapters + 1,000 Test Cr (₹1,999)
+              </button>
+
+              <p className="text-[11px] text-indigo-200/90 leading-relaxed">
+                🛡️ <strong>Upwork-Style Credit Refund Guarantee:</strong> If a chapter or live exam ever has a technical issue, 100% of your spent credits are refunded directly back to your Vidya Credit Wallet.
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : !hasSelectedUnit ? (
+        /* ====================================================================
+           VIEW 1: CHAPTER FULL UNIT LIST (When user clicks Chapter Name or View All)
+          ==================================================================== */
+        <div className="rounded-3xl bg-white border-2 border-slate-200 shadow-[0_6px_0_0_#e2e8f0] p-6 sm:p-8 space-y-5">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div className="flex items-center gap-2">
+              {chapterIsFreeStarter ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 border border-emerald-300 px-3 py-1 text-xs font-extrabold text-emerald-800">
+                  <Unlock className="h-3.5 w-3.5" />
+                  <span>100% Free Starter Chapter</span>
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 border border-indigo-300 px-3 py-1 text-xs font-extrabold text-indigo-800">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  <span>Unlocked Permanently with Vidya Credits</span>
+                </span>
+              )}
+            </div>
+            <span className="text-xs font-extrabold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1">
+              🪙 Wallet: {(profile.credits ?? 300).toLocaleString()} Credits
+            </span>
+          </div>
           {/* All Units Stacked Vertically One Below the Other */}
           <div className="relative pl-6 sm:pl-8 space-y-3 before:absolute before:left-2.5 sm:before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
             {mod.units.map((unit, idx) => {
@@ -3763,6 +3930,23 @@ function TrailDetailContent({ slug }: { slug: string }) {
         classGrade={mod.classGrade}
         chapterTag={mod.title.replace(/^Ch\s*\d+:\s*/i, "").trim()}
         questionRef={activeQuestionRef}
+      />
+
+      {/* Credit Pack Top-Up Modal */}
+      <PaymentModal
+        isOpen={showChapterCreditModal}
+        onClose={() => setShowChapterCreditModal(false)}
+        chapterTitle={mod.title}
+        targetClassGrade={mod.classGrade === 10 ? 10 : 9}
+        onSuccessPackage={(pkg: PassPackageType, chosenClassGrade?: 9 | 10) => {
+          activateProPass(
+            pkg,
+            undefined,
+            mod.id,
+            chosenClassGrade || (mod.classGrade === 10 ? 10 : 9)
+          );
+          setShowChapterCreditModal(false);
+        }}
       />
     </div>
   );

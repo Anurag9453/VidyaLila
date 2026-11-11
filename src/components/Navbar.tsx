@@ -195,35 +195,25 @@ export function Navbar() {
                   <span className="hidden sm:inline">GP</span>
                 </Link>
 
-                {(profile.dailyPassesRemaining || 0) +
-                  (profile.competitionPassesRemaining || 0) >
-                0 ? (
+                <div className="flex items-center gap-1 rounded-xl bg-amber-50 border border-amber-300 px-2.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-extrabold text-amber-900">
                   <Link
                     href="/auth"
-                    title="View Remaining Quiz Passes in User Settings"
-                    className="flex items-center gap-1 rounded-xl bg-amber-100 border border-amber-300 px-2.5 py-1.5 text-[11px] sm:text-xs font-extrabold text-amber-900 hover:bg-amber-200 transition"
+                    title="View Vidya Credits Wallet & Passbook in User Settings"
+                    className="flex items-center gap-1 hover:text-indigo-700 transition"
                   >
-                    <Crown className="h-3.5 w-3.5 text-amber-600 shrink-0" />
-                    <span>
-                      {profile.proPassPlan === "MONTHLY"
-                        ? "👑 Pro Pass"
-                        : profile.proPassPlan === "WEEKLY"
-                        ? "💎 VIP Pass"
-                        : "⚡ Basic Pass"}{" "}
-                      ({(profile.dailyPassesRemaining || 0) + (profile.competitionPassesRemaining || 0)} Left)
-                    </span>
+                    <span>🪙</span>
+                    <span>{(profile.credits ?? 300).toLocaleString()}</span>
+                    <span className="hidden lg:inline">Credits</span>
                   </Link>
-                ) : (
                   <button
+                    type="button"
                     onClick={() => setShowPassModal(true)}
-                    className="btn-3d-amber px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs flex items-center gap-1"
+                    title="Buy More Vidya Credits"
+                    className="ml-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 px-1.5 py-0.5 text-[10px] font-black transition cursor-pointer"
                   >
-                    <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-                    <span>
-                      {profile.proPassPlan ? "Recharge Pass" : "Buy Pass"}
-                    </span>
+                    + Buy
                   </button>
-                )}
+                </div>
 
                 <div className="flex items-center gap-1.5">
                   <Link

@@ -19,14 +19,20 @@ import {
   Bug,
 } from "lucide-react";
 
-export type PassPackageType = "ONE_DAY" | "WEEKLY" | "MONTHLY";
+export type PassPackageType =
+  | "ONE_DAY"
+  | "WEEKLY"
+  | "MONTHLY"
+  | "COMPREHENSIVE";
 
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultPackage?: PassPackageType;
   contestTitle?: string;
-  onSuccessPackage: (pkg: PassPackageType) => void;
+  chapterTitle?: string;
+  targetClassGrade?: 9 | 10;
+  onSuccessPackage: (pkg: PassPackageType, chosenClassGrade?: 9 | 10) => void;
 }
 
 interface RazorpaySuccessResponse {
@@ -122,6 +128,9 @@ export const PASS_PACKAGES: {
   badge: string;
   name: string;
   priceInr: number;
+  credits: number;
+  chaptersEquivalent: number;
+  isFullClassUnlock?: boolean;
   durationLabel: string;
   dailyCount: number;
   competitionCount: number;
@@ -134,19 +143,21 @@ export const PASS_PACKAGES: {
 }[] = [
   {
     id: "ONE_DAY",
-    symbol: "⚡",
-    badge: "⚡ BASIC • 2 QUIZZES",
-    name: "Basic Pass (Daily)",
-    priceInr: 49,
-    durationLabel: "/ 2 quizzes",
-    dailyCount: 2,
-    competitionCount: 0,
-    summary: "2 Daily Quiz Credits (~₹24.50 / quiz)",
+    symbol: "🪙",
+    badge: "🪙 400 CREDITS",
+    name: "Starter Pack",
+    priceInr: 199,
+    credits: 400,
+    chaptersEquivalent: 4,
+    durationLabel: "/ 400 credits",
+    dailyCount: 20,
+    competitionCount: 4,
+    summary: "400 Vidya Credits (Unlocks 4 Full Chapters or 20 Daily Tests • ~₹50/chapter)",
     perks: [
-      "Unlocks 2 Daily Quizzes (1 Credit = 1 Quiz entry)",
-      "Use on 2 subjects today or 1 today & 1 tomorrow",
-      "Instant All-India Rank & Contest Rating",
-      "Exhausts after 2 Daily Quizzes — recharge anytime",
+      "400 Instant Vidya Credits added to your wallet",
+      "Unlock any 4 Chapters permanently (100 Credits / chapter)",
+      "Or enter up to 20 Daily Tests (20 Credits) / 8 Weekly Tests (50 Credits)",
+      "Credits never expire — spend on any subject or test",
     ],
     accentBorder: "border-amber-500",
     accentBg: "bg-amber-50",
@@ -155,19 +166,46 @@ export const PASS_PACKAGES: {
   },
   {
     id: "WEEKLY",
-    symbol: "💎",
-    badge: "💎 VIP • 8 QUIZZES",
-    name: "VIP Pass (Weekly)",
-    priceInr: 149,
-    durationLabel: "/ 8 quizzes",
-    dailyCount: 7,
-    competitionCount: 1,
-    summary: "7 Daily Quizzes + 1 Weekly Quiz (8 Total Credits • Save 24%)",
+    symbol: "📘",
+    badge: "📘 1,200 CREDITS • 1 SUBJECT",
+    name: "Subject Pack",
+    priceInr: 499,
+    credits: 1200,
+    chaptersEquivalent: 12,
+    durationLabel: "/ 1,200 credits",
+    dailyCount: 60,
+    competitionCount: 12,
+    summary:
+      "1,200 Vidya Credits (Unlocks 12 Chapters / 1 Full Subject + Tests • ~₹41/chapter)",
     perks: [
-      "7 Daily Quiz Credits (1 deducted per Daily Quiz)",
-      "1 Weekly Quiz Credit (for Sunday Weekly Quiz)",
-      "Save 24% per quiz (~₹18.60 / quiz vs Basic)",
-      "Once all 8 quizzes are used, recharge to get more",
+      "1,200 Vidya Credits (Enough to unlock an entire Subject like Physics or Chemistry!)",
+      "Unlock 12 Full PCM Chapters permanently (100 Credits / chapter)",
+      "Use remaining credits for Daily (20), Weekly (50) & Monthly (100) Exams",
+      "Instant credit refunds back to wallet if a test ever has an issue",
+    ],
+    accentBorder: "border-sky-500",
+    accentBg: "bg-sky-50",
+    badgeBg: "bg-sky-200 text-sky-900",
+    symbolBoxBg: "bg-sky-600 border-sky-800 text-white",
+  },
+  {
+    id: "MONTHLY",
+    symbol: "💎",
+    badge: "💎 2,600 CREDITS • 26 CHAPTERS",
+    name: "Scholar Pack",
+    priceInr: 999,
+    credits: 2600,
+    chaptersEquivalent: 26,
+    durationLabel: "/ 2,600 credits",
+    dailyCount: 130,
+    competitionCount: 26,
+    summary:
+      "2,600 Vidya Credits (Unlocks 26 Chapters Across PCM + Live Tests • ~₹38/chapter)",
+    perks: [
+      "2,600 Vidya Credits added directly to your wallet",
+      "Unlock 26 Full Chapters across Maths, Physics & Chemistry",
+      "Or mix & match Chapters (100 Cr) + Live Exams (20–100 Cr)",
+      "Unlocks the 'Champion Credit Scholar 👑' Profile Badge",
     ],
     accentBorder: "border-indigo-500",
     accentBg: "bg-indigo-50",
@@ -175,25 +213,28 @@ export const PASS_PACKAGES: {
     symbolBoxBg: "bg-indigo-600 border-indigo-800 text-white",
   },
   {
-    id: "MONTHLY",
+    id: "COMPREHENSIVE",
     symbol: "👑",
-    badge: "👑 PRO • 34 QUIZZES",
-    name: "Pro Pass (Monthly)",
-    priceInr: 499,
-    durationLabel: "/ 34 quizzes",
-    dailyCount: 30,
-    competitionCount: 4,
+    badge: "👑 ALL ~45 CLASS CHAPTERS + 1,000 CR",
+    name: "Comprehensive Class Pack",
+    priceInr: 1999,
+    credits: 1000,
+    chaptersEquivalent: 45,
+    isFullClassUnlock: true,
+    durationLabel: "/ Full Class + 1,000 Cr",
+    dailyCount: 50,
+    competitionCount: 20,
     summary:
-      "30 Daily Quizzes + 4 Weekly Quizzes (34 Total Credits • Save 40%)",
+      "Instantly Unlocks ALL ~45 PCM Chapters of Your Class + 1,000 Bonus Test Credits (~₹36/chapter)",
     perks: [
-      "30 Daily Quiz Credits (1 deducted per Daily Quiz)",
-      "4 Weekly / Monthly Quiz Credits",
-      "Best Value: Save 40% per quiz (~₹14.67 / quiz)",
-      "Once all 34 quizzes are exhausted, recharge anytime",
+      "100% Instant Unlock of ALL ~45 Maths, Physics & Chemistry Chapters for your Class!",
+      "PLUS +1,000 Bonus Vidya Credits in your wallet for Daily, Weekly & Monthly Exams",
+      "Total Value: 5,500 Credits (~₹36/chapter — Best Full-Year Value!)",
+      "Includes all future chapters added to your selected Class automatically",
     ],
     accentBorder: "border-emerald-500",
     accentBg: "bg-emerald-50",
-    badgeBg: "bg-emerald-200 text-emerald-900",
+    badgeBg: "bg-emerald-200 text-emerald-950",
     symbolBoxBg: "bg-emerald-500 border-emerald-700 text-white",
   },
 ];
@@ -201,14 +242,19 @@ export const PASS_PACKAGES: {
 export function PaymentModal({
   isOpen,
   onClose,
-  defaultPackage = "WEEKLY",
+  defaultPackage = "COMPREHENSIVE",
   contestTitle,
+  chapterTitle,
+  targetClassGrade,
   onSuccessPackage,
 }: PaymentModalProps) {
   const { isAuthenticated, signInWithGoogle, profile, updateProfilePhone } =
     useApp();
   const [selectedPkg, setSelectedPkg] =
     useState<PassPackageType>(defaultPackage);
+  const [selectedClassForComp, setSelectedClassForComp] = useState<9 | 10>(
+    targetClassGrade || (profile.classGrade === 10 ? 10 : 9)
+  );
   const [phone, setPhone] = useState(profile.phone || "");
   const [phoneError, setPhoneError] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -221,6 +267,14 @@ export function PaymentModal({
   useEffect(() => {
     setSelectedPkg(defaultPackage);
   }, [defaultPackage]);
+
+  useEffect(() => {
+    if (targetClassGrade === 9 || targetClassGrade === 10) {
+      setSelectedClassForComp(targetClassGrade);
+    } else if (profile.classGrade === 9 || profile.classGrade === 10) {
+      setSelectedClassForComp(profile.classGrade);
+    }
+  }, [targetClassGrade, profile.classGrade]);
 
   useEffect(() => {
     if (profile.phone && !phone) {
@@ -402,7 +456,7 @@ export function PaymentModal({
 
               if (verifyRes.ok && verifyData.ok) {
                 setIsProcessing(false);
-                onSuccessPackage(selectedPkg);
+                onSuccessPackage(selectedPkg, selectedClassForComp);
                 onClose();
               } else {
                 setIsProcessing(false);
@@ -468,7 +522,7 @@ export function PaymentModal({
       });
 
       setIsProcessing(false);
-      onSuccessPackage(selectedPkg);
+      onSuccessPackage(selectedPkg, selectedClassForComp);
       onClose();
     } catch (err: unknown) {
       setIsProcessing(false);
@@ -504,17 +558,25 @@ export function PaymentModal({
           >
             <X className="h-5 w-5" />
           </button>
-          <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-300">
-            <ShieldCheck className="h-4 w-4" />
-            <span>VidyaLila Official Examination Passes • Razorpay Checkout</span>
+          <div className="flex flex-wrap items-center justify-between gap-2 pr-8">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-300">
+              <ShieldCheck className="h-4 w-4" />
+              <span>Vidya Credits Wallet • Razorpay Secure Checkout</span>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 border border-white/25 px-3 py-1 text-xs font-extrabold text-white">
+              <span>🪙</span>
+              <span>Balance: {(profile.credits ?? 300).toLocaleString()} Credits</span>
+            </span>
           </div>
-          <h3 className="mt-1 text-xl sm:text-2xl font-extrabold pr-6">
-            Choose Your Test Pass Package ⚡
+          <h3 className="mt-1.5 text-xl sm:text-2xl font-extrabold pr-6">
+            Top Up Your Vidya Credits 🪙
           </h3>
           <p className="mt-1 text-xs font-medium text-indigo-100">
-            {contestTitle
-              ? `Unlocking "${contestTitle}" — Pick Basic Pass (Daily), VIP Pass (Weekly), or Pro Pass (Monthly).`
-              : "Supports UPI (GPay, PhonePe, Paytm), Debit/Credit Cards & Netbanking via Razorpay."}
+            {chapterTitle
+              ? `Unlocking Chapter "${chapterTitle}" (100 Credits) — Top up your wallet to unlock chapters & live tests anytime!`
+              : contestTitle
+              ? `Entering "${contestTitle}" — Top up your Vidya Credits to unlock live board exams & study chapters!`
+              : "1 Unified Credit Wallet for unlocking Class 9 & 10 PCM Chapters (100 Credits) and Live Board Tests (20–100 Credits)."}
           </p>
         </div>
 
@@ -573,8 +635,8 @@ export function PaymentModal({
             </div>
           )}
 
-          {/* 3 Package Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* 4 Package Cards (2x2 Grid) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {PASS_PACKAGES.map((pkg) => {
               const isSelected = selectedPkg === pkg.id;
               return (
@@ -585,7 +647,7 @@ export function PaymentModal({
                     setSelectedPkg(pkg.id);
                     setFailureInfo(null);
                   }}
-                  className={`rounded-2xl border-2 border-b-4 p-3.5 text-left transition flex flex-col justify-between ${
+                  className={`rounded-2xl border-2 border-b-4 p-3.5 text-left transition flex flex-col justify-between cursor-pointer ${
                     isSelected
                       ? `${pkg.accentBorder} ${pkg.accentBg}`
                       : "border-slate-200 bg-slate-50 hover:bg-slate-100"
@@ -609,36 +671,85 @@ export function PaymentModal({
                       <span>{pkg.name}</span>
                     </h4>
                     <p className="mt-1 text-2xl font-extrabold text-slate-900">
-                      ₹{pkg.priceInr}
+                      ₹{pkg.priceInr.toLocaleString()}
                       <span className="text-xs font-bold text-slate-500">
+                        {" "}
                         {pkg.durationLabel}
                       </span>
                     </p>
                   </div>
 
                   <div className="mt-3 pt-2.5 border-t border-slate-200/80 space-y-1 text-[11px] font-bold text-slate-700">
-                    <p className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3 text-indigo-600 shrink-0" />
-                      <span>
-                        {pkg.dailyCount} Daily Quiz
-                        {pkg.dailyCount > 1 ? "zes" : ""}
-                      </span>
-                    </p>
-                    <p className="flex items-center gap-1">
-                      <Trophy className="h-3 w-3 text-amber-600 shrink-0" />
-                      <span>
-                        {pkg.competitionCount > 0
-                          ? `${pkg.competitionCount} Weekly Quiz${
-                              pkg.competitionCount > 1 ? "zes" : ""
-                            }`
-                          : "No Weekly Quiz"}
-                      </span>
-                    </p>
+                    {pkg.isFullClassUnlock ? (
+                      <>
+                        <p className="flex items-center gap-1 text-emerald-900 font-extrabold">
+                          <span>👑</span>
+                          <span>
+                            All ~45 Class {selectedClassForComp} PCM Chapters Unlocked!
+                          </span>
+                        </p>
+                        <p className="flex items-center gap-1 text-indigo-900 font-extrabold">
+                          <span>🪙</span>
+                          <span>
+                            + 1,000 Bonus Wallet Credits for Live Tests
+                          </span>
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="flex items-center gap-1 text-indigo-950 font-extrabold">
+                          <span>🪙</span>
+                          <span>{pkg.credits.toLocaleString()} Vidya Credits</span>
+                        </p>
+                        <p className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3 text-indigo-600 shrink-0" />
+                          <span>
+                            Unlocks {pkg.chaptersEquivalent} Chapters (100 Cr each)
+                          </span>
+                        </p>
+                        <p className="flex items-center gap-1">
+                          <Trophy className="h-3 w-3 text-amber-600 shrink-0" />
+                          <span>
+                            Or up to {pkg.dailyCount} Live Tests
+                          </span>
+                        </p>
+                      </>
+                    )}
                   </div>
                 </button>
               );
             })}
           </div>
+
+          {/* Class Selector when COMPREHENSIVE (₹1,999) is selected */}
+          {selectedPkg === "COMPREHENSIVE" && (
+            <div className="rounded-2xl border-2 border-emerald-400 bg-emerald-50/80 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <p className="text-xs font-extrabold text-emerald-950 uppercase tracking-wider">
+                  👑 Select Class for Instant Full-Syllabus Unlock (₹1,999):
+                </p>
+                <p className="text-xs font-semibold text-emerald-800">
+                  All Maths, Physics &amp; Chemistry chapters of this Class will be unlocked immediately + 1,000 Bonus Test Credits!
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                {([9, 10] as const).map((grade) => (
+                  <button
+                    key={grade}
+                    type="button"
+                    onClick={() => setSelectedClassForComp(grade)}
+                    className={`rounded-xl border-2 px-4 py-2 text-xs font-extrabold transition cursor-pointer ${
+                      selectedClassForComp === grade
+                        ? "border-emerald-700 bg-emerald-600 text-white shadow-sm"
+                        : "border-emerald-300 bg-white text-emerald-900 hover:bg-emerald-100"
+                    }`}
+                  >
+                    Class {grade} Full PCM
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Selected Package Details Box */}
           <div className="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 space-y-2.5 text-xs text-slate-700">
@@ -663,12 +774,21 @@ export function PaymentModal({
               ))}
             </div>
 
-            <div className="rounded-xl bg-amber-50 border border-amber-200 p-2.5 text-[11px] font-bold text-amber-900 leading-relaxed">
-              💡 <strong>Quiz-Wise Pass Rule:</strong> Passes are strictly{" "}
-              <strong>quiz-count based</strong> (not unlimited per day). For
-              example, the <strong>VIP Pass (Weekly)</strong> gives you{" "}
-              <strong>7 Daily Quizzes + 1 Weekly Quiz</strong> total. Once all
-              credits are used, you can recharge anytime.
+            <div className="rounded-xl bg-amber-50 border border-amber-200 p-2.5 text-[11px] font-bold text-amber-900 leading-relaxed space-y-1">
+              <p>
+                🪙 <strong>How Vidya Credits Work (Like Upwork Connects):</strong>{" "}
+                First 2 chapters of every subject are <strong>100% Free</strong>.
+                Beyond that, unlocking any chapter permanently costs{" "}
+                <strong>100 Credits</strong>, Daily Tests cost{" "}
+                <strong>20 Credits</strong>, Weekly Tests{" "}
+                <strong>50 Credits</strong>, and Monthly Championships{" "}
+                <strong>100 Credits</strong>.
+              </p>
+              <p className="text-amber-800">
+                🛡️ <strong>Credit Refund Policy:</strong> Purchases are for
+                non-expiring digital Vidya Credits. In case of any test
+                cancellation or technical issue, <strong>100% of the credits are refunded directly back to your Vidya Credit Wallet</strong> (no cash refunds).
+              </p>
             </div>
           </div>
 

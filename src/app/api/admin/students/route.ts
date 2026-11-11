@@ -11,7 +11,7 @@ export interface FailedPaymentLead {
   classGrade: number;
   userEmail: string;
   phone: string;
-  packagePlan: "ONE_DAY" | "WEEKLY" | "MONTHLY";
+  packagePlan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE";
   amountInr: number;
   orderId: string;
   failureReason: string;
@@ -34,7 +34,7 @@ export interface AdminStudentRecord {
   city: string;
   school: string;
   hasProPass: boolean;
-  proPassPlan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | null;
+  proPassPlan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE" | null;
   dailyPassesRemaining: number;
   competitionPassesRemaining: number;
   streak: number;

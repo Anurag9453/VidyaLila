@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 
 function getPlanDetails(
-  plan?: "ONE_DAY" | "WEEKLY" | "MONTHLY",
+  plan?: "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE",
   dailyLeft: number = 0,
   compLeft: number = 0
 ) {
@@ -557,23 +557,19 @@ function AuthAndSettingsContent() {
             </div>
           </div>
 
-          {/* Active Quiz Pass & Credits Section (Only for Signed-In Users) */}
-          <div
-            className={`rounded-2xl border-2 p-5 space-y-4 ${planInfo.cardStyle}`}
-          >
+          {/* Unified Vidya Credits Wallet & Passbook Section */}
+          <div className="rounded-2xl border-2 border-amber-300 bg-gradient-to-br from-amber-50/70 via-white to-indigo-50/40 p-5 sm:p-6 space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="space-y-1">
-                <span
-                  className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-0.5 text-[10px] font-extrabold uppercase ${planInfo.badgeStyle}`}
-                >
-                  <Crown className="h-3 w-3" />
-                  {planInfo.badge}
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-100 px-2.5 py-0.5 text-[10px] font-extrabold uppercase text-amber-900">
+                  <span>🪙</span>
+                  <span>VIDYA CREDITS WALLET &amp; PASSBOOK</span>
                 </span>
                 <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
-                  {planInfo.name}
+                  🪙 {(profile.credits ?? 300).toLocaleString()} Vidya Credits Available
                 </h2>
                 <p className="text-xs font-semibold text-slate-600">
-                  {planInfo.summary}
+                  Spend credits to permanently unlock additional chapters (100 Credits) or enter Live Daily (20 Cr), Weekly (50 Cr) &amp; Monthly (100 Cr) Board Exams.
                 </p>
               </div>
 
@@ -583,44 +579,44 @@ function AuthAndSettingsContent() {
                   setDefaultModalPkg(profile.proPassPlan || "WEEKLY");
                   setShowPassModal(true);
                 }}
-                className="btn-3d-amber px-4 py-2.5 text-xs inline-flex items-center gap-1.5 shrink-0"
+                className="btn-3d-amber px-4 py-2.5 text-xs inline-flex items-center gap-1.5 shrink-0 cursor-pointer"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>
-                  {profile.proPassPlan
-                    ? dailyPassesLeft + compPassesLeft === 0
-                      ? "Recharge Quiz Pass"
-                      : "Recharge / Add Pass"
-                    : "Buy Quiz Pass"}
-                </span>
+                <span>+ Buy More Vidya Credits</span>
               </button>
             </div>
 
-            {/* Remaining Pass Balances */}
+            {/* Wallet Summary Metrics */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-200/70">
               <div className="rounded-xl bg-white border border-slate-200 p-3.5">
                 <p className="text-[11px] font-extrabold uppercase text-slate-400 flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5 text-indigo-600" />
-                  Daily Quiz Credits Left
+                  <span>🪙</span>
+                  <span>Credit Balance</span>
                 </p>
                 <p className="text-xl font-extrabold text-slate-900 mt-1">
-                  {dailyPassesLeft}
+                  {(profile.credits ?? 300).toLocaleString()} Credits
                 </p>
                 <p className="text-[10px] font-bold text-slate-400 mt-0.5">
-                  1 deducted per Daily Quiz
+                  Non-expiring • Valid for Chapters &amp; Exams
                 </p>
               </div>
 
               <div className="rounded-xl bg-white border border-slate-200 p-3.5">
                 <p className="text-[11px] font-extrabold uppercase text-slate-400 flex items-center gap-1">
-                  <Award className="h-3.5 w-3.5 text-amber-600" />
-                  Weekly Quiz Credits Left
+                  <Award className="h-3.5 w-3.5 text-indigo-600" />
+                  <span>Chapters Unlocked</span>
                 </p>
-                <p className="text-xl font-extrabold text-slate-900 mt-1">
-                  {compPassesLeft}
+                <p className="text-xl font-extrabold text-indigo-900 mt-1">
+                  {Array.isArray(profile.unlockedClassGrades) &&
+                  profile.unlockedClassGrades.length > 0
+                    ? `👑 All Class ${profile.unlockedClassGrades.join(" & ")}`
+                    : `6 Free + ${Math.floor((profile.unlockedModuleIds?.length || 0) / 2)} Paid`}
                 </p>
                 <p className="text-[10px] font-bold text-slate-400 mt-0.5">
-                  1 deducted per Weekly Quiz
+                  {Array.isArray(profile.unlockedClassGrades) &&
+                  profile.unlockedClassGrades.length > 0
+                    ? "Comprehensive Full-Class Pack Active"
+                    : "First 2 chapters / subject are 100% Free"}
                 </p>
               </div>
 
@@ -632,10 +628,51 @@ function AuthAndSettingsContent() {
                   {profile.xp.toLocaleString()} GP
                 </p>
                 <p className="text-[10px] font-bold text-slate-400 mt-0.5">
-                  Earned only by studying &amp; unit tests
+                  Earned strictly by studying &amp; unit tests
                 </p>
               </div>
             </div>
+
+            {/* Credit Refund Policy Note */}
+            <div className="rounded-xl bg-amber-50 border border-amber-200 p-3 text-[11px] font-bold text-amber-900 leading-relaxed">
+              🛡️ <strong>Upwork-Style Credit Refund Policy:</strong> All payments purchase digital Vidya Credits (🪙). If a live exam or chapter ever has a technical issue or rescheduling, 100% of the spent credits are refunded directly back into your Vidya Credit Wallet above (no cash refunds).
+            </div>
+
+            {/* Recent Credit Transactions Passbook */}
+            {Array.isArray(profile.creditTransactions) &&
+              profile.creditTransactions.length > 0 && (
+                <div className="space-y-2 pt-1">
+                  <p className="text-xs font-extrabold uppercase tracking-wider text-slate-500">
+                    Recent Credit Wallet Passbook
+                  </p>
+                  <div className="max-h-48 overflow-y-auto rounded-xl border border-slate-200 bg-white divide-y divide-slate-100">
+                    {profile.creditTransactions.slice(0, 10).map((tx) => (
+                      <div
+                        key={tx.id}
+                        className="flex items-center justify-between gap-3 px-3.5 py-2.5 text-xs"
+                      >
+                        <div>
+                          <p className="font-bold text-slate-800">
+                            {tx.description}
+                          </p>
+                          <p className="text-[10px] font-semibold text-slate-400">
+                            {tx.createdAt || tx.date || "Just now"} • Balance: 🪙 {tx.balanceAfter}
+                          </p>
+                        </div>
+                        <span
+                          className={`shrink-0 rounded-lg px-2.5 py-1 font-extrabold ${
+                            tx.amount >= 0
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : "bg-rose-50 text-rose-700 border border-rose-200"
+                          }`}
+                        >
+                          {tx.amount >= 0 ? `+${tx.amount}` : tx.amount} 🪙
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
           </div>
         </section>
       )}

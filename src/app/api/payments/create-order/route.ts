@@ -3,22 +3,28 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const PLAN_CONFIG = {
   ONE_DAY: {
-    amountInr: 49,
-    dailyPasses: 2,
-    compPasses: 0,
-    label: "⚡ Basic Pass (Daily • 2 Quizzes)",
+    amountInr: 199,
+    dailyPasses: 20,
+    compPasses: 4,
+    label: "🪙 Starter Pack (400 Vidya Credits • 4 Chapters)",
   },
   WEEKLY: {
-    amountInr: 149,
-    dailyPasses: 7,
-    compPasses: 1,
-    label: "💎 VIP Pass (Weekly • 8 Quizzes)",
+    amountInr: 499,
+    dailyPasses: 60,
+    compPasses: 12,
+    label: "📘 Subject Pack (1,200 Vidya Credits • 12 Chapters)",
   },
   MONTHLY: {
-    amountInr: 499,
-    dailyPasses: 30,
-    compPasses: 4,
-    label: "👑 Pro Pass (Monthly • 34 Quizzes)",
+    amountInr: 999,
+    dailyPasses: 130,
+    compPasses: 26,
+    label: "💎 Scholar Pack (2,600 Vidya Credits • 26 Chapters)",
+  },
+  COMPREHENSIVE: {
+    amountInr: 1999,
+    dailyPasses: 275,
+    compPasses: 55,
+    label: "👑 Comprehensive Full-Class Pack (All ~45 Class Chapters + 1,000 Test Credits)",
   },
 } as const;
 
@@ -59,7 +65,7 @@ export async function POST(req: Request) {
       contestTitle,
     } = body as {
       userId?: string;
-      packagePlan: "ONE_DAY" | "WEEKLY" | "MONTHLY";
+      packagePlan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE";
       phone?: string;
       userName?: string;
       userUsername?: string;
@@ -68,6 +74,8 @@ export async function POST(req: Request) {
     };
 
     const config = PLAN_CONFIG[packagePlan] || PLAN_CONFIG.WEEKLY;
+    const dbSafePlan =
+      packagePlan === "COMPREHENSIVE" ? "MONTHLY" : packagePlan;
     const cleanPhone = (phone || "").replace(/[^0-9]/g, "").slice(-10);
     const amountPaise = config.amountInr * 100;
     const receiptId = `rcpt_vl_${Date.now()}_${Math.floor(100 + Math.random() * 900)}`;
@@ -136,7 +144,7 @@ export async function POST(req: Request) {
       try {
         await supabaseAdmin.from("payment_orders").insert({
           user_id: userId,
-          package_plan: packagePlan,
+          package_plan: dbSafePlan,
           daily_passes_granted: config.dailyPasses,
           competition_passes_granted: config.compPasses,
           amount_inr: config.amountInr,

@@ -17,8 +17,10 @@ import {
   ChevronRight,
   Swords,
   Lock,
+  Unlock,
   Sparkles,
 } from "lucide-react";
+import { PaymentModal, PassPackageType } from "@/components/PaymentModal";
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -29,7 +31,19 @@ function HomeContent() {
     modules,
     selectedBoardFilter,
     setSelectedBoardFilter,
+    isChapterFreeStarter,
+    isChapterUnlocked,
+    unlockChapterWithCredits,
+    activateProPass,
   } = useApp();
+
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [defaultModalPkg, setDefaultModalPkg] =
+    useState<PassPackageType>("COMPREHENSIVE");
+  const [pendingChapterToUnlock, setPendingChapterToUnlock] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const paramClass = Number(searchParams.get("class")) as ClassGrade;
   const paramSubject = searchParams.get("subject") as CoreSubject | null;
@@ -372,27 +386,121 @@ function HomeContent() {
          ==================================================================== */}
       {currentStep === 3 && selectedClass && selectedSubject && (
         <section className="space-y-6">
-          {chaptersForSelection.map((chap) => {
+          {/* Vidya Credits Wallet Banner */}
+          <div className="rounded-3xl bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-5 sm:p-6 text-white shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 border border-white/25 px-3 py-0.5 text-[11px] font-extrabold text-amber-300 uppercase tracking-wider">
+                <span>🪙</span>
+                <span>Vidya Credit Chapter Economy</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-extrabold">
+                First 2 Chapters of Every Subject are 100% Free!
+              </h3>
+              <p className="text-xs sm:text-sm text-indigo-100 font-medium">
+                New scholars receive <strong>🪙 300 Free Welcome Credits</strong>. Unlock any additional chapter permanently for <strong>🪙 100 Credits</strong>, or use credits for Daily &amp; Weekly Live Tests!
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <div className="rounded-2xl bg-white/15 border border-white/25 px-4 py-2.5 text-center">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-200">
+                  Your Wallet
+                </p>
+                <p className="text-lg font-black text-amber-300">
+                  🪙 {(profile.credits ?? 300).toLocaleString()} Credits
+                </p>
+              </div>
+              {(profile.unlockedClassGrades || []).includes(selectedClass) ? (
+                <span className="rounded-2xl bg-emerald-500/30 border border-emerald-300/60 px-4 py-3 text-xs font-extrabold text-emerald-100 flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                  <span>👑 All Class {selectedClass} Chapters Unlocked!</span>
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPendingChapterToUnlock(null);
+                    setDefaultModalPkg("COMPREHENSIVE");
+                    setPaymentModalOpen(true);
+                  }}
+                  className="btn-3d-emerald px-4 py-3 text-xs font-extrabold flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>👑</span>
+                  <span>Unlock All Class {selectedClass} (₹1,999)</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  setPendingChapterToUnlock(null);
+                  setDefaultModalPkg("WEEKLY");
+                  setPaymentModalOpen(true);
+                }}
+                className="btn-3d-amber px-4 py-3 text-xs font-extrabold flex items-center gap-1.5 cursor-pointer"
+              >
+                <Sparkles className="h-4 w-4" />
+                <span>+ Top Up Credits</span>
+              </button>
+            </div>
+          </div>
+
+          {chaptersForSelection.map((chap, chapIdx) => {
             const completedUnits = chap.units.filter((u) =>
               profile.completedUnitIds.includes(u.id)
             ).length;
+            const isFreeStarter = isChapterFreeStarter(chap.id) || chapIdx < 2;
+            const isUnlocked = isChapterUnlocked(chap.id) || chapIdx < 2;
+
+            const handleQuickUnlockChapter = () => {
+              if ((profile.credits ?? 0) >= 100) {
+                unlockChapterWithCredits(chap.id);
+              } else {
+                setPendingChapterToUnlock({ id: chap.id, title: chap.title });
+                setPaymentModalOpen(true);
+              }
+            };
 
             return (
               <div
                 key={chap.id}
-                className="rounded-3xl bg-white border-2 border-slate-200 shadow-[0_6px_0_0_#e2e8f0] p-6 sm:p-8 space-y-6"
+                className={`rounded-3xl bg-white border-2 shadow-[0_6px_0_0_#e2e8f0] p-6 sm:p-8 space-y-6 transition ${
+                  isUnlocked
+                    ? "border-slate-200"
+                    : "border-amber-200 bg-amber-50/15"
+                }`}
               >
                 {/* Chapter Header — Clicking the Chapter Name opens the Chapter directly */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
                   <div className="flex items-start gap-4">
                     <Link
                       href={`/trails/${chap.slug}`}
-                      className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-2xl text-white shadow-sm hover:scale-105 transition"
+                      className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl text-white shadow-sm hover:scale-105 transition ${
+                        isUnlocked ? "bg-indigo-600" : "bg-amber-500"
+                      }`}
                     >
-                      {chap.badgeEmoji}
+                      {isUnlocked ? chap.badgeEmoji : "🔒"}
                     </Link>
 
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {isFreeStarter ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider">
+                            <Unlock className="h-3 w-3" />
+                            <span>Free Starter Chapter #{chapIdx + 1}</span>
+                          </span>
+                        ) : isUnlocked ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 border border-indigo-300 px-2.5 py-0.5 text-[10px] font-extrabold text-indigo-800 uppercase tracking-wider">
+                            <CheckCircle2 className="h-3 w-3" />
+                            <span>Unlocked Permanently</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 border border-amber-300 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-900 uppercase tracking-wider">
+                            <Lock className="h-3 w-3" />
+                            <span>🪙 100 Credits to Unlock</span>
+                          </span>
+                        )}
+                      </div>
+
                       <Link
                         href={`/trails/${chap.slug}`}
                         className="inline-flex items-center gap-2 text-xl sm:text-2xl font-extrabold text-slate-900 hover:text-indigo-600 underline-offset-4 hover:underline transition"
@@ -406,7 +514,21 @@ function HomeContent() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 self-start sm:self-center shrink-0 text-xs font-bold">
+                  <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-center shrink-0 text-xs font-bold">
+                    {!isUnlocked && (
+                      <button
+                        type="button"
+                        onClick={handleQuickUnlockChapter}
+                        className="btn-3d-amber px-3.5 py-2 text-xs font-extrabold inline-flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <span>🪙</span>
+                        <span>
+                          {(profile.credits ?? 0) >= 100
+                            ? "Unlock Now (100 Credits)"
+                            : "Buy Credits to Unlock (100 Cr)"}
+                        </span>
+                      </button>
+                    )}
                     <span className="rounded-xl bg-amber-50 border border-amber-200 px-3 py-1.5 text-amber-800">
                       ⚡ +{chap.totalXp} GP
                     </span>
@@ -512,6 +634,27 @@ function HomeContent() {
           </div>
         </section>
       )}
+
+      <PaymentModal
+        isOpen={paymentModalOpen}
+        onClose={() => {
+          setPaymentModalOpen(false);
+          setPendingChapterToUnlock(null);
+        }}
+        defaultPackage={defaultModalPkg}
+        chapterTitle={pendingChapterToUnlock?.title}
+        targetClassGrade={selectedClass === 10 ? 10 : 9}
+        onSuccessPackage={(pkg: PassPackageType, chosenClassGrade?: 9 | 10) => {
+          activateProPass(
+            pkg,
+            undefined,
+            pendingChapterToUnlock?.id,
+            chosenClassGrade || (selectedClass === 10 ? 10 : 9)
+          );
+          setPendingChapterToUnlock(null);
+          setPaymentModalOpen(false);
+        }}
+      />
     </div>
   );
 }

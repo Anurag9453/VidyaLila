@@ -14,6 +14,58 @@ import {
 } from "./mock-data";
 import { supabase, isSupabaseConfigured } from "./supabase";
 
+export type CreditPlanType = "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE";
+
+export const WELCOME_CREDITS = 300;
+export const CHAPTER_UNLOCK_COST = 100;
+export const CONTEST_CREDIT_COSTS: Record<"DAILY" | "WEEKLY" | "MONTHLY", number> = {
+  DAILY: 20,
+  WEEKLY: 50,
+  MONTHLY: 100,
+};
+export const CREDIT_PACK_CREDITS: Record<
+  CreditPlanType,
+  { credits: number; priceInr: number; label: string; isFullClassUnlock?: boolean }
+> = {
+  ONE_DAY: {
+    credits: 400,
+    priceInr: 199,
+    label: "🪙 Starter Pack (400 Credits • 4 Chapters)",
+  },
+  WEEKLY: {
+    credits: 1200,
+    priceInr: 499,
+    label: "📘 Subject Pack (1,200 Credits • 12 Chapters)",
+  },
+  MONTHLY: {
+    credits: 2600,
+    priceInr: 999,
+    label: "💎 Scholar Pack (2,600 Credits • 26 Chapters)",
+  },
+  COMPREHENSIVE: {
+    credits: 1000,
+    priceInr: 1999,
+    label: "👑 Comprehensive Full-Class Pack (All ~45 Class Chapters + 1,000 Test Credits)",
+    isFullClassUnlock: true,
+  },
+};
+
+export interface CreditTransaction {
+  id: string;
+  type:
+    | "WELCOME_BONUS"
+    | "PACK_PURCHASE"
+    | "CHAPTER_UNLOCK"
+    | "CONTEST_ENTRY"
+    | "GOODIE_REWARD"
+    | "ADMIN_REFUND";
+  amount: number; // positive for credit, negative for debit
+  balanceAfter: number;
+  description: string;
+  date?: string;
+  createdAt?: string;
+}
+
 export interface StudentProfile {
   id?: string;
   email?: string;
@@ -31,8 +83,12 @@ export interface StudentProfile {
   xp: number;
   rating: number;
   streak: number;
+  credits: number;
+  unlockedModuleIds: string[];
+  unlockedClassGrades?: ClassGrade[];
+  creditTransactions: CreditTransaction[];
   hasProPass: boolean;
-  proPassPlan?: "ONE_DAY" | "WEEKLY" | "MONTHLY";
+  proPassPlan?: CreditPlanType;
   proPassPurchasedAt?: string;
   dailyPassesRemaining?: number;
   competitionPassesRemaining?: number;
@@ -132,8 +188,27 @@ interface AppContextType {
     wrongAttempts?: Record<string, number>
   ) => void;
   unlockContestSingle: (contestId: string) => void;
-  activateProPass: (plan: "ONE_DAY" | "WEEKLY" | "MONTHLY", autoUnlockContestId?: string) => void;
-  consumePassForContest: (contestId: string, contestType: "DAILY" | "WEEKLY" | "MONTHLY") => boolean;
+  isChapterFreeStarter: (moduleIdOrSlug: string) => boolean;
+  isChapterUnlocked: (moduleIdOrSlug: string) => boolean;
+  unlockChapterWithCredits: (
+    moduleIdOrSlug: string
+  ) => { ok: boolean; error?: string; remainingCredits?: number };
+  getContestCreditCost: (contestType: "DAILY" | "WEEKLY" | "MONTHLY") => number;
+  activateProPass: (
+    plan: CreditPlanType,
+    autoUnlockContestId?: string,
+    autoUnlockModuleId?: string,
+    targetClassGrade?: ClassGrade
+  ) => void;
+  consumePassForContest: (
+    contestId: string,
+    contestType: "DAILY" | "WEEKLY" | "MONTHLY"
+  ) => boolean;
+  refundOrGrantCredits: (
+    amount: number,
+    reason: string,
+    targetEmailOrUsername?: string
+  ) => void;
   submitContestResult: (
     contestId: string,
     score: number,
@@ -165,6 +240,18 @@ const DEFAULT_PROFILE: StudentProfile = {
   xp: 0,
   rating: 1500,
   streak: 0,
+  credits: WELCOME_CREDITS,
+  unlockedModuleIds: [],
+  creditTransactions: [
+    {
+      id: "tx-welcome-default",
+      type: "WELCOME_BONUS",
+      amount: WELCOME_CREDITS,
+      balanceAfter: WELCOME_CREDITS,
+      description: "🎁 Welcome Scholar Bonus (+300 Free Vidya Credits)",
+      date: "On Joining",
+    },
+  ],
   hasProPass: false,
   dailyPassesRemaining: 0,
   competitionPassesRemaining: 0,
@@ -239,6 +326,123 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     }
+  };
+
+  // Persistent local credit wallet store keyed by user ID, email, and username
+  const getLocalCreditWallet = (
+    userId?: string,
+    email?: string,
+    username?: string
+  ): {
+    credits: number;
+    unlockedModuleIds: string[];
+    unlockedClassGrades?: ClassGrade[];
+    unlockedContestIds?: string[];
+    creditTransactions: CreditTransaction[];
+  } | null => {
+    try {
+      const raw = localStorage.getItem("vidyalila_credit_wallets_v1");
+      if (!raw) return null;
+      const map = JSON.parse(raw);
+      return (
+        (userId && map[userId]) ||
+        (email && map[email.toLowerCase()]) ||
+        (username && map[username.toLowerCase()]) ||
+        null
+      );
+    } catch {
+      return null;
+    }
+  };
+
+  const saveLocalCreditWallet = (p: StudentProfile) => {
+    try {
+      const raw = localStorage.getItem("vidyalila_credit_wallets_v1");
+      const map = raw ? JSON.parse(raw) : {};
+      const entry = {
+        credits: typeof p.credits === "number" ? p.credits : WELCOME_CREDITS,
+        unlockedModuleIds: Array.isArray(p.unlockedModuleIds)
+          ? p.unlockedModuleIds
+          : [],
+        unlockedClassGrades: Array.isArray(p.unlockedClassGrades)
+          ? p.unlockedClassGrades
+          : [],
+        unlockedContestIds: Array.isArray(p.unlockedContestIds)
+          ? p.unlockedContestIds
+          : [],
+        creditTransactions: Array.isArray(p.creditTransactions)
+          ? p.creditTransactions
+          : DEFAULT_PROFILE.creditTransactions,
+      };
+      if (p.id) map[p.id] = entry;
+      if (p.email) map[p.email.toLowerCase()] = entry;
+      if (p.username) map[p.username.toLowerCase()] = entry;
+      localStorage.setItem("vidyalila_credit_wallets_v1", JSON.stringify(map));
+    } catch {
+      // ignore
+    }
+  };
+
+  const hydrateCreditWallet = (raw: StudentProfile): StudentProfile => {
+    const savedWallet = getLocalCreditWallet(raw.id, raw.email, raw.username);
+    const legacyConvertedCredits =
+      (raw.dailyPassesRemaining || 0) * 20 +
+      (raw.competitionPassesRemaining || 0) * 50;
+
+    const resolvedCredits =
+      typeof savedWallet?.credits === "number"
+        ? savedWallet.credits
+        : typeof raw.credits === "number"
+        ? raw.credits
+        : WELCOME_CREDITS + legacyConvertedCredits;
+
+    const resolvedUnlockedModules = Array.from(
+      new Set([
+        ...(Array.isArray(raw.unlockedModuleIds) ? raw.unlockedModuleIds : []),
+        ...(Array.isArray(savedWallet?.unlockedModuleIds)
+          ? savedWallet.unlockedModuleIds
+          : []),
+      ])
+    );
+
+    const resolvedUnlockedClasses = Array.from(
+      new Set([
+        ...(Array.isArray(raw.unlockedClassGrades)
+          ? raw.unlockedClassGrades
+          : []),
+        ...(Array.isArray(savedWallet?.unlockedClassGrades)
+          ? savedWallet.unlockedClassGrades
+          : []),
+      ])
+    ) as ClassGrade[];
+
+    const resolvedUnlockedContests = Array.from(
+      new Set([
+        ...(Array.isArray(raw.unlockedContestIds) ? raw.unlockedContestIds : []),
+        ...(Array.isArray(savedWallet?.unlockedContestIds)
+          ? savedWallet.unlockedContestIds
+          : []),
+      ])
+    );
+
+    const resolvedTransactions =
+      Array.isArray(savedWallet?.creditTransactions) &&
+      savedWallet.creditTransactions.length > 0
+        ? savedWallet.creditTransactions
+        : Array.isArray(raw.creditTransactions) &&
+          raw.creditTransactions.length > 0
+        ? raw.creditTransactions
+        : DEFAULT_PROFILE.creditTransactions;
+
+    return {
+      ...raw,
+      credits: resolvedCredits,
+      unlockedModuleIds: resolvedUnlockedModules,
+      unlockedClassGrades: resolvedUnlockedClasses,
+      unlockedContestIds: resolvedUnlockedContests,
+      creditTransactions: resolvedTransactions,
+      hasProPass: resolvedCredits > 0 || resolvedUnlockedClasses.length > 0,
+    };
   };
 
   const checkUsernameAvailability = async (
@@ -383,7 +587,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
                 (meta?.preferred_language as ContentLanguage) ||
                 "HINGLISH";
 
-              const syncedProfile: StudentProfile = {
+              const syncedProfile: StudentProfile = hydrateCreditWallet({
                 ...DEFAULT_PROFILE,
                 ...syncData.profile,
                 username:
@@ -396,8 +600,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
                   syncData.profile.completedUnitIds.length > 0
                     ? syncData.profile.completedUnitIds
                     : [],
-              };
+              });
               setProfile(syncedProfile);
+              saveLocalCreditWallet(syncedProfile);
               if (hasOnboarded) {
                 setContentLanguageState(resolvedLang);
                 setSelectedClassFilter(resolvedClass);
@@ -437,7 +642,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           (meta?.preferred_language as ContentLanguage) ||
           "HINGLISH";
 
-        const mapped: StudentProfile = {
+        const mapped: StudentProfile = hydrateCreditWallet({
           ...DEFAULT_PROFILE,
           id: data.id,
           email: email || data.email,
@@ -482,8 +687,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           earnedBadges: Array.isArray(data.earned_badges) && data.earned_badges.length > 0
             ? data.earned_badges
             : DEFAULT_PROFILE.earnedBadges,
-        };
+        });
         setProfile(mapped);
+        saveLocalCreditWallet(mapped);
         if (hasOnboarded) {
           setContentLanguageState(resolvedLang);
           setSelectedClassFilter(resolvedClass);
@@ -502,7 +708,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           (meta.preferred_language as ContentLanguage) ||
           "HINGLISH";
 
-        const fallbackProfile: StudentProfile = {
+        const fallbackProfile: StudentProfile = hydrateCreditWallet({
           ...DEFAULT_PROFILE,
           id: userId,
           email,
@@ -526,8 +732,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           city: (meta.city as string) || "Delhi",
           school: (meta.school_name as string) || "VidyaLila Academy",
           xp: 0,
-        };
+        });
         setProfile(fallbackProfile);
+        saveLocalCreditWallet(fallbackProfile);
         if (hasOnboarded) {
           setContentLanguageState(resolvedLang);
           setSelectedClassFilter(resolvedClass);
@@ -543,7 +750,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const savedProfile = localStorage.getItem("vidyalila_profile_v6");
-      if (savedProfile) setProfile(JSON.parse(savedProfile));
+      if (savedProfile) {
+        const parsed = hydrateCreditWallet(JSON.parse(savedProfile));
+        setProfile(parsed);
+      }
       const savedAuth = localStorage.getItem("vidyalila_is_auth_v4");
       if (savedAuth === "true") setIsAuthenticated(true);
       const savedModules = localStorage.getItem("vidyalila_modules_v13");
@@ -642,8 +852,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const saveProfile = (next: StudentProfile) => {
     setProfile(next);
+    saveLocalCreditWallet(next);
     try {
       localStorage.setItem("vidyalila_profile_v6", JSON.stringify(next));
+      if (next.email) {
+        const rawUsers = localStorage.getItem("vidyalila_local_users_v1");
+        if (rawUsers) {
+          const users = JSON.parse(rawUsers);
+          const key = next.email.toLowerCase();
+          if (users[key]) {
+            users[key].profile = next;
+            localStorage.setItem(
+              "vidyalila_local_users_v1",
+              JSON.stringify(users)
+            );
+          }
+        }
+      }
     } catch {
       // ignore
     }
@@ -1285,6 +1510,101 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const isChapterFreeStarter = (moduleIdOrSlug: string): boolean => {
+    const mod = modules.find(
+      (m) => m.id === moduleIdOrSlug || m.slug === moduleIdOrSlug
+    );
+    if (!mod) return false;
+    // First 2 chapters of each subject per class are 100% Free Starter Chapters
+    const sameSubjectModules = modules.filter(
+      (m) => m.classGrade === mod.classGrade && m.subject === mod.subject
+    );
+    const idx = sameSubjectModules.findIndex((m) => m.id === mod.id);
+    return idx >= 0 && idx < 2;
+  };
+
+  const isChapterUnlocked = (moduleIdOrSlug: string): boolean => {
+    if (profile.role === "admin") return true;
+    if (isChapterFreeStarter(moduleIdOrSlug)) return true;
+    const mod = modules.find(
+      (m) => m.id === moduleIdOrSlug || m.slug === moduleIdOrSlug
+    );
+    if (mod && (profile.unlockedClassGrades || []).includes(mod.classGrade)) {
+      return true;
+    }
+    const unlockedIds = profile.unlockedModuleIds || [];
+    if (unlockedIds.includes(moduleIdOrSlug)) return true;
+    if (mod && (unlockedIds.includes(mod.id) || unlockedIds.includes(mod.slug))) {
+      return true;
+    }
+    return false;
+  };
+
+  const unlockChapterWithCredits = (
+    moduleIdOrSlug: string
+  ): { ok: boolean; error?: string; remainingCredits?: number } => {
+    const mod = modules.find(
+      (m) => m.id === moduleIdOrSlug || m.slug === moduleIdOrSlug
+    );
+    if (!mod) {
+      return { ok: false, error: "Chapter not found." };
+    }
+    if (isChapterUnlocked(moduleIdOrSlug)) {
+      return { ok: true, remainingCredits: profile.credits };
+    }
+
+    const currentCredits =
+      typeof profile.credits === "number" ? profile.credits : 0;
+    if (currentCredits < CHAPTER_UNLOCK_COST) {
+      return {
+        ok: false,
+        error: `You need ${CHAPTER_UNLOCK_COST} Vidya Credits to unlock "${mod.title}" (you have ${currentCredits} Credits).`,
+        remainingCredits: currentCredits,
+      };
+    }
+
+    const nextCredits = currentCredits - CHAPTER_UNLOCK_COST;
+    const nextUnlockedModules = Array.from(
+      new Set([...(profile.unlockedModuleIds || []), mod.id, mod.slug])
+    );
+    const tx: CreditTransaction = {
+      id: `tx-chap-${Date.now()}`,
+      type: "CHAPTER_UNLOCK",
+      amount: -CHAPTER_UNLOCK_COST,
+      balanceAfter: nextCredits,
+      description: `Unlocked Chapter: ${mod.title} (${mod.subject} • Class ${mod.classGrade})`,
+      createdAt: "Just now",
+    };
+
+    const nextProfile: StudentProfile = {
+      ...profile,
+      credits: nextCredits,
+      hasProPass: nextCredits > 0,
+      proPassPurchasedAt:
+        nextCredits > 0
+          ? `${nextCredits.toLocaleString()} Credits Available`
+          : "0 Credits — Top Up Required",
+      unlockedModuleIds: nextUnlockedModules,
+      creditTransactions: [tx, ...(profile.creditTransactions || [])],
+    };
+
+    saveProfile(nextProfile);
+    setCelebration({
+      title: `Chapter Unlocked! 🔓 "${mod.title}"`,
+      subtitle: `Spent 🪙 ${CHAPTER_UNLOCK_COST} Vidya Credits • Permanent Lifetime Access unlocked! Remaining Wallet Balance: 🪙 ${nextCredits.toLocaleString()} Credits.`,
+      xpEarned: 0,
+      badgeEmoji: mod.badgeEmoji || "🔓",
+    });
+
+    return { ok: true, remainingCredits: nextCredits };
+  };
+
+  const getContestCreditCost = (
+    contestType: "DAILY" | "WEEKLY" | "MONTHLY"
+  ): number => {
+    return CONTEST_CREDIT_COSTS[contestType] || 20;
+  };
+
   const unlockContestSingle = (contestId: string) => {
     if (profile.unlockedContestIds.includes(contestId)) return;
     saveProfile({
@@ -1294,81 +1614,148 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const activateProPass = (
-    plan: "ONE_DAY" | "WEEKLY" | "MONTHLY",
-    autoUnlockContestId?: string
+    plan: CreditPlanType,
+    autoUnlockContestId?: string,
+    autoUnlockModuleId?: string,
+    targetClassGrade?: ClassGrade
   ) => {
-    const curDaily = profile.dailyPassesRemaining || 0;
-    const curComp = profile.competitionPassesRemaining || 0;
+    const pack = CREDIT_PACK_CREDITS[plan] || CREDIT_PACK_CREDITS.ONE_DAY;
+    const curCredits =
+      typeof profile.credits === "number" ? profile.credits : 0;
+    let nextCredits = curCredits + pack.credits;
 
-    let addDaily = 2;
-    let addComp = 0;
-    let passTitle = "⚡ Basic Pass (Daily) Activated (₹49 • 2 Daily Quizzes)!";
-    let passSub =
-      "Added 2 Daily Quiz Credits to your wallet. Note: Passes are Quiz-Wise (1 Credit = 1 Quiz). Once both are used, recharge to add more!";
+    const classToUnlock: ClassGrade =
+      targetClassGrade || profile.classGrade || 9;
+    const nextUnlockedClasses = Array.from(
+      new Set([
+        ...(profile.unlockedClassGrades || []),
+        ...(plan === "COMPREHENSIVE" ? [classToUnlock] : []),
+      ])
+    ) as ClassGrade[];
 
-    if (plan === "WEEKLY") {
-      addDaily = 7;
-      addComp = 1;
-      passTitle = "💎 VIP Pass (Weekly) Activated (₹149 • 7 Daily + 1 Weekly Quiz)!";
-      passSub =
-        "Added 7 Daily Quiz Credits + 1 Weekly Quiz Credit (8 total). Passes are deducted per quiz taken (if you use all 7 in 2 days, your balance will be exhausted).";
-    } else if (plan === "MONTHLY") {
-      addDaily = 30;
-      addComp = 4;
-      passTitle = "👑 Pro Pass (Monthly) Activated (₹499 • 30 Daily + 4 Weekly Quizzes)!";
-      passSub =
-        "Added 30 Daily Quiz Credits + 4 Weekly/Monthly Quiz Credits (34 total) to your wallet. Check User Settings to track your remaining quiz balance!";
+    const nextUnlockedContests = [...(profile.unlockedContestIds || [])];
+    const nextUnlockedModules = [...(profile.unlockedModuleIds || [])];
+
+    if (plan === "COMPREHENSIVE") {
+      // Immediately unlock every chapter of the target class
+      modules
+        .filter((m) => m.classGrade === classToUnlock)
+        .forEach((m) => {
+          nextUnlockedModules.push(m.id, m.slug);
+        });
     }
 
-    let nextDaily = curDaily + addDaily;
-    let nextComp = curComp + addComp;
-    const nextUnlocked = [...profile.unlockedContestIds];
+    const nextTransactions: CreditTransaction[] = [
+      {
+        id: `tx-pack-${Date.now()}`,
+        type: "PACK_PURCHASE",
+        amount: pack.credits,
+        balanceAfter: nextCredits,
+        description:
+          plan === "COMPREHENSIVE"
+            ? `👑 Comprehensive Class ${classToUnlock} Pack (₹${pack.priceInr} → All Class ${classToUnlock} PCM Chapters Unlocked + ${pack.credits.toLocaleString()} Test Credits)`
+            : `Purchased ${pack.label} (₹${pack.priceInr} → +${pack.credits.toLocaleString()} Credits)`,
+        createdAt: "Just now",
+      },
+      ...(profile.creditTransactions || []),
+    ];
 
-    if (autoUnlockContestId && !nextUnlocked.includes(autoUnlockContestId)) {
+    if (autoUnlockContestId && !nextUnlockedContests.includes(autoUnlockContestId)) {
       const targetContest = contests.find((c) => c.id === autoUnlockContestId);
       if (targetContest) {
-        if (targetContest.type === "DAILY" && nextDaily > 0) {
-          nextDaily -= 1;
-          nextUnlocked.push(autoUnlockContestId);
-        } else if (targetContest.type !== "DAILY" && nextComp > 0) {
-          nextComp -= 1;
-          nextUnlocked.push(autoUnlockContestId);
+        const cost = getContestCreditCost(targetContest.type);
+        if (nextCredits >= cost) {
+          nextCredits -= cost;
+          nextUnlockedContests.push(autoUnlockContestId);
+          nextTransactions.unshift({
+            id: `tx-contest-${Date.now() + 1}`,
+            type: "CONTEST_ENTRY",
+            amount: -cost,
+            balanceAfter: nextCredits,
+            description: `Entered Live Exam: ${targetContest.title} (${targetContest.type})`,
+            createdAt: "Just now",
+          });
         }
+      }
+    }
+
+    if (
+      plan !== "COMPREHENSIVE" &&
+      autoUnlockModuleId &&
+      !isChapterUnlocked(autoUnlockModuleId)
+    ) {
+      const targetMod = modules.find(
+        (m) => m.id === autoUnlockModuleId || m.slug === autoUnlockModuleId
+      );
+      if (targetMod && nextCredits >= CHAPTER_UNLOCK_COST) {
+        nextCredits -= CHAPTER_UNLOCK_COST;
+        nextUnlockedModules.push(targetMod.id, targetMod.slug);
+        nextTransactions.unshift({
+          id: `tx-chap-${Date.now() + 2}`,
+          type: "CHAPTER_UNLOCK",
+          amount: -CHAPTER_UNLOCK_COST,
+          balanceAfter: nextCredits,
+          description: `Unlocked Chapter: ${targetMod.title} (${targetMod.subject})`,
+          createdAt: "Just now",
+        });
       }
     }
 
     const bonusBadges = [...profile.earnedBadges];
     if (
-      plan === "MONTHLY" &&
-      !bonusBadges.some((b) => b.name === "Monthly Pass Scholar")
+      (plan === "MONTHLY" || plan === "COMPREHENSIVE") &&
+      !bonusBadges.some((b) => b.name === "Champion Credit Scholar")
     ) {
       bonusBadges.unshift({
-        name: "Monthly Pass Scholar",
+        name: "Champion Credit Scholar",
         emoji: "👑",
         date: "Just now",
       });
     }
 
-    const stillHasPasses = nextDaily + nextComp > 0;
+    // Also keep legacy pass counters roughly synced for backward compatibility
+    const approxDaily = Math.floor(nextCredits / 20);
+    const approxComp = Math.floor(nextCredits / 50);
 
     saveProfile({
       ...profile,
-      hasProPass: stillHasPasses,
+      credits: nextCredits,
+      hasProPass: nextCredits > 0 || nextUnlockedClasses.length > 0,
       proPassPlan: plan,
-      proPassPurchasedAt: stillHasPasses ? "Active Now" : "Exhausted — Recharge Required",
-      dailyPassesRemaining: nextDaily,
-      competitionPassesRemaining: nextComp,
-      unlockedContestIds: nextUnlocked,
-      // GPs are strictly earned via learning & unit tests, never upgraded on pass purchase
+      proPassPurchasedAt:
+        plan === "COMPREHENSIVE"
+          ? `All Class ${classToUnlock} Chapters Unlocked + ${nextCredits.toLocaleString()} Credits`
+          : nextCredits > 0
+          ? `${nextCredits.toLocaleString()} Credits Available`
+          : "0 Credits — Top Up Required",
+      dailyPassesRemaining: approxDaily,
+      competitionPassesRemaining: approxComp,
+      unlockedContestIds: nextUnlockedContests,
+      unlockedModuleIds: Array.from(new Set(nextUnlockedModules)),
+      unlockedClassGrades: nextUnlockedClasses,
+      creditTransactions: nextTransactions,
       xp: profile.xp,
       earnedBadges: bonusBadges,
     });
 
     setCelebration({
-      title: passTitle,
-      subtitle: passSub,
+      title:
+        plan === "COMPREHENSIVE"
+          ? `👑 All Class ${classToUnlock} PCM Chapters Unlocked + 1,000 Test Credits!`
+          : `🪙 +${pack.credits.toLocaleString()} Vidya Credits Added (${pack.label})!`,
+      subtitle:
+        plan === "COMPREHENSIVE"
+          ? `Every Class ${classToUnlock} Maths, Physics & Chemistry chapter is now 100% unlocked permanently, plus you have 🪙 ${nextCredits.toLocaleString()} Credits in your wallet for Live Tests!`
+          : `Your wallet now has 🪙 ${nextCredits.toLocaleString()} Vidya Credits. Use them anytime to unlock chapters (${CHAPTER_UNLOCK_COST} Credits) or enter live tests (20–100 Credits)!`,
       xpEarned: 0,
-      badgeEmoji: plan === "MONTHLY" ? "👑" : plan === "WEEKLY" ? "💎" : "⚡",
+      badgeEmoji:
+        plan === "COMPREHENSIVE"
+          ? "👑"
+          : plan === "MONTHLY"
+          ? "💎"
+          : plan === "WEEKLY"
+          ? "📘"
+          : "🪙",
     });
   };
 
@@ -1378,40 +1765,123 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   ): boolean => {
     if (profile.unlockedContestIds.includes(contestId)) return true;
 
-    const curDaily = profile.dailyPassesRemaining || 0;
-    const curComp = profile.competitionPassesRemaining || 0;
+    const cost = getContestCreditCost(contestType);
+    const curCredits =
+      typeof profile.credits === "number" ? profile.credits : 0;
 
-    if (contestType === "DAILY" && curDaily > 0) {
-      const nextDaily = curDaily - 1;
-      const stillHasPasses = nextDaily + curComp > 0;
+    if (curCredits >= cost) {
+      const nextCredits = curCredits - cost;
+      const targetContest = contests.find((c) => c.id === contestId);
+      const tx: CreditTransaction = {
+        id: `tx-contest-${Date.now()}`,
+        type: "CONTEST_ENTRY",
+        amount: -cost,
+        balanceAfter: nextCredits,
+        description: `Entered ${contestType} Exam: ${
+          targetContest?.title || contestId
+        }`,
+        createdAt: "Just now",
+      };
+
       saveProfile({
         ...profile,
-        hasProPass: stillHasPasses,
-        proPassPurchasedAt: stillHasPasses
-          ? "Active Now"
-          : "Exhausted — Recharge Required",
-        dailyPassesRemaining: nextDaily,
+        credits: nextCredits,
+        hasProPass: nextCredits > 0,
+        proPassPurchasedAt:
+          nextCredits > 0
+            ? `${nextCredits.toLocaleString()} Credits Available`
+            : "0 Credits — Top Up Required",
+        dailyPassesRemaining: Math.floor(nextCredits / 20),
+        competitionPassesRemaining: Math.floor(nextCredits / 50),
         unlockedContestIds: [...profile.unlockedContestIds, contestId],
-      });
-      return true;
-    }
-
-    if (contestType !== "DAILY" && curComp > 0) {
-      const nextComp = curComp - 1;
-      const stillHasPasses = curDaily + nextComp > 0;
-      saveProfile({
-        ...profile,
-        hasProPass: stillHasPasses,
-        proPassPurchasedAt: stillHasPasses
-          ? "Active Now"
-          : "Exhausted — Recharge Required",
-        competitionPassesRemaining: nextComp,
-        unlockedContestIds: [...profile.unlockedContestIds, contestId],
+        creditTransactions: [tx, ...(profile.creditTransactions || [])],
       });
       return true;
     }
 
     return false;
+  };
+
+  const refundOrGrantCredits = (
+    amount: number,
+    reason: string,
+    targetEmailOrUsername?: string
+  ) => {
+    if (!amount || amount <= 0) return;
+    const cleanReason =
+      reason.trim() || "Admin Credit Refund / Scholarship Grant";
+
+    const isCurrentUser =
+      !targetEmailOrUsername ||
+      targetEmailOrUsername.toLowerCase() ===
+        (profile.email || "").toLowerCase() ||
+      targetEmailOrUsername.toLowerCase() ===
+        (profile.username || "").toLowerCase();
+
+    if (isCurrentUser) {
+      const curCredits =
+        typeof profile.credits === "number" ? profile.credits : 0;
+      const nextCredits = curCredits + amount;
+      const tx: CreditTransaction = {
+        id: `tx-refund-${Date.now()}`,
+        type: "ADMIN_REFUND",
+        amount,
+        balanceAfter: nextCredits,
+        description: `Credit Refund / Grant: ${cleanReason}`,
+        createdAt: "Just now",
+      };
+      saveProfile({
+        ...profile,
+        credits: nextCredits,
+        hasProPass: nextCredits > 0,
+        proPassPurchasedAt: `${nextCredits.toLocaleString()} Credits Available`,
+        dailyPassesRemaining: Math.floor(nextCredits / 20),
+        competitionPassesRemaining: Math.floor(nextCredits / 50),
+        creditTransactions: [tx, ...(profile.creditTransactions || [])],
+      });
+    } else if (targetEmailOrUsername) {
+      // Also update local credit wallet & local users map for target student
+      try {
+        const key = targetEmailOrUsername.trim().toLowerCase();
+        const rawWallets = localStorage.getItem("vidyalila_credit_wallets_v1");
+        const wallets = rawWallets ? JSON.parse(rawWallets) : {};
+        const existing = wallets[key] || {
+          credits: WELCOME_CREDITS,
+          unlockedModuleIds: [],
+          unlockedContestIds: [],
+          creditTransactions: DEFAULT_PROFILE.creditTransactions,
+        };
+        const nextCredits = (existing.credits || 0) + amount;
+        const tx: CreditTransaction = {
+          id: `tx-refund-${Date.now()}`,
+          type: "ADMIN_REFUND",
+          amount,
+          balanceAfter: nextCredits,
+          description: `Credit Refund / Grant: ${cleanReason}`,
+          createdAt: "Just now",
+        };
+        wallets[key] = {
+          ...existing,
+          credits: nextCredits,
+          creditTransactions: [tx, ...(existing.creditTransactions || [])],
+        };
+        localStorage.setItem(
+          "vidyalila_credit_wallets_v1",
+          JSON.stringify(wallets)
+        );
+      } catch {
+        // ignore
+      }
+    }
+
+    setCelebration({
+      title: `🪙 +${amount} Vidya Credits Refunded / Granted!`,
+      subtitle: `${cleanReason} • Credits have been added directly to ${
+        targetEmailOrUsername || profile.username
+      }'s wallet (Upwork-style instant credit refund).`,
+      xpEarned: 0,
+      badgeEmoji: "🪙",
+    });
   };
 
   const submitContestResult = (
@@ -1425,47 +1895,65 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const ratio = total > 0 ? score / total : 0;
     const ratingDelta = Math.round((ratio - 0.5) * 80) + 15;
 
-    // Top-Ranker Goodies: Reward Free Quiz Passes to Top Performers!
-    let goodieDailyAdded = 0;
-    let goodieCompAdded = 0;
+    // Top-Ranker Goodies: Reward Free Vidya Credits to Top Performers!
+    let goodieCreditsAdded = 0;
     let goodieLabel = "";
     const cType = contest?.type || "DAILY";
 
     if (ratio === 1) {
       // Top 3 Ranker Bracket (100% Accuracy)
       if (cType === "MONTHLY") {
-        goodieDailyAdded = 30;
-        goodieCompAdded = 4;
-        goodieLabel = "🎁 Top-3 Goodie Won: Free 👑 Pro Pass (34 Quizzes • Worth ₹499)!";
+        goodieCreditsAdded = 500;
+        goodieLabel =
+          "🎁 Top-3 Goodie Won: +500 Free Vidya Credits (Worth ₹199 Starter Pack)!";
       } else if (cType === "WEEKLY") {
-        goodieDailyAdded = 7;
-        goodieCompAdded = 1;
-        goodieLabel = "🎁 Top-3 Goodie Won: Free 💎 VIP Pass (8 Quizzes • Worth ₹149)!";
+        goodieCreditsAdded = 200;
+        goodieLabel =
+          "🎁 Top-3 Goodie Won: +200 Free Vidya Credits (Unlocks 2 Full Chapters)!";
       } else {
-        goodieDailyAdded = 2;
-        goodieLabel = "🎁 Top-3 Goodie Won: Free ⚡ Basic Pass (2 Daily Quizzes • Worth ₹49)!";
+        goodieCreditsAdded = 50;
+        goodieLabel =
+          "🎁 Top-3 Goodie Won: +50 Free Vidya Credits!";
       }
     } else if (ratio >= 0.75) {
       // Top 10 Ranker Bracket (75%+ Accuracy)
       if (cType === "MONTHLY") {
-        goodieDailyAdded = 7;
-        goodieCompAdded = 1;
-        goodieLabel = "🎁 Top-10 Goodie Won: Free 💎 VIP Pass (8 Quizzes • Worth ₹149)!";
+        goodieCreditsAdded = 200;
+        goodieLabel =
+          "🎁 Top-10 Goodie Won: +200 Free Vidya Credits!";
       } else if (cType === "WEEKLY") {
-        goodieDailyAdded = 2;
-        goodieLabel = "🎁 Top-10 Goodie Won: Free ⚡ Basic Pass (2 Daily Quizzes • Worth ₹49)!";
+        goodieCreditsAdded = 60;
+        goodieLabel =
+          "🎁 Top-10 Goodie Won: +60 Free Vidya Credits!";
       } else {
-        goodieDailyAdded = 1;
-        goodieLabel = "🎁 Top-10 Goodie Won: +1 Free Daily Quiz Pass Credit!";
+        goodieCreditsAdded = 20;
+        goodieLabel =
+          "🎁 Top-10 Goodie Won: +20 Free Vidya Credits (Free Daily Test Refund)!";
       }
     }
 
-    const nextDaily = (profile.dailyPassesRemaining || 0) + goodieDailyAdded;
-    const nextComp = (profile.competitionPassesRemaining || 0) + goodieCompAdded;
+    const curCredits =
+      typeof profile.credits === "number" ? profile.credits : 0;
+    const nextCredits = curCredits + goodieCreditsAdded;
+    const nextTransactions = [...(profile.creditTransactions || [])];
+
+    if (goodieCreditsAdded > 0) {
+      nextTransactions.unshift({
+        id: `tx-goodie-${Date.now()}`,
+        type: "GOODIE_REWARD",
+        amount: goodieCreditsAdded,
+        balanceAfter: nextCredits,
+        description: `Topper Goodie Reward (${Math.round(ratio * 100)}% in ${
+          contest?.title || cType
+        })`,
+        createdAt: "Just now",
+      });
+    }
+
     const nextBadges = [...profile.earnedBadges];
 
     if (
-      goodieDailyAdded > 0 &&
+      goodieCreditsAdded > 0 &&
       !nextBadges.some((b) => b.name === "Topper Goodie Winner")
     ) {
       nextBadges.unshift({
@@ -1485,14 +1973,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       date: "Just now",
     };
 
-    // GPs are strictly for free study content; quizzes update Contest Rating, History & Goodie Passes
+    // GPs are strictly for free study content; quizzes update Contest Rating, History & Goodie Credits
     saveProfile({
       ...profile,
+      credits: nextCredits,
       xp: profile.xp,
       rating: profile.rating + ratingDelta,
-      hasProPass: nextDaily + nextComp > 0 ? true : profile.hasProPass,
-      dailyPassesRemaining: nextDaily,
-      competitionPassesRemaining: nextComp,
+      hasProPass: nextCredits > 0,
+      dailyPassesRemaining: Math.floor(nextCredits / 20),
+      competitionPassesRemaining: Math.floor(nextCredits / 50),
+      creditTransactions: nextTransactions,
       earnedBadges: nextBadges,
       contestHistory: [newHistoryItem, ...profile.contestHistory],
     });
@@ -1545,12 +2035,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ? `Score: ${score}/${total} • ${goodieLabel}`
         : `Quiz Submitted! Score: ${score}/${total} 🏆`,
       subtitle: goodieLabel
-        ? `Your Free Goodie Pass Credits have been added directly to your Pass Wallet! Contest Rating +${ratingDelta} (Now ${
+        ? `Your Free Goodie Credits (+${goodieCreditsAdded} 🪙) have been added directly to your Vidya Credit Wallet! Contest Rating +${ratingDelta} (Now ${
             profile.rating + ratingDelta
           }).`
         : `Contest Rating ${ratingDelta >= 0 ? `+${ratingDelta}` : ratingDelta} (Now ${
             profile.rating + ratingDelta
-          }). Score 75%+ next time to win Free Pass Goodies!`,
+          }). Score 75%+ next time to win Free Vidya Credits!`,
       xpEarned: 0,
       badgeEmoji: goodieLabel ? "🎁" : "⚔️",
     });
@@ -1669,9 +2159,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         updateUniqueUsername,
         updateProfilePhone,
         completeUnit,
+        isChapterFreeStarter,
+        isChapterUnlocked,
+        unlockChapterWithCredits,
+        getContestCreditCost,
         unlockContestSingle,
         activateProPass,
         consumePassForContest,
+        refundOrGrantCredits,
         submitContestResult,
         addCustomModule,
         addCustomContest,

@@ -3,9 +3,10 @@ import crypto from "crypto";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const PLAN_CREDITS = {
-  ONE_DAY: { amountInr: 49, daily: 2, comp: 0 },
-  WEEKLY: { amountInr: 149, daily: 7, comp: 1 },
-  MONTHLY: { amountInr: 499, daily: 30, comp: 4 },
+  ONE_DAY: { amountInr: 199, daily: 20, comp: 4 },
+  WEEKLY: { amountInr: 499, daily: 60, comp: 12 },
+  MONTHLY: { amountInr: 999, daily: 130, comp: 26 },
+  COMPREHENSIVE: { amountInr: 1999, daily: 275, comp: 55 },
 } as const;
 
 function isRealRazorpaySecret(val?: string): boolean {
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
       userEmail,
     } = body as {
       userId?: string;
-      packagePlan: "ONE_DAY" | "WEEKLY" | "MONTHLY";
+      packagePlan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE";
       razorpayOrderId: string;
       razorpayPaymentId?: string;
       razorpaySignature?: string;
@@ -56,6 +57,8 @@ export async function POST(req: Request) {
     }
 
     const credits = PLAN_CREDITS[packagePlan];
+    const dbSafePlan =
+      packagePlan === "COMPREHENSIVE" ? "MONTHLY" : packagePlan;
     const rzpSecret = (process.env.RAZORPAY_KEY_SECRET || "").trim();
 
     // 1. Cryptographic HMAC-SHA256 Signature Verification (Mandatory when real Razorpay secret is configured)
@@ -147,7 +150,7 @@ export async function POST(req: Request) {
         // Insert paid order record if create-order DB insert had been skipped
         await supabaseAdmin.from("payment_orders").insert({
           user_id: userId,
-          package_plan: packagePlan,
+          package_plan: dbSafePlan,
           daily_passes_granted: credits.daily,
           competition_passes_granted: credits.comp,
           amount_inr: credits.amountInr,
@@ -179,7 +182,7 @@ export async function POST(req: Request) {
         .from("profiles")
         .update({
           has_pro_pass: true,
-          pro_pass_plan: packagePlan,
+          pro_pass_plan: dbSafePlan,
           daily_passes_remaining: nextDaily,
           competition_passes_remaining: nextComp,
           ...(cleanPhone.length >= 10 ? { phone: cleanPhone } : {}),

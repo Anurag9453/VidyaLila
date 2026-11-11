@@ -1,3 +1,4 @@
+import { CLASS_9_CHEMISTRY_MODULES } from "./class9-chemistry-data";
 import { CLASS_9_MATHS_MODULES } from "./class9-maths-data";
 import { CLASS_9_PHYSICS_MODULES } from "./class9-physics-data";
 
@@ -746,83 +747,7 @@ const RAW_INITIAL_MODULES: LearningModule[] = [
   // ==========================================================================
   // CLASS 9 - PHYSICS, CHEMISTRY, MATHEMATICS
   // ==========================================================================
-  {
-    id: "mod-9-chem-1",
-    slug: "class-9-mole-concept-atomic-structure",
-    chapterNumber: 1,
-    title: "Atoms, Molecules & Chemical Formula Builder",
-    subtitle: "Conquer valency criss-cross tricks, molecular mass, and laws of chemical combination!",
-    subtitleHinglish: "Criss-cross valency se kisi bhi compound ka chemical formula 5 second me banao!",
-    board: "BOTH",
-    classGrade: 9,
-    subject: "Chemistry",
-    difficulty: "Beginner",
-    badgeName: "Quantum Alchemist",
-    badgeEmoji: "🧬",
-    accentColor: "from-emerald-500 to-teal-600",
-    totalXp: 400,
-    estimatedMinutes: 35,
-    units: [
-      {
-        id: "u-chem-1",
-        title: "Criss-Cross Valency & Chemical Formula Builder",
-        durationMinutes: 18,
-        xpReward: 200,
-        summary: "Build 100+ chemical formulas in seconds without memorizing.",
-        summaryHinglish: "Valency ko aapas me cross karo aur 100+ chemical formulas bina ratte banao!",
-        contentSections: [
-          {
-            heading: "Swap the Valencies! 🔄",
-            headingHinglish: "Dono ki Valency Cross (X) Kar Do! 🔄",
-            body: "Write the symbol of cation (positive) first and anion (negative) second. Cross their valency numbers to the subscript!",
-            bodyHinglish: "Pehle metal ka symbol likho, phir non-metal ya polyatomic ion ka. Ab pehle ki valency dusre ke pairon me, aur dusre ki valency pehle ke pairon me likh do!",
-            formulaOrTip: "Aluminium (Al³⁺) + Sulphate (SO₄²⁻)  ➔  Al₂(SO₄)₃",
-            formulaOrTipHinglish: "Al ki valency 3 aur SO₄ ki 2 ➔ Cross karne par bana Al₂(SO₄)₃!",
-          },
-        ],
-        checkpointQuestions: [
-          {
-            id: "q-chem-1",
-            question: "What is the correct chemical formula of Magnesium Nitride? (Mg valency = 2, N valency = 3)",
-            questionHinglish: "Magnesium Nitride ka sahi formula kya hoga? (Mg ki valency = 2, N ki valency = 3)",
-            options: ["MgN", "Mg₂N₃", "Mg₃N₂", "Mg(NO₃)₂"],
-            correctIndex: 2,
-            explanation: "Criss-crossing Mg²⁺ and N³⁻ gives Mg₃N₂.",
-            explanationHinglish: "Mg ke niche N ki valency (3) aur N ke niche Mg ki valency (2) aayegi ➔ Mg₃N₂!",
-          },
-        ],
-      },
-      {
-        id: "u-chem-2",
-        title: "Law of Conservation of Mass & Molecular Mass",
-        durationMinutes: 17,
-        xpReward: 200,
-        summary: "Calculate molar mass of H₂SO₄, CaCO₃, and C₆H₁₂O₆ effortlessly.",
-        summaryHinglish: "Sirf 6 elements ka mass yaad rakho aur poori book ke molecular mass nikalo!",
-        contentSections: [
-          {
-            heading: "Atomic Mass Building Blocks 🧱",
-            headingHinglish: "Ye 6 Atomic Mass Yaad Toh Sab Yaad! 🧱",
-            body: "Memorize just 6 atomic masses: H = 1 u, C = 12 u, N = 14 u, O = 16 u, S = 32 u, Ca = 40 u.",
-            bodyHinglish: "Saare atoms ka mass jodne par Molecular Mass milta hai. Bas H=1, C=12, N=14, O=16, S=32 aur Ca=40 yaad rakho!",
-            formulaOrTip: "Molecular Mass of H₂O = 2(1) + 16 = 18 u  |  CaCO₃ = 40 + 12 + 3(16) = 100 u",
-            formulaOrTipHinglish: "Paani (H₂O) = 18 u  |  Chuna Patthar (CaCO₃) = 100 u  |  H₂SO₄ = 98 u",
-          },
-        ],
-        checkpointQuestions: [
-          {
-            id: "q-chem-2",
-            question: "What is the molecular mass of Calcium Carbonate (CaCO₃)? (Ca=40, C=12, O=16)",
-            questionHinglish: "Calcium Carbonate (CaCO₃) ka molecular mass kitna hota hai?",
-            options: ["68 u", "100 u", "84 u", "120 u"],
-            correctIndex: 1,
-            explanation: "40 + 12 + (3 × 16) = 52 + 48 = 100 u.",
-            explanationHinglish: "Ca(40) + C(12) + 3×O(48) = 100 u.",
-          },
-        ],
-      },
-    ],
-  },
+  ...CLASS_9_CHEMISTRY_MODULES,
   ...CLASS_9_PHYSICS_MODULES,
   ...CLASS_9_MATHS_MODULES,
 

@@ -3027,7 +3027,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
               </div>
             </div>
 
-            {/* Right: 1-Click Credit Unlock Box */}
+            {/* Right: 1-Click Credit Unlock Box (Requires Sign-In first) */}
             <div className="lg:col-span-5 rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 text-white p-6 space-y-5 shadow-lg">
               <div className="space-y-1.5">
                 <span className="inline-block rounded-lg bg-amber-400/20 border border-amber-300/40 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-300 uppercase tracking-wider">
@@ -3038,62 +3038,96 @@ function TrailDetailContent({ slug }: { slug: string }) {
                 </h3>
                 <p className="text-xs text-indigo-200 leading-relaxed">
                   First 2 chapters of every subject are 100% Free. Unlocking{" "}
-                  <strong>{mod.title}</strong> gives you permanent access to all{" "}
-                  {mod.units.length} story-driven units, worked examples, and
-                  interactive 100-mark unit tests.
+                  <strong>{mod.title}</strong> gives your account permanent
+                  access to all {mod.units.length} story-driven units, worked
+                  examples, and interactive 100-mark unit tests.
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-white/10 border border-white/15 p-3.5 space-y-1.5 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-indigo-200 font-semibold">Your Current Balance:</span>
-                  <span className="font-extrabold text-white">
-                    🪙 {(profile.credits ?? 300).toLocaleString()} Credits
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-indigo-200 font-semibold">Chapter Unlock Cost:</span>
-                  <span className="font-extrabold text-amber-300">
-                    - 🪙 100 Credits
-                  </span>
-                </div>
-                <div className="border-t border-white/15 pt-1.5 flex items-center justify-between">
-                  <span className="text-indigo-200 font-semibold">Balance After Unlock:</span>
-                  <span className="font-black text-emerald-300">
-                    {(profile.credits ?? 0) >= 100
-                      ? `🪙 ${((profile.credits ?? 0) - 100).toLocaleString()} Credits`
-                      : "Top Up Needed"}
-                  </span>
-                </div>
-              </div>
+              {isAuthenticated ? (
+                <>
+                  <div className="rounded-2xl bg-white/10 border border-white/15 p-3.5 space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="text-indigo-200 font-semibold">
+                        Your Account Balance:
+                      </span>
+                      <span className="font-extrabold text-white">
+                        🪙 {(profile.credits ?? 300).toLocaleString()} Credits
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-indigo-200 font-semibold">
+                        Chapter Unlock Cost:
+                      </span>
+                      <span className="font-extrabold text-amber-300">
+                        - 🪙 100 Credits
+                      </span>
+                    </div>
+                    <div className="border-t border-white/15 pt-1.5 flex items-center justify-between">
+                      <span className="text-indigo-200 font-semibold">
+                        Balance After Unlock:
+                      </span>
+                      <span className="font-black text-emerald-300">
+                        {(profile.credits ?? 0) >= 100
+                          ? `🪙 ${((profile.credits ?? 0) - 100).toLocaleString()} Credits`
+                          : "Top Up Needed"}
+                      </span>
+                    </div>
+                  </div>
 
-              {(profile.credits ?? 0) >= 100 ? (
-                <button
-                  type="button"
-                  onClick={() => unlockChapterWithCredits(mod.id)}
-                  className="w-full btn-3d-amber py-3.5 text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Unlock className="h-4 w-4" />
-                  <span>Unlock Chapter Now (Spend 🪙 100 Credits)</span>
-                </button>
+                  {(profile.credits ?? 0) >= 100 ? (
+                    <button
+                      type="button"
+                      onClick={() => unlockChapterWithCredits(mod.id)}
+                      className="w-full btn-3d-amber py-3.5 text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Unlock className="h-4 w-4" />
+                      <span>Unlock Chapter Now (Spend 🪙 100 Credits)</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowChapterCreditModal(true)}
+                      className="w-full btn-3d-emerald py-3.5 text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <Sparkles className="h-4 w-4" />
+                      <span>Buy Vidya Credits (From ₹199 • 400 Credits)</span>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => setShowChapterCreditModal(true)}
+                    className="w-full rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 py-2.5 px-3 text-xs font-extrabold text-emerald-200 transition cursor-pointer"
+                  >
+                    👑 Or Unlock ALL Class {mod.classGrade} PCM Chapters + 1,000 Test Cr (₹1,999)
+                  </button>
+                </>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => setShowChapterCreditModal(true)}
-                  className="w-full btn-3d-emerald py-3.5 text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Sparkles className="h-4 w-4" />
-                  <span>Buy Vidya Credits (From ₹199 • 400 Credits)</span>
-                </button>
-              )}
+                <>
+                  <div className="rounded-2xl bg-amber-400/15 border border-amber-300/35 p-4 space-y-1.5 text-xs">
+                    <p className="font-extrabold text-amber-300 text-sm">
+                      🔐 Sign In Required to Use Vidya Credits
+                    </p>
+                    <p className="text-indigo-100 leading-relaxed">
+                      Please sign into your scholar account first. Every new
+                      account gets <strong>🪙 300 Free Welcome Credits</strong>{" "}
+                      automatically, and every chapter you unlock stays{" "}
+                      <strong>unlocked forever</strong> in your account!
+                    </p>
+                  </div>
 
-              <button
-                type="button"
-                onClick={() => setShowChapterCreditModal(true)}
-                className="w-full rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 py-2.5 px-3 text-xs font-extrabold text-emerald-200 transition cursor-pointer"
-              >
-                👑 Or Unlock ALL Class {mod.classGrade} PCM Chapters + 1,000 Test Cr (₹1,999)
-              </button>
+                  <Link
+                    href={`/auth?next=${encodeURIComponent(
+                      `/trails/${mod.slug}`
+                    )}`}
+                    className="w-full btn-3d-amber py-3.5 text-sm font-extrabold flex items-center justify-center gap-2"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    <span>Sign In to Unlock Chapter (100 Credits)</span>
+                  </Link>
+                </>
+              )}
 
               <p className="text-[11px] text-indigo-200/90 leading-relaxed">
                 🛡️ <strong>Upwork-Style Credit Refund Guarantee:</strong> If a chapter or live exam ever has a technical issue, 100% of your spent credits are refunded directly back to your Vidya Credit Wallet.
@@ -3120,9 +3154,18 @@ function TrailDetailContent({ slug }: { slug: string }) {
                 </span>
               )}
             </div>
-            <span className="text-xs font-extrabold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1">
-              🪙 Wallet: {(profile.credits ?? 300).toLocaleString()} Credits
-            </span>
+            {isAuthenticated ? (
+              <span className="text-xs font-extrabold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1">
+                🪙 Wallet: {(profile.credits ?? 300).toLocaleString()} Credits
+              </span>
+            ) : (
+              <Link
+                href={`/auth?next=${encodeURIComponent(`/trails/${mod.slug}`)}`}
+                className="text-xs font-extrabold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl px-3 py-1 transition"
+              >
+                🔐 Sign In to Claim 🪙 300 Free Credits
+              </Link>
+            )}
           </div>
           {/* All Units Stacked Vertically One Below the Other */}
           <div className="relative pl-6 sm:pl-8 space-y-3 before:absolute before:left-2.5 sm:before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">

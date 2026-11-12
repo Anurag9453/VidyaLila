@@ -28,6 +28,7 @@ function HomeContent() {
 
   const {
     profile,
+    isAuthenticated,
     modules,
     selectedBoardFilter,
     setSelectedBoardFilter,
@@ -402,45 +403,59 @@ function HomeContent() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 shrink-0">
-              <div className="rounded-2xl bg-white/15 border border-white/25 px-4 py-2.5 text-center">
-                <p className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-200">
-                  Your Wallet
-                </p>
-                <p className="text-lg font-black text-amber-300">
-                  🪙 {(profile.credits ?? 300).toLocaleString()} Credits
-                </p>
-              </div>
-              {(profile.unlockedClassGrades || []).includes(selectedClass) ? (
-                <span className="rounded-2xl bg-emerald-500/30 border border-emerald-300/60 px-4 py-3 text-xs font-extrabold text-emerald-100 flex items-center gap-1.5">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                  <span>👑 All Class {selectedClass} Chapters Unlocked Forever!</span>
-                </span>
+              {isAuthenticated ? (
+                <>
+                  <div className="rounded-2xl bg-white/15 border border-white/25 px-4 py-2.5 text-center">
+                    <p className="text-[10px] font-extrabold uppercase tracking-wider text-indigo-200">
+                      Your Wallet
+                    </p>
+                    <p className="text-lg font-black text-amber-300">
+                      🪙 {(profile.credits ?? 300).toLocaleString()} Credits
+                    </p>
+                  </div>
+                  {(profile.unlockedClassGrades || []).includes(selectedClass) ? (
+                    <span className="rounded-2xl bg-emerald-500/30 border border-emerald-300/60 px-4 py-3 text-xs font-extrabold text-emerald-100 flex items-center gap-1.5">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                      <span>👑 All Class {selectedClass} Chapters Unlocked Forever!</span>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPendingChapterToUnlock(null);
+                        setDefaultModalPkg("COMPREHENSIVE");
+                        setPaymentModalOpen(true);
+                      }}
+                      className="btn-3d-emerald px-4 py-3 text-xs font-extrabold flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <span>👑</span>
+                      <span>Unlock All Class {selectedClass} (₹1,999)</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPendingChapterToUnlock(null);
+                      setDefaultModalPkg("WEEKLY");
+                      setPaymentModalOpen(true);
+                    }}
+                    className="btn-3d-amber px-4 py-3 text-xs font-extrabold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    <span>+ Top Up Credits</span>
+                  </button>
+                </>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPendingChapterToUnlock(null);
-                    setDefaultModalPkg("COMPREHENSIVE");
-                    setPaymentModalOpen(true);
-                  }}
-                  className="btn-3d-emerald px-4 py-3 text-xs font-extrabold flex items-center gap-1.5 cursor-pointer"
+                <Link
+                  href={`/auth?next=${encodeURIComponent(
+                    `/?class=${selectedClass}&subject=${selectedSubject}`
+                  )}`}
+                  className="btn-3d-amber px-5 py-3 text-xs font-extrabold flex items-center gap-2"
                 >
-                  <span>👑</span>
-                  <span>Unlock All Class {selectedClass} (₹1,999)</span>
-                </button>
+                  <span>🔐</span>
+                  <span>Sign In to Claim 🪙 300 Free Credits &amp; Unlock Chapters</span>
+                </Link>
               )}
-              <button
-                type="button"
-                onClick={() => {
-                  setPendingChapterToUnlock(null);
-                  setDefaultModalPkg("WEEKLY");
-                  setPaymentModalOpen(true);
-                }}
-                className="btn-3d-amber px-4 py-3 text-xs font-extrabold flex items-center gap-1.5 cursor-pointer"
-              >
-                <Sparkles className="h-4 w-4" />
-                <span>+ Top Up Credits</span>
-              </button>
             </div>
           </div>
 
@@ -456,7 +471,8 @@ function HomeContent() {
                   ? Math.round((completedUnits / totalUnits) * 100)
                   : 0;
               const isFreeStarter = isChapterFreeStarter(chap.id) || chapIdx < 2;
-              const isUnlocked = isChapterUnlocked(chap.id) || chapIdx < 2;
+              const isUnlocked =
+                isFreeStarter || (isAuthenticated && isChapterUnlocked(chap.id));
 
               const handleCardClick = () => {
                 router.push(`/trails/${chap.slug}`);
@@ -464,6 +480,15 @@ function HomeContent() {
 
               const handleQuickUnlockChapter = (e: React.MouseEvent) => {
                 e.stopPropagation();
+                // Require Sign-In first before using any credits
+                if (!isAuthenticated) {
+                  router.push(
+                    `/auth?next=${encodeURIComponent(
+                      `/?class=${selectedClass}&subject=${selectedSubject}`
+                    )}`
+                  );
+                  return;
+                }
                 if ((profile.credits ?? 0) >= 100) {
                   const res = unlockChapterWithCredits(chap.id);
                   if (res.ok) {
@@ -573,9 +598,11 @@ function HomeContent() {
                         onClick={handleQuickUnlockChapter}
                         className="w-full btn-3d-amber px-4 py-3 text-xs font-extrabold flex items-center justify-center gap-2 cursor-pointer"
                       >
-                        <span>🪙</span>
+                        <span>{isAuthenticated ? "🪙" : "🔐"}</span>
                         <span>
-                          {(profile.credits ?? 0) >= 100
+                          {!isAuthenticated
+                            ? "Unlock Forever (100 Credits) — Sign In"
+                            : (profile.credits ?? 0) >= 100
                             ? "Unlock Forever & Open (100 Credits)"
                             : "Buy Credits to Unlock Forever (100 Cr)"}
                         </span>

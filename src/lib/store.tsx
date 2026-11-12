@@ -328,23 +328,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Append-only Permanent Chapter Unlock Registry — guarantees that once a chapter
-  // or class is unlocked with credits, it NEVER gets re-locked across reloads, auth syncs, or sign-outs.
+  // Append-only Permanent Chapter Unlock Registry — strictly keyed per signed-in user account
+  // so that once a signed-in user unlocks a chapter with credits, it stays unlocked forever for their account.
+  const getAccountKeys = (
+    userId?: string,
+    email?: string,
+    username?: string
+  ): string[] => {
+    const cleanUser =
+      username && username.toLowerCase() !== "@guest_scholar"
+        ? username.toLowerCase()
+        : undefined;
+    return [userId, email?.toLowerCase(), cleanUser].filter(Boolean) as string[];
+  };
+
   const getPermanentUnlocks = (
     userId?: string,
     email?: string,
     username?: string
   ): { moduleIds: string[]; classGrades: ClassGrade[] } => {
     try {
+      const keys = getAccountKeys(userId, email, username);
+      if (keys.length === 0) return { moduleIds: [], classGrades: [] };
       const raw = localStorage.getItem("vidyalila_permanent_unlocked_v1");
       if (!raw) return { moduleIds: [], classGrades: [] };
       const map = JSON.parse(raw);
-      const keys = [
-        "__device__",
-        userId,
-        email?.toLowerCase(),
-        username?.toLowerCase(),
-      ].filter(Boolean) as string[];
 
       const modSet = new Set<string>();
       const clsSet = new Set<ClassGrade>();
@@ -377,14 +385,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   ) => {
     if (moduleIds.length === 0 && classGrades.length === 0) return;
     try {
+      const keys = getAccountKeys(userId, email, username);
+      if (keys.length === 0) return;
       const raw = localStorage.getItem("vidyalila_permanent_unlocked_v1");
       const map = raw ? JSON.parse(raw) : {};
-      const keys = [
-        "__device__",
-        userId,
-        email?.toLowerCase(),
-        username?.toLowerCase(),
-      ].filter(Boolean) as string[];
 
       for (const k of keys) {
         const existing = map[k] || { moduleIds: [], classGrades: [] };
@@ -406,7 +410,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Persistent local credit wallet store keyed by user ID, email, and username
+  // Persistent local credit wallet store keyed strictly by signed-in user ID, email, and username
   const getLocalCreditWallet = (
     userId?: string,
     email?: string,
@@ -419,16 +423,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     creditTransactions: CreditTransaction[];
   } | null => {
     try {
+      const keys = getAccountKeys(userId, email, username);
+      if (keys.length === 0) return null;
       const raw = localStorage.getItem("vidyalila_credit_wallets_v1");
       if (!raw) return null;
       const map = JSON.parse(raw);
-      return (
-        (userId && map[userId]) ||
-        (email && map[email.toLowerCase()]) ||
-        (username && map[username.toLowerCase()]) ||
-        map["__guest__"] ||
-        null
-      );
+      for (const k of keys) {
+        if (map[k]) return map[k];
+      }
+      return null;
     } catch {
       return null;
     }
@@ -436,14 +439,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const saveLocalCreditWallet = (p: StudentProfile) => {
     try {
+      const keys = getAccountKeys(p.id, p.email, p.username);
+      if (keys.length === 0) return;
       const raw = localStorage.getItem("vidyalila_credit_wallets_v1");
       const map = raw ? JSON.parse(raw) : {};
-      const existing =
-        (p.id && map[p.id]) ||
-        (p.email && map[p.email.toLowerCase()]) ||
-        (p.username && map[p.username.toLowerCase()]) ||
-        map["__guest__"] ||
-        null;
+      let existing = null;
+      for (const k of keys) {
+        if (map[k]) {
+          existing = map[k];
+          break;
+        }
+      }
       const perm = getPermanentUnlocks(p.id, p.email, p.username);
 
       const mergedModules = Array.from(
@@ -501,10 +507,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             ? existing.creditTransactions
             : DEFAULT_PROFILE.creditTransactions,
       };
-      map["__guest__"] = entry;
-      if (p.id) map[p.id] = entry;
-      if (p.email) map[p.email.toLowerCase()] = entry;
-      if (p.username) map[p.username.toLowerCase()] = entry;
+      for (const k of keys) {
+        map[k] = entry;
+      }
       localStorage.setItem("vidyalila_credit_wallets_v1", JSON.stringify(map));
     } catch {
       // ignore
@@ -1727,8 +1732,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const isChapterUnlocked = (moduleIdOrSlug: string): boolean => {
-    if (profile.role === "admin") return true;
     if (isChapterFreeStarter(moduleIdOrSlug)) return true;
+    // Paid chapters (Chapter 3+) are strictly tied to a signed-in user account
+    if (!isAuthenticated) return false;
+    if (profile.role === "admin") return true;
     const perm = getPermanentUnlocks(profile.id, profile.email, profile.username);
     const mod = modules.find(
       (m) => m.id === moduleIdOrSlug || m.slug === moduleIdOrSlug
@@ -1754,6 +1761,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const unlockChapterWithCredits = (
     moduleIdOrSlug: string
   ): { ok: boolean; error?: string; remainingCredits?: number } => {
+    if (!isAuthenticated) {
+      return {
+        ok: false,
+        error:
+          "Please Sign In to your account first to unlock chapters using your Vidya Credits.",
+      };
+    }
     const mod = modules.find(
       (m) => m.id === moduleIdOrSlug || m.slug === moduleIdOrSlug
     );

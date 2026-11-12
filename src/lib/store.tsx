@@ -328,6 +328,84 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  // Append-only Permanent Chapter Unlock Registry — guarantees that once a chapter
+  // or class is unlocked with credits, it NEVER gets re-locked across reloads, auth syncs, or sign-outs.
+  const getPermanentUnlocks = (
+    userId?: string,
+    email?: string,
+    username?: string
+  ): { moduleIds: string[]; classGrades: ClassGrade[] } => {
+    try {
+      const raw = localStorage.getItem("vidyalila_permanent_unlocked_v1");
+      if (!raw) return { moduleIds: [], classGrades: [] };
+      const map = JSON.parse(raw);
+      const keys = [
+        "__device__",
+        userId,
+        email?.toLowerCase(),
+        username?.toLowerCase(),
+      ].filter(Boolean) as string[];
+
+      const modSet = new Set<string>();
+      const clsSet = new Set<ClassGrade>();
+      for (const k of keys) {
+        const rec = map[k];
+        if (rec) {
+          if (Array.isArray(rec.moduleIds)) {
+            rec.moduleIds.forEach((id: string) => modSet.add(id));
+          }
+          if (Array.isArray(rec.classGrades)) {
+            rec.classGrades.forEach((c: ClassGrade) => clsSet.add(c));
+          }
+        }
+      }
+      return {
+        moduleIds: Array.from(modSet),
+        classGrades: Array.from(clsSet),
+      };
+    } catch {
+      return { moduleIds: [], classGrades: [] };
+    }
+  };
+
+  const recordPermanentUnlocks = (
+    moduleIds: string[] = [],
+    classGrades: ClassGrade[] = [],
+    userId?: string,
+    email?: string,
+    username?: string
+  ) => {
+    if (moduleIds.length === 0 && classGrades.length === 0) return;
+    try {
+      const raw = localStorage.getItem("vidyalila_permanent_unlocked_v1");
+      const map = raw ? JSON.parse(raw) : {};
+      const keys = [
+        "__device__",
+        userId,
+        email?.toLowerCase(),
+        username?.toLowerCase(),
+      ].filter(Boolean) as string[];
+
+      for (const k of keys) {
+        const existing = map[k] || { moduleIds: [], classGrades: [] };
+        map[k] = {
+          moduleIds: Array.from(
+            new Set([...(existing.moduleIds || []), ...moduleIds])
+          ),
+          classGrades: Array.from(
+            new Set([...(existing.classGrades || []), ...classGrades])
+          ),
+        };
+      }
+      localStorage.setItem(
+        "vidyalila_permanent_unlocked_v1",
+        JSON.stringify(map)
+      );
+    } catch {
+      // ignore
+    }
+  };
+
   // Persistent local credit wallet store keyed by user ID, email, and username
   const getLocalCreditWallet = (
     userId?: string,
@@ -348,6 +426,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         (userId && map[userId]) ||
         (email && map[email.toLowerCase()]) ||
         (username && map[username.toLowerCase()]) ||
+        map["__guest__"] ||
         null
       );
     } catch {
@@ -359,21 +438,70 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     try {
       const raw = localStorage.getItem("vidyalila_credit_wallets_v1");
       const map = raw ? JSON.parse(raw) : {};
+      const existing =
+        (p.id && map[p.id]) ||
+        (p.email && map[p.email.toLowerCase()]) ||
+        (p.username && map[p.username.toLowerCase()]) ||
+        map["__guest__"] ||
+        null;
+      const perm = getPermanentUnlocks(p.id, p.email, p.username);
+
+      const mergedModules = Array.from(
+        new Set([
+          ...(Array.isArray(existing?.unlockedModuleIds)
+            ? existing.unlockedModuleIds
+            : []),
+          ...(Array.isArray(p.unlockedModuleIds) ? p.unlockedModuleIds : []),
+          ...perm.moduleIds,
+        ])
+      );
+
+      const mergedClasses = Array.from(
+        new Set([
+          ...(Array.isArray(existing?.unlockedClassGrades)
+            ? existing.unlockedClassGrades
+            : []),
+          ...(Array.isArray(p.unlockedClassGrades) ? p.unlockedClassGrades : []),
+          ...perm.classGrades,
+        ])
+      ) as ClassGrade[];
+
+      const mergedContests = Array.from(
+        new Set([
+          ...(Array.isArray(existing?.unlockedContestIds)
+            ? existing.unlockedContestIds
+            : []),
+          ...(Array.isArray(p.unlockedContestIds) ? p.unlockedContestIds : []),
+        ])
+      );
+
+      recordPermanentUnlocks(
+        mergedModules,
+        mergedClasses,
+        p.id,
+        p.email,
+        p.username
+      );
+
       const entry = {
-        credits: typeof p.credits === "number" ? p.credits : WELCOME_CREDITS,
-        unlockedModuleIds: Array.isArray(p.unlockedModuleIds)
-          ? p.unlockedModuleIds
-          : [],
-        unlockedClassGrades: Array.isArray(p.unlockedClassGrades)
-          ? p.unlockedClassGrades
-          : [],
-        unlockedContestIds: Array.isArray(p.unlockedContestIds)
-          ? p.unlockedContestIds
-          : [],
-        creditTransactions: Array.isArray(p.creditTransactions)
-          ? p.creditTransactions
-          : DEFAULT_PROFILE.creditTransactions,
+        credits:
+          typeof p.credits === "number"
+            ? p.credits
+            : typeof existing?.credits === "number"
+            ? existing.credits
+            : WELCOME_CREDITS,
+        unlockedModuleIds: mergedModules,
+        unlockedClassGrades: mergedClasses,
+        unlockedContestIds: mergedContests,
+        creditTransactions:
+          Array.isArray(p.creditTransactions) && p.creditTransactions.length > 0
+            ? p.creditTransactions
+            : Array.isArray(existing?.creditTransactions) &&
+              existing.creditTransactions.length > 0
+            ? existing.creditTransactions
+            : DEFAULT_PROFILE.creditTransactions,
       };
+      map["__guest__"] = entry;
       if (p.id) map[p.id] = entry;
       if (p.email) map[p.email.toLowerCase()] = entry;
       if (p.username) map[p.username.toLowerCase()] = entry;
@@ -383,18 +511,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const hydrateCreditWallet = (raw: StudentProfile): StudentProfile => {
+  const hydrateCreditWallet = (
+    raw: StudentProfile,
+    meta?: Record<string, unknown>
+  ): StudentProfile => {
     const savedWallet = getLocalCreditWallet(raw.id, raw.email, raw.username);
+    const perm = getPermanentUnlocks(raw.id, raw.email, raw.username);
     const legacyConvertedCredits =
       (raw.dailyPassesRemaining || 0) * 20 +
       (raw.competitionPassesRemaining || 0) * 50;
 
+    const metaCredits =
+      typeof meta?.vidya_credits === "number" ? meta.vidya_credits : undefined;
+
     const resolvedCredits =
       typeof savedWallet?.credits === "number"
         ? savedWallet.credits
+        : typeof metaCredits === "number"
+        ? metaCredits
         : typeof raw.credits === "number"
         ? raw.credits
         : WELCOME_CREDITS + legacyConvertedCredits;
+
+    const metaUnlockedModules = Array.isArray(meta?.unlocked_module_ids)
+      ? (meta.unlocked_module_ids as string[])
+      : [];
 
     const resolvedUnlockedModules = Array.from(
       new Set([
@@ -402,8 +543,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ...(Array.isArray(savedWallet?.unlockedModuleIds)
           ? savedWallet.unlockedModuleIds
           : []),
+        ...perm.moduleIds,
+        ...metaUnlockedModules,
       ])
     );
+
+    const metaUnlockedClasses = Array.isArray(meta?.unlocked_class_grades)
+      ? (meta.unlocked_class_grades as ClassGrade[])
+      : [];
 
     const resolvedUnlockedClasses = Array.from(
       new Set([
@@ -413,8 +560,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ...(Array.isArray(savedWallet?.unlockedClassGrades)
           ? savedWallet.unlockedClassGrades
           : []),
+        ...perm.classGrades,
+        ...metaUnlockedClasses,
       ])
     ) as ClassGrade[];
+
+    recordPermanentUnlocks(
+      resolvedUnlockedModules,
+      resolvedUnlockedClasses,
+      raw.id,
+      raw.email,
+      raw.username
+    );
 
     const resolvedUnlockedContests = Array.from(
       new Set([
@@ -587,20 +744,24 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
                 (meta?.preferred_language as ContentLanguage) ||
                 "HINGLISH";
 
-              const syncedProfile: StudentProfile = hydrateCreditWallet({
-                ...DEFAULT_PROFILE,
-                ...syncData.profile,
-                username:
-                  localOnboard?.username || syncData.profile.username,
-                classGrade: resolvedClass,
-                preferredLanguage: resolvedLang,
-                hasCompletedOnboarding: hasOnboarded,
-                completedUnitIds:
-                  Array.isArray(syncData.profile.completedUnitIds) &&
-                  syncData.profile.completedUnitIds.length > 0
-                    ? syncData.profile.completedUnitIds
-                    : [],
-              });
+              const syncedProfile: StudentProfile = hydrateCreditWallet(
+                {
+                  ...DEFAULT_PROFILE,
+                  ...syncData.profile,
+                  email: email || syncData.profile.email,
+                  username:
+                    localOnboard?.username || syncData.profile.username,
+                  classGrade: resolvedClass,
+                  preferredLanguage: resolvedLang,
+                  hasCompletedOnboarding: hasOnboarded,
+                  completedUnitIds:
+                    Array.isArray(syncData.profile.completedUnitIds) &&
+                    syncData.profile.completedUnitIds.length > 0
+                      ? syncData.profile.completedUnitIds
+                      : [],
+                },
+                meta
+              );
               setProfile(syncedProfile);
               saveLocalCreditWallet(syncedProfile);
               if (hasOnboarded) {
@@ -642,52 +803,55 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           (meta?.preferred_language as ContentLanguage) ||
           "HINGLISH";
 
-        const mapped: StudentProfile = hydrateCreditWallet({
-          ...DEFAULT_PROFILE,
-          id: data.id,
-          email: email || data.email,
-          phone: (data.phone as string) || (meta?.phone as string) || "",
-          name:
-            data.full_name ||
-            (meta?.full_name as string) ||
-            (meta?.name as string) ||
-            "Scholar",
-          username:
-            localOnboard?.username ||
-            data.username ||
-            `@scholar_${userId.slice(0, 4)}`,
-          avatar:
-            data.avatar_url ||
-            (meta?.avatar_url as string) ||
-            (meta?.picture as string) ||
-            "🚀",
-          board: (data.board as "CBSE" | "ICSE") || "CBSE",
-          classGrade: resolvedClass,
-          preferredLanguage: resolvedLang,
-          hasCompletedOnboarding: hasOnboarded,
-          city: data.city || "Delhi",
-          school: data.school_name || "VidyaLila Academy",
-          role: (data.role as "student" | "admin") || "student",
-          xp: typeof data.xp_points === "number" ? data.xp_points : 0,
-          rating: typeof data.contest_rating === "number" ? data.contest_rating : 1500,
-          streak: typeof data.current_streak === "number" ? data.current_streak : 1,
-          hasProPass: Boolean(data.has_pro_pass),
-          proPassPlan: data.pro_pass_plan || undefined,
-          dailyPassesRemaining:
-            typeof data.daily_passes_remaining === "number"
-              ? data.daily_passes_remaining
-              : 0,
-          competitionPassesRemaining:
-            typeof data.competition_passes_remaining === "number"
-              ? data.competition_passes_remaining
-              : 0,
-          unlockedContestIds: Array.isArray(data.unlocked_contest_ids)
-            ? data.unlocked_contest_ids
-            : [],
-          earnedBadges: Array.isArray(data.earned_badges) && data.earned_badges.length > 0
-            ? data.earned_badges
-            : DEFAULT_PROFILE.earnedBadges,
-        });
+        const mapped: StudentProfile = hydrateCreditWallet(
+          {
+            ...DEFAULT_PROFILE,
+            id: data.id,
+            email: email || data.email,
+            phone: (data.phone as string) || (meta?.phone as string) || "",
+            name:
+              data.full_name ||
+              (meta?.full_name as string) ||
+              (meta?.name as string) ||
+              "Scholar",
+            username:
+              localOnboard?.username ||
+              data.username ||
+              `@scholar_${userId.slice(0, 4)}`,
+            avatar:
+              data.avatar_url ||
+              (meta?.avatar_url as string) ||
+              (meta?.picture as string) ||
+              "🚀",
+            board: (data.board as "CBSE" | "ICSE") || "CBSE",
+            classGrade: resolvedClass,
+            preferredLanguage: resolvedLang,
+            hasCompletedOnboarding: hasOnboarded,
+            city: data.city || "Delhi",
+            school: data.school_name || "VidyaLila Academy",
+            role: (data.role as "student" | "admin") || "student",
+            xp: typeof data.xp_points === "number" ? data.xp_points : 0,
+            rating: typeof data.contest_rating === "number" ? data.contest_rating : 1500,
+            streak: typeof data.current_streak === "number" ? data.current_streak : 1,
+            hasProPass: Boolean(data.has_pro_pass),
+            proPassPlan: data.pro_pass_plan || undefined,
+            dailyPassesRemaining:
+              typeof data.daily_passes_remaining === "number"
+                ? data.daily_passes_remaining
+                : 0,
+            competitionPassesRemaining:
+              typeof data.competition_passes_remaining === "number"
+                ? data.competition_passes_remaining
+                : 0,
+            unlockedContestIds: Array.isArray(data.unlocked_contest_ids)
+              ? data.unlocked_contest_ids
+              : [],
+            earnedBadges: Array.isArray(data.earned_badges) && data.earned_badges.length > 0
+              ? data.earned_badges
+              : DEFAULT_PROFILE.earnedBadges,
+          },
+          meta
+        );
         setProfile(mapped);
         saveLocalCreditWallet(mapped);
         if (hasOnboarded) {
@@ -708,31 +872,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           (meta.preferred_language as ContentLanguage) ||
           "HINGLISH";
 
-        const fallbackProfile: StudentProfile = hydrateCreditWallet({
-          ...DEFAULT_PROFILE,
-          id: userId,
-          email,
-          phone: (meta.phone as string) || "",
-          name:
-            (meta.full_name as string) ||
-            (meta.name as string) ||
-            email?.split("@")[0] ||
-            "Scholar",
-          username:
-            (meta.username as string) ||
-            `@${(email?.split("@")[0] || "scholar").toLowerCase().replace(/[^a-z0-9]/g, "")}`,
-          avatar:
-            (meta.avatar_url as string) ||
-            (meta.picture as string) ||
-            "🚀",
-          board: (meta.board as "CBSE" | "ICSE") || "CBSE",
-          classGrade: resolvedClass,
-          preferredLanguage: resolvedLang,
-          hasCompletedOnboarding: hasOnboarded,
-          city: (meta.city as string) || "Delhi",
-          school: (meta.school_name as string) || "VidyaLila Academy",
-          xp: 0,
-        });
+        const fallbackProfile: StudentProfile = hydrateCreditWallet(
+          {
+            ...DEFAULT_PROFILE,
+            id: userId,
+            email,
+            phone: (meta.phone as string) || "",
+            name:
+              (meta.full_name as string) ||
+              (meta.name as string) ||
+              email?.split("@")[0] ||
+              "Scholar",
+            username:
+              (meta.username as string) ||
+              `@${(email?.split("@")[0] || "scholar").toLowerCase().replace(/[^a-z0-9]/g, "")}`,
+            avatar:
+              (meta.avatar_url as string) ||
+              (meta.picture as string) ||
+              "🚀",
+            board: (meta.board as "CBSE" | "ICSE") || "CBSE",
+            classGrade: resolvedClass,
+            preferredLanguage: resolvedLang,
+            hasCompletedOnboarding: hasOnboarded,
+            city: (meta.city as string) || "Delhi",
+            school: (meta.school_name as string) || "VidyaLila Academy",
+            xp: 0,
+          },
+          meta
+        );
         setProfile(fallbackProfile);
         saveLocalCreditWallet(fallbackProfile);
         if (hasOnboarded) {
@@ -753,6 +920,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (savedProfile) {
         const parsed = hydrateCreditWallet(JSON.parse(savedProfile));
         setProfile(parsed);
+      } else {
+        const guestHydrated = hydrateCreditWallet(DEFAULT_PROFILE);
+        setProfile(guestHydrated);
       }
       const savedAuth = localStorage.getItem("vidyalila_is_auth_v4");
       if (savedAuth === "true") setIsAuthenticated(true);
@@ -851,17 +1021,41 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const saveProfile = (next: StudentProfile) => {
-    setProfile(next);
-    saveLocalCreditWallet(next);
+    const perm = getPermanentUnlocks(next.id, next.email, next.username);
+    const mergedUnlockedModules = Array.from(
+      new Set([...(next.unlockedModuleIds || []), ...perm.moduleIds])
+    );
+    const mergedUnlockedClasses = Array.from(
+      new Set([...(next.unlockedClassGrades || []), ...perm.classGrades])
+    ) as ClassGrade[];
+
+    const normalizedNext: StudentProfile = {
+      ...next,
+      unlockedModuleIds: mergedUnlockedModules,
+      unlockedClassGrades: mergedUnlockedClasses,
+    };
+
+    recordPermanentUnlocks(
+      mergedUnlockedModules,
+      mergedUnlockedClasses,
+      normalizedNext.id,
+      normalizedNext.email,
+      normalizedNext.username
+    );
+    setProfile(normalizedNext);
+    saveLocalCreditWallet(normalizedNext);
     try {
-      localStorage.setItem("vidyalila_profile_v6", JSON.stringify(next));
-      if (next.email) {
+      localStorage.setItem(
+        "vidyalila_profile_v6",
+        JSON.stringify(normalizedNext)
+      );
+      if (normalizedNext.email) {
         const rawUsers = localStorage.getItem("vidyalila_local_users_v1");
         if (rawUsers) {
           const users = JSON.parse(rawUsers);
-          const key = next.email.toLowerCase();
+          const key = normalizedNext.email.toLowerCase();
           if (users[key]) {
-            users[key].profile = next;
+            users[key].profile = normalizedNext;
             localStorage.setItem(
               "vidyalila_local_users_v1",
               JSON.stringify(users)
@@ -872,21 +1066,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore
     }
-    // Sync harmless profile fields to Supabase if connected and authenticated
-    // XP, rating, passes, and role are strictly updated on the server
-    if (isSupabaseConfigured && next.id) {
+    // Sync harmless profile fields & permanent chapter unlocks to Supabase if connected and authenticated
+    if (isSupabaseConfigured && normalizedNext.id && !normalizedNext.id.startsWith("local-")) {
       supabase
         .from("profiles")
         .update({
-          full_name: next.name,
-          avatar_url: next.avatar,
-          board: next.board,
-          class_grade: next.classGrade,
-          city: next.city,
-          school_name: next.school,
+          full_name: normalizedNext.name,
+          avatar_url: normalizedNext.avatar,
+          board: normalizedNext.board,
+          class_grade: normalizedNext.classGrade,
+          city: normalizedNext.city,
+          school_name: normalizedNext.school,
         })
-        .eq("id", next.id)
+        .eq("id", normalizedNext.id)
         .then(() => {});
+
+      supabase.auth
+        .updateUser({
+          data: {
+            vidya_credits: normalizedNext.credits,
+            unlocked_module_ids: mergedUnlockedModules,
+            unlocked_class_grades: mergedUnlockedClasses,
+          },
+        })
+        .catch(() => {});
     }
   };
 
@@ -1526,13 +1729,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const isChapterUnlocked = (moduleIdOrSlug: string): boolean => {
     if (profile.role === "admin") return true;
     if (isChapterFreeStarter(moduleIdOrSlug)) return true;
+    const perm = getPermanentUnlocks(profile.id, profile.email, profile.username);
     const mod = modules.find(
       (m) => m.id === moduleIdOrSlug || m.slug === moduleIdOrSlug
     );
-    if (mod && (profile.unlockedClassGrades || []).includes(mod.classGrade)) {
+    const unlockedClasses = [
+      ...(profile.unlockedClassGrades || []),
+      ...perm.classGrades,
+    ];
+    if (mod && unlockedClasses.includes(mod.classGrade)) {
       return true;
     }
-    const unlockedIds = profile.unlockedModuleIds || [];
+    const unlockedIds = [
+      ...(profile.unlockedModuleIds || []),
+      ...perm.moduleIds,
+    ];
     if (unlockedIds.includes(moduleIdOrSlug)) return true;
     if (mod && (unlockedIds.includes(mod.id) || unlockedIds.includes(mod.slug))) {
       return true;

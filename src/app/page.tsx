@@ -382,7 +382,7 @@ function HomeContent() {
       )}
 
       {/* ====================================================================
-          STEP 3: CHAPTER LINKS + VERTICAL STACKED UNITS (One below the other)
+          STEP 3: CHAPTER CARDS GRID (Topics appear only after clicking a Chapter Card)
          ==================================================================== */}
       {currentStep === 3 && selectedClass && selectedSubject && (
         <section className="space-y-6">
@@ -397,7 +397,7 @@ function HomeContent() {
                 First 2 Chapters of Every Subject are 100% Free!
               </h3>
               <p className="text-xs sm:text-sm text-indigo-100 font-medium">
-                New scholars receive <strong>🪙 300 Free Welcome Credits</strong>. Unlock any additional chapter permanently for <strong>🪙 100 Credits</strong>, or use credits for Daily &amp; Weekly Live Tests!
+                Click any Chapter Card below to open all its topics &amp; interactive lessons. Once you unlock a chapter with <strong>🪙 100 Credits</strong>, it stays <strong>Unlocked Forever</strong>!
               </p>
             </div>
 
@@ -413,7 +413,7 @@ function HomeContent() {
               {(profile.unlockedClassGrades || []).includes(selectedClass) ? (
                 <span className="rounded-2xl bg-emerald-500/30 border border-emerald-300/60 px-4 py-3 text-xs font-extrabold text-emerald-100 flex items-center gap-1.5">
                   <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                  <span>👑 All Class {selectedClass} Chapters Unlocked!</span>
+                  <span>👑 All Class {selectedClass} Chapters Unlocked Forever!</span>
                 </span>
               ) : (
                 <button
@@ -444,165 +444,148 @@ function HomeContent() {
             </div>
           </div>
 
-          {chaptersForSelection.map((chap, chapIdx) => {
-            const completedUnits = chap.units.filter((u) =>
-              profile.completedUnitIds.includes(u.id)
-            ).length;
-            const isFreeStarter = isChapterFreeStarter(chap.id) || chapIdx < 2;
-            const isUnlocked = isChapterUnlocked(chap.id) || chapIdx < 2;
+          {/* Chapter Cards Grid — Only Chapters are shown here; Topics open on clicking a Card */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {chaptersForSelection.map((chap, chapIdx) => {
+              const completedUnits = chap.units.filter((u) =>
+                profile.completedUnitIds.includes(u.id)
+              ).length;
+              const totalUnits = chap.units.length;
+              const progressPct =
+                totalUnits > 0
+                  ? Math.round((completedUnits / totalUnits) * 100)
+                  : 0;
+              const isFreeStarter = isChapterFreeStarter(chap.id) || chapIdx < 2;
+              const isUnlocked = isChapterUnlocked(chap.id) || chapIdx < 2;
 
-            const handleQuickUnlockChapter = () => {
-              if ((profile.credits ?? 0) >= 100) {
-                unlockChapterWithCredits(chap.id);
-              } else {
-                setPendingChapterToUnlock({ id: chap.id, title: chap.title });
-                setPaymentModalOpen(true);
-              }
-            };
+              const handleCardClick = () => {
+                router.push(`/trails/${chap.slug}`);
+              };
 
-            return (
-              <div
-                key={chap.id}
-                className={`rounded-3xl bg-white border-2 shadow-[0_6px_0_0_#e2e8f0] p-6 sm:p-8 space-y-6 transition ${
-                  isUnlocked
-                    ? "border-slate-200"
-                    : "border-amber-200 bg-amber-50/15"
-                }`}
-              >
-                {/* Chapter Header — Clicking the Chapter Name opens the Chapter directly */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-5">
-                  <div className="flex items-start gap-4">
-                    <Link
-                      href={`/trails/${chap.slug}`}
-                      className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl text-white shadow-sm hover:scale-105 transition ${
-                        isUnlocked ? "bg-indigo-600" : "bg-amber-500"
-                      }`}
-                    >
-                      {isUnlocked ? chap.badgeEmoji : "🔒"}
-                    </Link>
+              const handleQuickUnlockChapter = (e: React.MouseEvent) => {
+                e.stopPropagation();
+                if ((profile.credits ?? 0) >= 100) {
+                  const res = unlockChapterWithCredits(chap.id);
+                  if (res.ok) {
+                    router.push(`/trails/${chap.slug}`);
+                  }
+                } else {
+                  setPendingChapterToUnlock({ id: chap.id, title: chap.title });
+                  setDefaultModalPkg("ONE_DAY");
+                  setPaymentModalOpen(true);
+                }
+              };
 
-                    <div className="space-y-1.5">
-                      <div className="flex flex-wrap items-center gap-2">
+              return (
+                <div
+                  key={chap.id}
+                  onClick={handleCardClick}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleCardClick();
+                    }
+                  }}
+                  className={`group rounded-3xl bg-white border-2 p-6 flex flex-col justify-between gap-5 transition-all cursor-pointer select-none ${
+                    isUnlocked
+                      ? "border-slate-200 shadow-[0_6px_0_0_#e2e8f0] hover:border-indigo-400 hover:shadow-[0_6px_0_0_#818cf8] hover:-translate-y-0.5"
+                      : "border-amber-200 bg-amber-50/15 shadow-[0_6px_0_0_#fde68a] hover:border-amber-400 hover:-translate-y-0.5"
+                  }`}
+                >
+                  {/* Top Row: Chapter Emoji Icon + Status Pill */}
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div
+                        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl text-white shadow-sm group-hover:scale-105 transition ${
+                          isUnlocked ? "bg-indigo-600" : "bg-amber-500"
+                        }`}
+                      >
+                        {isUnlocked ? chap.badgeEmoji : "🔒"}
+                      </div>
+
+                      <div className="flex flex-col items-end gap-1.5">
+                        <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                          Chapter {chapIdx + 1}
+                        </span>
                         {isFreeStarter ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 text-[10px] font-extrabold text-emerald-800 uppercase tracking-wider">
                             <Unlock className="h-3 w-3" />
-                            <span>Free Starter Chapter #{chapIdx + 1}</span>
+                            <span>Free Starter</span>
                           </span>
                         ) : isUnlocked ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 border border-indigo-300 px-2.5 py-0.5 text-[10px] font-extrabold text-indigo-800 uppercase tracking-wider">
                             <CheckCircle2 className="h-3 w-3" />
-                            <span>Unlocked Permanently</span>
+                            <span>Unlocked Forever</span>
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 border border-amber-300 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-900 uppercase tracking-wider">
                             <Lock className="h-3 w-3" />
-                            <span>🪙 100 Credits to Unlock</span>
+                            <span>🪙 100 Credits</span>
                           </span>
                         )}
                       </div>
+                    </div>
 
-                      <Link
-                        href={`/trails/${chap.slug}`}
-                        className="inline-flex items-center gap-2 text-xl sm:text-2xl font-extrabold text-slate-900 hover:text-indigo-600 underline-offset-4 hover:underline transition"
-                      >
-                        <span>{chap.title}</span>
-                        <ArrowRight className="h-5 w-5 text-indigo-500" />
-                      </Link>
-                      <p className="text-sm text-slate-500 font-medium">
+                    {/* Chapter Title & Subtitle */}
+                    <div className="space-y-1.5">
+                      <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 group-hover:text-indigo-600 transition line-clamp-2">
+                        {chap.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-500 font-medium line-clamp-2">
                         {chap.subtitle}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-center shrink-0 text-xs font-bold">
-                    {!isUnlocked && (
+                  {/* Bottom Section: Stats Pills + Progress Bar + Action Button */}
+                  <div className="space-y-4 pt-3 border-t border-slate-100">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-extrabold">
+                      <span className="rounded-xl bg-slate-100 border border-slate-200 px-2.5 py-1 text-slate-700">
+                        📚 {totalUnits} {totalUnits === 1 ? "Topic" : "Topics"}
+                      </span>
+                      <span className="rounded-xl bg-amber-50 border border-amber-200 px-2.5 py-1 text-amber-800">
+                        ⚡ +{chap.totalXp} GP
+                      </span>
+                      <span className="rounded-xl bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-emerald-700">
+                        {completedUnits}/{totalUnits} Done
+                      </span>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+                        style={{ width: `${progressPct}%` }}
+                      />
+                    </div>
+
+                    {/* Card CTA */}
+                    {isUnlocked ? (
+                      <div className="w-full rounded-2xl bg-indigo-50 group-hover:bg-indigo-600 border border-indigo-200 group-hover:border-indigo-600 px-4 py-3 text-xs font-extrabold text-indigo-700 group-hover:text-white flex items-center justify-between transition">
+                        <span>Open Chapter &amp; View {totalUnits} Topics</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                    ) : (
                       <button
                         type="button"
                         onClick={handleQuickUnlockChapter}
-                        className="btn-3d-amber px-3.5 py-2 text-xs font-extrabold inline-flex items-center gap-1.5 cursor-pointer"
+                        className="w-full btn-3d-amber px-4 py-3 text-xs font-extrabold flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <span>🪙</span>
                         <span>
                           {(profile.credits ?? 0) >= 100
-                            ? "Unlock Now (100 Credits)"
-                            : "Buy Credits to Unlock (100 Cr)"}
+                            ? "Unlock Forever & Open (100 Credits)"
+                            : "Buy Credits to Unlock Forever (100 Cr)"}
                         </span>
                       </button>
                     )}
-                    <span className="rounded-xl bg-amber-50 border border-amber-200 px-3 py-1.5 text-amber-800">
-                      ⚡ +{chap.totalXp} GP
-                    </span>
-                    <span className="rounded-xl bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-emerald-700">
-                      {completedUnits}/{chap.units.length} Done
-                    </span>
                   </div>
                 </div>
-
-                {/* Vertical Sequence of Units (Show at most 3 units here; if > 3, show View All button) */}
-                <div className="relative pl-6 sm:pl-8 space-y-3 before:absolute before:left-2.5 sm:before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
-                  {chap.units.slice(0, 3).map((unit, idx) => {
-                    const isDone = profile.completedUnitIds.includes(unit.id);
-
-                    return (
-                      <Link
-                        key={unit.id}
-                        href={`/trails/${chap.slug}?unit=${idx}`}
-                        className={`group relative block rounded-2xl border p-4 transition-all ${
-                          isDone
-                            ? "bg-emerald-50/50 border-emerald-200 hover:border-emerald-400"
-                            : "bg-slate-50/70 border-slate-200 hover:bg-white hover:border-indigo-300 hover:shadow-sm"
-                        }`}
-                      >
-                        {/* Vertical Connector Dot */}
-                        <span
-                          className={`absolute -left-[25px] sm:-left-[29px] top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full border-2 ${
-                            isDone
-                              ? "bg-emerald-500 border-emerald-600 text-white"
-                              : "bg-white border-slate-300 group-hover:border-indigo-500"
-                          }`}
-                        >
-                          {isDone && <CheckCircle2 className="h-3.5 w-3.5" />}
-                        </span>
-
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                          <div>
-                            <h4 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
-                              {unit.title}
-                            </h4>
-                            <p className="text-xs text-slate-500 font-medium mt-0.5">
-                              {unit.summary}
-                            </p>
-                          </div>
-
-                          <div className="flex items-center gap-3 shrink-0 text-xs font-bold">
-                            <span className="text-slate-400 flex items-center gap-1">
-                              <Clock className="h-3.5 w-3.5" /> {unit.durationMinutes}m
-                            </span>
-                            <span className="text-amber-600">
-                              +{unit.xpReward} GP
-                            </span>
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-
-                {/* View All Units Button (shown when chapter has more than 3 units) */}
-                {chap.units.length > 3 && (
-                  <div className="pl-6 sm:pl-8 pt-1">
-                    <Link
-                      href={`/trails/${chap.slug}`}
-                      className="inline-flex items-center gap-2 rounded-2xl bg-indigo-50 border border-indigo-200 px-4 py-2.5 text-xs font-extrabold text-indigo-700 hover:bg-indigo-600 hover:text-white transition"
-                    >
-                      <span>View All ({chap.units.length} Units)</span>
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </section>
       )}
 

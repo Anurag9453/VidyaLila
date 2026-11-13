@@ -238,7 +238,7 @@ export function DailyStreakModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm p-3 sm:p-4 animate-fade-in">
       <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-3xl border-4 border-amber-400 bg-white text-slate-900 shadow-[0_12px_0_0_#d97706]">
-        {/* Top Game Header (8-Ball Pool Golden Shot Style) */}
+        {/* Top Header: Daily Streak Brain Challenge */}
         <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 p-5 sm:p-6 text-white relative">
           <button
             type="button"
@@ -256,22 +256,22 @@ export function DailyStreakModal() {
 
             <span className="inline-flex items-center gap-1 rounded-full bg-white/20 border border-white/30 px-2.5 py-0.5 text-[11px] font-black text-white">
               {isPracticeMode
-                ? "🎲 Bonus Practice Mode"
-                : "🎯 1 Golden Trick Shot = +15 🪙 Credits"}
+                ? "📘 Bonus Practice Mode"
+                : "✨ Daily Streak Reward: +15 🪙 Credits"}
             </span>
           </div>
 
           <h3 className="mt-2.5 text-xl sm:text-2xl font-black tracking-tight">
             {isPracticeMode
-              ? "Bonus Brain-Teaser Trick Shot 🧠"
-              : "Daily Streak Golden Trick Question! 🎯"}
+              ? "Bonus Concept Brain-Teaser 🧠"
+              : "Daily Streak Concept Challenge! 🧠"}
           </h3>
           <p className="mt-1 text-xs sm:text-sm font-bold text-amber-50">
             {isPracticeMode
-              ? "You already played today's Golden Shot! Practice more fun trick questions below — your next +15 🪙 reward unlocks tomorrow."
+              ? "You already completed today's Daily Streak Challenge! Practice more concept brain-teasers below — your next +15 🪙 reward unlocks tomorrow."
               : isHinglish
-              ? "Har roz website open karne par milega 1 Trick Question! Pehli baar mein sahi jawab do aur turant jeeto +15 🪙 Vidya Credits!"
-              : "Open VidyaLila daily for 1 Golden Trick Question! Answer correctly on your first shot to win +15 🪙 Vidya Credits instantly!"}
+              ? "Har roz apna study streak banaye rakhein! Aaj ke concept question ka sahi jawab dein aur paayein +15 🪙 Vidya Credits!"
+              : "Keep your daily learning streak alive! Answer today's concept question correctly on your first attempt to earn +15 🪙 Vidya Credits!"}
           </p>
         </div>
 
@@ -373,13 +373,13 @@ export function DailyStreakModal() {
                       <Trophy className="h-5 w-5 text-amber-500" />
                       <span>
                         {earnedCreditsThisShot > 0
-                          ? `BULLSEYE! +${earnedCreditsThisShot} 🪙 Vidya Credits Added!`
-                          : "Spot On! You Cracked the Trick! 🎉"}
+                          ? `Excellent! +${earnedCreditsThisShot} 🪙 Vidya Credits Added!`
+                          : "Spot On! Concept Mastered! 🎉"}
                       </span>
                     </>
                   ) : (
                     <>
-                      <span>😄 Arre! Trick Mein Phas Gaye!</span>
+                      <span>💡 Good Try! Read the Concept Insight Below:</span>
                     </>
                   )}
                 </p>
@@ -392,7 +392,7 @@ export function DailyStreakModal() {
               </div>
 
               <p className="text-xs sm:text-sm font-semibold leading-relaxed">
-                <strong>💡 Secret Behind the Trick:</strong>{" "}
+                <strong>💡 Concept Explanation:</strong>{" "}
                 {isHinglish
                   ? currentQ.trickExplanationHi
                   : currentQ.trickExplanationEn}
@@ -412,8 +412,8 @@ export function DailyStreakModal() {
                 <Sparkles className="h-4 w-4" />
                 <span>
                   {isPracticeMode
-                    ? "Lock Answer & Reveal Trick"
-                    : "Take My Daily Golden Shot (Win +15 🪙 Credits!)"}
+                    ? "Submit Answer & View Explanation"
+                    : "Submit Daily Answer (Earn +15 🪙 Credits)"}
                 </span>
               </button>
             ) : (
@@ -424,7 +424,7 @@ export function DailyStreakModal() {
                   className="w-full sm:w-auto flex-1 rounded-2xl border-2 border-indigo-200 bg-indigo-50 hover:bg-indigo-100 py-3 px-4 text-xs font-extrabold text-indigo-900 flex items-center justify-center gap-1.5 transition cursor-pointer"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
-                  <span>Try Another Trick Question (Practice)</span>
+                  <span>Try Another Concept Question (Practice)</span>
                 </button>
 
                 <button

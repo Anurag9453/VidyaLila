@@ -842,7 +842,7 @@ export default function WriterStudioPage() {
             </div>
           </div>
 
-          {/* Syllabus Scope Selector: Full Syllabus vs Selected Chapters (Zero Daily Burden Auto-Pool) */}
+          {/* Syllabus Scope Selector: Full Syllabus vs Selected Chapters */}
           <div className="rounded-2xl border-2 border-indigo-200 bg-indigo-50/50 p-5 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -850,7 +850,7 @@ export default function WriterStudioPage() {
                   📚 Quiz Syllabus Scope (Full Syllabus vs Selected Chapters)
                 </h3>
                 <p className="text-xs font-medium text-slate-600">
-                  Leave the manual question box empty below to auto-pull verified questions from your Chapter Question Pool!
+                  Leave the manual question box empty below to auto-select verified questions from your Chapter Question Bank!
                 </p>
               </div>
 
@@ -960,7 +960,7 @@ export default function WriterStudioPage() {
 
           <div>
             <label className="block text-xs font-black text-slate-700 mb-1.5">
-              Prize Pool / Student Reward Highlight
+              Scholarship &amp; Student Reward Highlight
             </label>
             <input
               type="text"

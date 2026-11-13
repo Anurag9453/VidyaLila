@@ -3142,7 +3142,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
               </div>
 
               <p className="text-[11px] text-indigo-200/90 leading-relaxed">
-                🛡️ <strong>Upwork-Style Credit Refund Guarantee:</strong> If a chapter or live exam ever has a technical issue, 100% of your spent credits are refunded directly back to your Vidya Credit Wallet.
+                🛡️ <strong>100% Wallet Credit Protection:</strong> If a chapter or live exam ever has a technical issue, 100% of your spent credits are restored directly to your Vidya Credit Wallet.
               </p>
             </div>
           </div>

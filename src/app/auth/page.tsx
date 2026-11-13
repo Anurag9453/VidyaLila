@@ -645,7 +645,7 @@ function AuthAndSettingsContent() {
 
             {/* Credit Refund Policy Note */}
             <div className="rounded-xl bg-amber-50 border border-amber-200 p-3 text-[11px] font-bold text-amber-900 leading-relaxed">
-              🛡️ <strong>Upwork-Style Credit Refund Policy:</strong> All payments purchase digital Vidya Credits (🪙). If a live exam or chapter ever has a technical issue or rescheduling, 100% of the spent credits are refunded directly back into your Vidya Credit Wallet above (no cash refunds).
+              🛡️ <strong>Vidya Credit Protection Policy:</strong> All packages add digital Vidya Credits (🪙) to your account. If a live exam or chapter ever experiences a technical issue or rescheduling, 100% of your spent credits are automatically restored to your Vidya Credit Wallet above.
             </div>
 
             {/* Recent Credit Transactions Passbook */}

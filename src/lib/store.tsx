@@ -2359,7 +2359,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       title: `🪙 +${amount} Vidya Credits Refunded / Granted!`,
       subtitle: `${cleanReason} • Credits have been added directly to ${
         targetEmailOrUsername || profile.username
-      }'s wallet (Upwork-style instant credit refund).`,
+      }'s Vidya Credit Wallet.`,
       xpEarned: 0,
       badgeEmoji: "🪙",
     });
@@ -2754,7 +2754,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     profile.lastDailyChallengeDate === todayIst
   );
 
-  // Automatic Daily Streak Tracker & 8-Ball Pool Style Daily Trick Question Trigger
+  // Automatic Daily Streak Tracker & Daily Concept Challenge Trigger
   useEffect(() => {
     if (!isAuthenticated || authLoading) return;
     if (!profile.username || profile.username === "@guest_scholar") return;
@@ -2897,7 +2897,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               type: "GOODIE_REWARD",
               amount: rewardCredits,
               balanceAfter: nextCredits,
-              description: `🎯 Daily Streak Trick Shot Winner (Day ${nextStreak} Streak • "${questionTitle}")`,
+              description: `✨ Daily Streak Concept Challenge Reward (Day ${nextStreak} Streak • "${questionTitle}")`,
               createdAt: "Just now",
             },
             ...(profile.creditTransactions || []),

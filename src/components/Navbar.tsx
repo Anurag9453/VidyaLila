@@ -188,7 +188,7 @@ export function Navbar() {
                 <button
                   type="button"
                   onClick={() => setShowDailyTrickModal(true)}
-                  title="Click to play your Daily Streak Golden Trick Question (+15 🪙 Credits!)"
+                  title="Daily Learning Streak Challenge (+15 🪙 Credits)"
                   className="flex items-center gap-1 rounded-xl bg-orange-50 border border-orange-300 px-2.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-extrabold text-orange-800 hover:bg-orange-100 transition cursor-pointer relative"
                 >
                   <Flame className="h-4 w-4 text-orange-500 fill-orange-500" />

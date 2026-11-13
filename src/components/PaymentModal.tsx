@@ -1103,22 +1103,24 @@ export function PaymentModal({
                 )}
               </button>
 
-              {/* Security & Test Failure Simulator Bar */}
+              {/* Security Bar */}
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 text-[11px] font-bold text-slate-500">
                 <span className="flex items-center gap-1">
                   <Lock className="h-3.5 w-3.5 text-slate-400" />
                   Secured Globally ({activeCurrencyMeta.methodsLabel})
                 </span>
 
-                <button
-                  type="button"
-                  onClick={handleSimulateFailure}
-                  disabled={isProcessing}
-                  className="text-amber-700 hover:text-amber-900 underline font-extrabold inline-flex items-center gap-1 transition"
-                >
-                  <Bug className="h-3.5 w-3.5" />
-                  <span>Simulate Payment Drop (Test Lead Alert)</span>
-                </button>
+                {profile.role === "admin" && (
+                  <button
+                    type="button"
+                    onClick={handleSimulateFailure}
+                    disabled={isProcessing}
+                    className="text-amber-700 hover:text-amber-900 underline font-extrabold inline-flex items-center gap-1 transition"
+                  >
+                    <Bug className="h-3.5 w-3.5" />
+                    <span>Test Payment Alert (Admin Only)</span>
+                  </button>
+                )}
               </div>
 
               <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[11px] font-bold text-slate-600">

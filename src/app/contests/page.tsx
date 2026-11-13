@@ -1552,9 +1552,9 @@ function ContestArenaContent() {
               </div>
 
               <p className="text-[11px] font-bold text-slate-600 leading-snug">
-                🛡️ <strong>Upwork-Style Credit Refund Policy:</strong> Use
-                credits on any Chapter (100 Cr) or Live Test. Any refund for a
-                cancelled/rescheduled test is credited 100% back into your Vidya
+                🛡️ <strong>100% Wallet Credit Protection:</strong> Use
+                credits on any Chapter (100 Cr) or Live Test. Any credit spent on a
+                cancelled or rescheduled test is restored 100% back into your Vidya
                 Credit Wallet.
               </p>
             </div>

@@ -1518,14 +1518,14 @@ export default function AdminPortalPage() {
       </section>
 
       {/* ====================================================================
-          UPWORK-STYLE INSTANT CREDIT REFUND & SCHOLARSHIP GRANT CONSOLE
+          INSTANT CREDIT REFUND & SCHOLARSHIP GRANT CONSOLE
          ==================================================================== */}
       <section className="rounded-3xl border-2 border-amber-300 bg-gradient-to-r from-amber-50/80 via-white to-indigo-50/50 p-6 sm:p-8 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/70 pb-4">
           <div className="space-y-1">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 border border-amber-300 px-3 py-0.5 text-[11px] font-extrabold text-amber-900 uppercase tracking-wider">
               <span>🪙</span>
-              <span>Upwork-Style Credit Refund &amp; Grant Tool</span>
+              <span>Instant Wallet Credit Refund &amp; Scholarship Tool</span>
             </span>
             <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
               Issue Instant Vidya Credit Refunds (Zero Cash Refund Liability)

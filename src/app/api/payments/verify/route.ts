@@ -176,7 +176,7 @@ export async function POST(req: Request) {
       const nextComp =
         (currentProfile?.competition_passes_remaining || 0) + credits.comp;
 
-      const cleanPhone = (phone || "").replace(/[^0-9]/g, "").slice(-10);
+      const cleanPhone = (phone || "").replace(/[^0-9+]/g, "").slice(0, 16);
 
       await supabaseAdmin
         .from("profiles")
@@ -185,7 +185,7 @@ export async function POST(req: Request) {
           pro_pass_plan: dbSafePlan,
           daily_passes_remaining: nextDaily,
           competition_passes_remaining: nextComp,
-          ...(cleanPhone.length >= 10 ? { phone: cleanPhone } : {}),
+          ...(cleanPhone.length >= 7 ? { phone: cleanPhone } : {}),
         })
         .eq("id", userId);
 

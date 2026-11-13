@@ -17,6 +17,7 @@ import {
   RotateCcw,
   MessageCircle,
   Bug,
+  Globe,
 } from "lucide-react";
 
 export type PassPackageType =
@@ -24,6 +25,69 @@ export type PassPackageType =
   | "WEEKLY"
   | "MONTHLY"
   | "COMPREHENSIVE";
+
+export type SupportedCurrency = "INR" | "USD" | "GBP" | "EUR" | "AED" | "SGD";
+
+export const GLOBAL_CURRENCIES: {
+  code: SupportedCurrency;
+  symbol: string;
+  flag: string;
+  label: string;
+  methodsLabel: string;
+}[] = [
+  {
+    code: "INR",
+    symbol: "₹",
+    flag: "🇮🇳",
+    label: "INR (₹)",
+    methodsLabel: "UPI (GPay, PhonePe, Paytm), Cards & NetBanking",
+  },
+  {
+    code: "USD",
+    symbol: "$",
+    flag: "🌍",
+    label: "USD ($)",
+    methodsLabel: "International Visa, Mastercard, Amex, Apple Pay & PayPal",
+  },
+  {
+    code: "AED",
+    symbol: "AED ",
+    flag: "🇦🇪",
+    label: "AED (UAE)",
+    methodsLabel: "UAE & Gulf Cards (Visa/Mastercard), Apple Pay & PayPal",
+  },
+  {
+    code: "GBP",
+    symbol: "£",
+    flag: "🇬🇧",
+    label: "GBP (£)",
+    methodsLabel: "UK Cards (Visa/Mastercard), Apple Pay, Google Pay & PayPal",
+  },
+  {
+    code: "EUR",
+    symbol: "€",
+    flag: "🇪🇺",
+    label: "EUR (€)",
+    methodsLabel: "European Cards (Visa/Mastercard), Apple Pay & PayPal",
+  },
+  {
+    code: "SGD",
+    symbol: "S$",
+    flag: "🇸🇬",
+    label: "SGD (S$)",
+    methodsLabel: "Singapore & SE Asia Cards, Apple Pay, Google Pay & PayPal",
+  },
+];
+
+const COUNTRY_DIAL_CODES = [
+  { code: "+91", label: "🇮🇳 +91 (India)" },
+  { code: "+1", label: "🇺🇸/🇨🇦 +1 (US/CA)" },
+  { code: "+971", label: "🇦🇪 +971 (UAE)" },
+  { code: "+44", label: "🇬🇧 +44 (UK)" },
+  { code: "+65", label: "🇸🇬 +65 (SG)" },
+  { code: "+61", label: "🇦🇺 +61 (AU)" },
+  { code: "+49", label: "🇪🇺 +49 (EU)" },
+];
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -65,7 +129,7 @@ interface RazorpayOptions {
   prefill: {
     name: string;
     email?: string;
-    contact: string;
+    contact?: string;
   };
   notes?: Record<string, string>;
   theme?: {
@@ -128,6 +192,7 @@ export const PASS_PACKAGES: {
   badge: string;
   name: string;
   priceInr: number;
+  prices: Record<SupportedCurrency, number>;
   credits: number;
   chaptersEquivalent: number;
   isFullClassUnlock?: boolean;
@@ -147,12 +212,20 @@ export const PASS_PACKAGES: {
     badge: "🪙 400 CREDITS",
     name: "Starter Pack",
     priceInr: 199,
+    prices: {
+      INR: 199,
+      USD: 4.99,
+      GBP: 3.99,
+      EUR: 4.49,
+      AED: 18,
+      SGD: 6.99,
+    },
     credits: 400,
     chaptersEquivalent: 4,
     durationLabel: "/ 400 credits",
     dailyCount: 20,
     competitionCount: 4,
-    summary: "400 Vidya Credits (Unlocks 4 Full Chapters or 20 Daily Tests • ~₹50/chapter)",
+    summary: "400 Vidya Credits (Unlocks 4 Full Chapters or 20 Daily Tests)",
     perks: [
       "400 Instant Vidya Credits added to your wallet",
       "Unlock any 4 Chapters permanently (100 Credits / chapter)",
@@ -170,13 +243,21 @@ export const PASS_PACKAGES: {
     badge: "📘 1,200 CREDITS • 1 SUBJECT",
     name: "Subject Pack",
     priceInr: 499,
+    prices: {
+      INR: 499,
+      USD: 9.99,
+      GBP: 7.99,
+      EUR: 8.99,
+      AED: 35,
+      SGD: 12.99,
+    },
     credits: 1200,
     chaptersEquivalent: 12,
     durationLabel: "/ 1,200 credits",
     dailyCount: 60,
     competitionCount: 12,
     summary:
-      "1,200 Vidya Credits (Unlocks 12 Chapters / 1 Full Subject + Tests • ~₹41/chapter)",
+      "1,200 Vidya Credits (Unlocks 12 Chapters / 1 Full Subject + Live Tests)",
     perks: [
       "1,200 Vidya Credits (Enough to unlock an entire Subject like Physics or Chemistry!)",
       "Unlock 12 Full PCM Chapters permanently (100 Credits / chapter)",
@@ -194,13 +275,21 @@ export const PASS_PACKAGES: {
     badge: "💎 2,600 CREDITS • 26 CHAPTERS",
     name: "Scholar Pack",
     priceInr: 999,
+    prices: {
+      INR: 999,
+      USD: 19.99,
+      GBP: 15.99,
+      EUR: 17.99,
+      AED: 69,
+      SGD: 25.99,
+    },
     credits: 2600,
     chaptersEquivalent: 26,
     durationLabel: "/ 2,600 credits",
     dailyCount: 130,
     competitionCount: 26,
     summary:
-      "2,600 Vidya Credits (Unlocks 26 Chapters Across PCM + Live Tests • ~₹38/chapter)",
+      "2,600 Vidya Credits (Unlocks 26 Chapters Across PCM + Live Tests)",
     perks: [
       "2,600 Vidya Credits added directly to your wallet",
       "Unlock 26 Full Chapters across Maths, Physics & Chemistry",
@@ -218,6 +307,14 @@ export const PASS_PACKAGES: {
     badge: "👑 ALL ~45 CLASS CHAPTERS + 1,000 CR",
     name: "Comprehensive Class Pack",
     priceInr: 1999,
+    prices: {
+      INR: 1999,
+      USD: 34.99,
+      GBP: 27.99,
+      EUR: 31.99,
+      AED: 125,
+      SGD: 45.99,
+    },
     credits: 1000,
     chaptersEquivalent: 45,
     isFullClassUnlock: true,
@@ -225,11 +322,11 @@ export const PASS_PACKAGES: {
     dailyCount: 50,
     competitionCount: 20,
     summary:
-      "Instantly Unlocks ALL ~45 PCM Chapters of Your Class + 1,000 Bonus Test Credits (~₹36/chapter)",
+      "Instantly Unlocks ALL ~45 PCM Chapters of Your Class + 1,000 Bonus Test Credits",
     perks: [
       "100% Instant Unlock of ALL ~45 Maths, Physics & Chemistry Chapters for your Class!",
       "PLUS +1,000 Bonus Vidya Credits in your wallet for Daily, Weekly & Monthly Exams",
-      "Total Value: 5,500 Credits (~₹36/chapter — Best Full-Year Value!)",
+      "Total Value: 5,500 Credits (Best Full-Year Value Worldwide!)",
       "Includes all future chapters added to your selected Class automatically",
     ],
     accentBorder: "border-emerald-500",
@@ -238,6 +335,19 @@ export const PASS_PACKAGES: {
     symbolBoxBg: "bg-emerald-500 border-emerald-700 text-white",
   },
 ];
+
+export function formatGlobalPrice(
+  pkg: (typeof PASS_PACKAGES)[number],
+  currency: SupportedCurrency
+): string {
+  const meta =
+    GLOBAL_CURRENCIES.find((c) => c.code === currency) || GLOBAL_CURRENCIES[0];
+  const val = pkg.prices[currency] ?? pkg.priceInr;
+  if (currency === "INR" || currency === "AED") {
+    return `${meta.symbol}${val.toLocaleString()}`;
+  }
+  return `${meta.symbol}${val.toFixed(2)}`;
+}
 
 export function PaymentModal({
   isOpen,
@@ -252,6 +362,8 @@ export function PaymentModal({
     useApp();
   const [selectedPkg, setSelectedPkg] =
     useState<PassPackageType>(defaultPackage);
+  const [currency, setCurrency] = useState<SupportedCurrency>("INR");
+  const [dialCode, setDialCode] = useState("+91");
   const [selectedClassForComp, setSelectedClassForComp] = useState<9 | 10>(
     targetClassGrade || (profile.classGrade === 10 ? 10 : 9)
   );
@@ -263,6 +375,39 @@ export function PaymentModal({
     code?: string;
     orderId?: string;
   } | null>(null);
+
+  // Auto-detect visitor timezone so international students automatically see their currency
+  useEffect(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (tz === "Asia/Kolkata" || tz === "Asia/Calcutta") {
+        setCurrency("INR");
+        setDialCode("+91");
+      } else if (
+        tz.includes("Dubai") ||
+        tz.includes("Muscat") ||
+        tz.includes("Riyadh") ||
+        tz.includes("Qatar")
+      ) {
+        setCurrency("AED");
+        setDialCode("+971");
+      } else if (tz === "Europe/London") {
+        setCurrency("GBP");
+        setDialCode("+44");
+      } else if (tz.startsWith("Europe/")) {
+        setCurrency("EUR");
+        setDialCode("+49");
+      } else if (tz.includes("Singapore")) {
+        setCurrency("SGD");
+        setDialCode("+65");
+      } else if (tz.startsWith("America/") || tz.startsWith("Australia/")) {
+        setCurrency("USD");
+        setDialCode("+1");
+      }
+    } catch {
+      // default INR
+    }
+  }, []);
 
   useEffect(() => {
     setSelectedPkg(defaultPackage);
@@ -292,17 +437,30 @@ export function PaymentModal({
 
   const activePkg =
     PASS_PACKAGES.find((p) => p.id === selectedPkg) || PASS_PACKAGES[1];
+  const activeCurrencyMeta =
+    GLOBAL_CURRENCIES.find((c) => c.code === currency) || GLOBAL_CURRENCIES[0];
+  const formattedActivePrice = formatGlobalPrice(activePkg, currency);
+
+  // Check if user already has verified contact details on profile
+  const hasSavedContact = Boolean(
+    (profile.phone && profile.phone.replace(/[^0-9]/g, "").length >= 7) ||
+      (currency !== "INR" && profile.email)
+  );
 
   const validatePhone = (input: string): string | null => {
     const clean = input.replace(/[^0-9]/g, "");
+    // If signed in with an email and using an international currency, phone is optional
+    if (!clean && isAuthenticated && profile.email && currency !== "INR") {
+      return null;
+    }
+    if (!clean && hasSavedContact) {
+      return null;
+    }
     if (!clean) {
-      return "Mobile number is required so we can send your pass invoice & WhatsApp support.";
+      return "Please enter a contact number (7–15 digits) for payment receipt & support.";
     }
-    if (clean.length !== 10) {
-      return "Please enter a valid 10-digit mobile number.";
-    }
-    if (!/^[6-9]\d{9}$/.test(clean)) {
-      return "Mobile number should start with 6, 7, 8, or 9.";
+    if (clean.length < 7 || clean.length > 15) {
+      return "Please enter a valid phone number (7 to 15 digits).";
     }
     return null;
   };
@@ -312,7 +470,7 @@ export function PaymentModal({
     code: string,
     orderId?: string
   ) => {
-    const cleanPhone = phone.replace(/[^0-9]/g, "");
+    const cleanPhone = (phone || profile.phone || "").replace(/[^0-9+]/g, "");
     try {
       await fetch("/api/payments/log-failure", {
         method: "POST",
@@ -322,11 +480,11 @@ export function PaymentModal({
           orderId: orderId || `ord_fail_${Date.now()}`,
           packagePlan: selectedPkg,
           amountInr: activePkg.priceInr,
-          phone: cleanPhone,
+          phone: cleanPhone ? `${dialCode}${cleanPhone.replace(/^\+\d+/, "")}` : "",
           userName: profile.name,
           userUsername: profile.username,
           userEmail: profile.email,
-          failureReason: reason,
+          failureReason: `[${currency}] ${reason}`,
           failureCode: code,
         }),
       });
@@ -346,8 +504,11 @@ export function PaymentModal({
     }
     setPhoneError("");
 
-    const cleanPhone = phone.replace(/[^0-9]/g, "");
-    updateProfilePhone(cleanPhone);
+    const rawDigits = (phone || profile.phone || "").replace(/[^0-9]/g, "");
+    const fullPhone = rawDigits ? `${dialCode}${rawDigits}` : "";
+    if (rawDigits.length >= 7) {
+      updateProfilePhone(rawDigits);
+    }
 
     setIsProcessing(true);
     setFailureInfo(null);
@@ -355,14 +516,15 @@ export function PaymentModal({
     let createdOrderId = "";
 
     try {
-      // 1. Create order on backend (creates real Razorpay order_id via https://api.razorpay.com/v1/orders when keys are set)
+      // 1. Create global multi-currency order on backend
       const orderRes = await fetch("/api/payments/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: profile.id,
           packagePlan: selectedPkg,
-          phone: cleanPhone,
+          currency,
+          phone: fullPhone || rawDigits,
           userName: profile.name,
           userUsername: profile.username,
           userEmail: profile.email,
@@ -376,7 +538,7 @@ export function PaymentModal({
         setIsProcessing(false);
         await logFailureToBackend(
           orderData.error ||
-            "Could not initialize Razorpay order. Please check your API keys.",
+            "Could not initialize global checkout order. Please check your API keys.",
           orderData.code || "ORDER_CREATION_ERROR"
         );
         return;
@@ -400,7 +562,7 @@ export function PaymentModal({
         if (!scriptReady || !RazorpayConstructor) {
           setIsProcessing(false);
           await logFailureToBackend(
-            "Razorpay Checkout SDK could not be loaded. Please check your internet connection or ad-blocker.",
+            "Global Checkout SDK could not be loaded. Please check your internet connection or ad-blocker.",
             "SDK_LOAD_ERROR",
             createdOrderId
           );
@@ -411,20 +573,21 @@ export function PaymentModal({
 
         const rzp = new RazorpayConstructor({
           key: activeRzpKey,
-          amount: orderData.amountPaise || activePkg.priceInr * 100,
-          currency: orderData.currency || "INR",
-          name: "VidyaLila",
-          description: `${activePkg.name} • ${activePkg.summary}`,
+          amount: orderData.amountPaise,
+          currency: orderData.currency || currency,
+          name: "VidyaLila Global",
+          description: `${activePkg.name} (${formattedActivePrice}) • ${activePkg.summary}`,
           order_id: createdOrderId,
           prefill: {
             name: profile.name,
             email: profile.email || undefined,
-            contact: `+91${cleanPhone}`,
+            ...(fullPhone ? { contact: fullPhone } : {}),
           },
           notes: {
             userId: profile.id || "",
             packagePlan: selectedPkg,
-            phone: cleanPhone,
+            currency,
+            phone: fullPhone,
             userName: profile.name || "",
           },
           theme: {
@@ -446,7 +609,7 @@ export function PaymentModal({
                     response.razorpay_order_id || createdOrderId,
                   razorpayPaymentId: response.razorpay_payment_id,
                   razorpaySignature: response.razorpay_signature,
-                  phone: cleanPhone,
+                  phone: fullPhone || rawDigits,
                   userName: profile.name,
                   userEmail: profile.email,
                 }),
@@ -482,7 +645,7 @@ export function PaymentModal({
               setIsProcessing(false);
               if (!failureAlreadyLogged) {
                 logFailureToBackend(
-                  "Student closed the Razorpay checkout popup before completing payment.",
+                  "Student closed the checkout popup before completing payment.",
                   "CHECKOUT_DISMISSED",
                   createdOrderId
                 );
@@ -497,7 +660,7 @@ export function PaymentModal({
           const desc =
             resp.error?.description ||
             resp.error?.reason ||
-            "Bank or UPI transaction declined.";
+            "International card, bank, or UPI transaction declined.";
           const code = resp.error?.code || "PAYMENT_FAILED";
           logFailureToBackend(desc, code, createdOrderId);
         });
@@ -515,7 +678,7 @@ export function PaymentModal({
           packagePlan: selectedPkg,
           razorpayOrderId: createdOrderId,
           razorpayPaymentId: `pay_vl_sim_${Date.now()}`,
-          phone: cleanPhone,
+          phone: fullPhone || rawDigits,
           userName: profile.name,
           userEmail: profile.email,
         }),
@@ -540,8 +703,8 @@ export function PaymentModal({
     setPhone(cleanPhone);
     setIsProcessing(true);
     await logFailureToBackend(
-      "Simulated UPI timeout & bank server gateway error (Test Lead)",
-      "BANK_GATEWAY_TIMEOUT",
+      `Simulated ${currency} gateway timeout & card/UPI error (Test Lead)`,
+      "GATEWAY_TIMEOUT",
       `fail_sim_${Date.now()}`
     );
     setIsProcessing(false);
@@ -560,8 +723,8 @@ export function PaymentModal({
           </button>
           <div className="flex flex-wrap items-center justify-between gap-2 pr-8">
             <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-amber-300">
-              <ShieldCheck className="h-4 w-4" />
-              <span>Vidya Credits Wallet • Razorpay Secure Checkout</span>
+              <Globe className="h-4 w-4" />
+              <span>Vidya Credits Global Checkout • 130+ Countries</span>
             </div>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 border border-white/25 px-3 py-1 text-xs font-extrabold text-white">
               <span>🪙</span>
@@ -573,11 +736,46 @@ export function PaymentModal({
           </h3>
           <p className="mt-1 text-xs font-medium text-indigo-100">
             {chapterTitle
-              ? `Unlocking Chapter "${chapterTitle}" (100 Credits) — Top up your wallet to unlock chapters & live tests anytime!`
+              ? `Unlocking Chapter "${chapterTitle}" (100 Credits) — Pay in ${currency} via ${activeCurrencyMeta.methodsLabel}!`
               : contestTitle
               ? `Entering "${contestTitle}" — Top up your Vidya Credits to unlock live board exams & study chapters!`
-              : "1 Unified Credit Wallet for unlocking Class 9 & 10 PCM Chapters (100 Credits) and Live Board Tests (20–100 Credits)."}
+              : `Pay seamlessly from anywhere in the world (${activeCurrencyMeta.methodsLabel}).`}
           </p>
+
+          {/* Global Multi-Currency Switcher Bar */}
+          <div className="mt-3.5 pt-3 border-t border-white/15 flex flex-wrap items-center justify-between gap-2">
+            <span className="text-[11px] font-bold text-indigo-100 flex items-center gap-1">
+              <Globe className="h-3.5 w-3.5 text-amber-300" />
+              <span>Select Your Currency:</span>
+            </span>
+            <div className="flex flex-wrap items-center gap-1">
+              {GLOBAL_CURRENCIES.map((c) => {
+                const isCurr = currency === c.code;
+                return (
+                  <button
+                    key={c.code}
+                    type="button"
+                    onClick={() => {
+                      setCurrency(c.code);
+                      if (c.code === "INR") setDialCode("+91");
+                      else if (c.code === "USD") setDialCode("+1");
+                      else if (c.code === "AED") setDialCode("+971");
+                      else if (c.code === "GBP") setDialCode("+44");
+                      else if (c.code === "EUR") setDialCode("+49");
+                      else if (c.code === "SGD") setDialCode("+65");
+                    }}
+                    className={`rounded-lg px-2.5 py-1 text-[11px] font-extrabold transition cursor-pointer ${
+                      isCurr
+                        ? "bg-amber-400 text-slate-950 shadow-xs"
+                        : "bg-white/15 text-white hover:bg-white/25"
+                    }`}
+                  >
+                    {c.flag} {c.code}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         <div className="p-4 sm:p-6 space-y-5">
@@ -605,8 +803,8 @@ export function PaymentModal({
 
               <div className="rounded-xl bg-white/80 border border-rose-200 p-3 text-[11px] font-medium text-slate-700 leading-relaxed">
                 🛡️ <strong>Your money is completely safe:</strong> If any amount
-                was deducted by your bank or UPI app, it is automatically
-                reversed within 2–3 business days. Our team has also been
+                was deducted by your bank, card, or UPI app, it is automatically
+                reversed within 3–5 business days. Our team has also been
                 notified to assist you.
               </div>
 
@@ -617,7 +815,7 @@ export function PaymentModal({
                   className="btn-3d-indigo w-full sm:w-auto px-4 py-2 text-xs font-extrabold inline-flex items-center justify-center gap-1.5"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
-                  <span>Retry Razorpay Checkout</span>
+                  <span>Retry Checkout</span>
                 </button>
 
                 <Link
@@ -670,7 +868,7 @@ export function PaymentModal({
                       <span>{pkg.name}</span>
                     </h4>
                     <p className="mt-1 text-2xl font-extrabold text-slate-900">
-                      ₹{pkg.priceInr.toLocaleString()}
+                      {formatGlobalPrice(pkg, currency)}
                       <span className="text-xs font-bold text-slate-500">
                         {" "}
                         {pkg.durationLabel}
@@ -720,12 +918,12 @@ export function PaymentModal({
             })}
           </div>
 
-          {/* Class Selector when COMPREHENSIVE (₹1,999) is selected */}
+          {/* Class Selector when COMPREHENSIVE is selected */}
           {selectedPkg === "COMPREHENSIVE" && (
             <div className="rounded-2xl border-2 border-emerald-400 bg-emerald-50/80 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <p className="text-xs font-extrabold text-emerald-950 uppercase tracking-wider">
-                  👑 Select Class for Instant Full-Syllabus Unlock (₹1,999):
+                  👑 Select Class for Instant Full-Syllabus Unlock ({formattedActivePrice}):
                 </p>
                 <p className="text-xs font-semibold text-emerald-800">
                   All Maths, Physics &amp; Chemistry chapters of this Class will be unlocked immediately + 1,000 Bonus Test Credits!
@@ -760,7 +958,7 @@ export function PaymentModal({
                 </span>
               </p>
               <span className="rounded-lg bg-white border border-slate-200 px-2.5 py-1 font-extrabold text-slate-900">
-                ₹{activePkg.priceInr}
+                {formattedActivePrice}
               </span>
             </div>
 
@@ -775,64 +973,66 @@ export function PaymentModal({
 
             <div className="rounded-xl bg-amber-50 border border-amber-200 p-2.5 text-[11px] font-bold text-amber-900 leading-relaxed space-y-1">
               <p>
-                🪙 <strong>How Vidya Credits Work (Like Upwork Connects):</strong>{" "}
-                First 2 chapters of every subject are <strong>100% Free</strong>.
-                Beyond that, unlocking any chapter permanently costs{" "}
-                <strong>100 Credits</strong>, Daily Tests cost{" "}
-                <strong>20 Credits</strong>, Weekly Tests{" "}
-                <strong>50 Credits</strong>, and Monthly Championships{" "}
-                <strong>100 Credits</strong>.
+                🌍 <strong>Accepted Worldwide ({activeCurrencyMeta.label}):</strong>{" "}
+                Pay via <strong>{activeCurrencyMeta.methodsLabel}</strong>. First 2 chapters of every subject are 100% Free; unlocking any additional chapter permanently costs <strong>100 Credits</strong>.
               </p>
               <p className="text-amber-800">
-                🛡️ <strong>Credit Refund Policy:</strong> Purchases are for
-                non-expiring digital Vidya Credits. In case of any test
-                cancellation or technical issue, <strong>100% of the credits are refunded directly back to your Vidya Credit Wallet</strong> (no cash refunds).
+                🛡️ <strong>100% Credit &amp; Source Refund Guarantee:</strong>{" "}
+                In case of any technical issue, <strong>100% of credits are restored to your wallet</strong> (or refunded to your card/bank within 5–7 business days for duplicate/failed debits).
               </p>
             </div>
           </div>
 
           {isAuthenticated ? (
             <div className="space-y-4 pt-1">
-              {/* If phone is already saved on profile, do not keep asking for it */}
-              {profile.phone &&
-              profile.phone.replace(/[^0-9]/g, "").length === 10 ? (
+              {/* If user already has verified contact on profile, do not keep asking for it */}
+              {hasSavedContact ? (
                 <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 flex items-center justify-between gap-2 text-xs">
                   <div className="flex items-center gap-2 font-bold text-slate-800">
                     <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
                     <span>
                       Account Verified: <strong>{profile.name}</strong> (
-                      {profile.email || profile.username}) •{" "}
-                      <strong>+91 {profile.phone.replace(/[^0-9]/g, "")}</strong>
+                      {profile.email || profile.username})
+                      {profile.phone ? ` • 📞 ${profile.phone}` : ""}
                     </span>
                   </div>
                 </div>
               ) : (
-                /* WhatsApp / Phone Number Input (Asked Only Once if Not in Profile Yet) */
+                /* Global Phone Input with Country Code Selector (Asked Only Once if Not on Profile) */
                 <div className="rounded-2xl border-2 border-indigo-200 bg-indigo-50/50 p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
                       <Phone className="h-4 w-4 text-indigo-600" />
-                      <span>WhatsApp / Mobile Number (Saved to Profile Once)</span>
-                      <span className="text-rose-500">*</span>
+                      <span>
+                        Contact / WhatsApp Number (International &amp; India Supported)
+                      </span>
                     </label>
                   </div>
 
-                  <div className="relative flex items-center">
-                    <div className="absolute left-3 flex items-center gap-1 text-xs font-extrabold text-slate-600 border-r border-slate-300 pr-2 pointer-events-none select-none">
-                      <span>🇮🇳</span>
-                      <span>+91</span>
-                    </div>
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={dialCode}
+                      onChange={(e) => setDialCode(e.target.value)}
+                      className="rounded-xl border-2 border-slate-300 bg-white px-2.5 py-2.5 text-xs font-extrabold text-slate-800 focus:outline-none focus:border-indigo-500"
+                    >
+                      {COUNTRY_DIAL_CODES.map((d) => (
+                        <option key={d.code} value={d.code}>
+                          {d.label}
+                        </option>
+                      ))}
+                    </select>
+
                     <input
                       type="tel"
-                      maxLength={10}
+                      maxLength={15}
                       value={phone}
                       onChange={(e) => {
                         const clean = e.target.value.replace(/[^0-9]/g, "");
                         setPhone(clean);
                         if (phoneError) setPhoneError("");
                       }}
-                      placeholder="Enter 10-digit mobile (e.g. 9876543210)"
-                      className={`w-full rounded-xl border-2 bg-white pl-20 pr-3.5 py-2.5 text-sm font-bold text-slate-900 focus:outline-none transition ${
+                      placeholder="Mobile number (e.g. 9876543210)"
+                      className={`flex-1 rounded-xl border-2 bg-white px-3.5 py-2.5 text-sm font-bold text-slate-900 focus:outline-none transition ${
                         phoneError
                           ? "border-rose-500 focus:border-rose-600 bg-rose-50/30"
                           : "border-slate-300 focus:border-indigo-500"
@@ -847,7 +1047,7 @@ export function PaymentModal({
                     </p>
                   ) : (
                     <p className="text-[11px] font-medium text-slate-500 leading-snug">
-                      🔒 Saved to your profile so we never have to ask again.
+                      🔒 Saved to your profile once so we never have to ask again.
                     </p>
                   )}
                 </div>
@@ -861,12 +1061,12 @@ export function PaymentModal({
                 className="w-full btn-3d-emerald py-3.5 text-sm sm:text-base flex items-center justify-center gap-2 cursor-pointer"
               >
                 {isProcessing ? (
-                  <span>Opening Razorpay Secure Gateway...</span>
+                  <span>Opening Global Secure Gateway ({currency})...</span>
                 ) : (
                   <>
                     <Sparkles className="h-5 w-5" />
                     <span>
-                      Pay ₹{activePkg.priceInr} via Razorpay &amp; Activate{" "}
+                      Pay {formattedActivePrice} ({currency}) &amp; Activate{" "}
                       {activePkg.name}
                     </span>
                   </>
@@ -877,7 +1077,7 @@ export function PaymentModal({
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 text-[11px] font-bold text-slate-500">
                 <span className="flex items-center gap-1">
                   <Lock className="h-3.5 w-3.5 text-slate-400" />
-                  Secured by Razorpay (UPI, Cards, NetBanking)
+                  Secured Globally ({activeCurrencyMeta.methodsLabel})
                 </span>
 
                 <button
@@ -909,11 +1109,10 @@ export function PaymentModal({
               </div>
               <div className="space-y-1">
                 <h4 className="text-base font-extrabold text-slate-900">
-                  Sign In Required to Buy a Quiz Pass
+                  Sign In Required to Top Up Vidya Credits
                 </h4>
                 <p className="text-xs font-semibold text-slate-600">
-                  Quiz passes are linked to your student account. Please sign in
-                  or create a free account first to purchase a pass.
+                  Your Vidya Credits and unlocked chapters are permanently linked to your scholar account across all devices worldwide.
                 </p>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-2.5 pt-1">

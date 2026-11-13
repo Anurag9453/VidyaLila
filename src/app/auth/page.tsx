@@ -828,16 +828,15 @@ function AuthAndSettingsContent() {
 
                   <div>
                     <label className="block text-xs font-extrabold text-slate-700 mb-1.5">
-                      Phone / WhatsApp Number *
+                      Phone / WhatsApp Number (Global or India)
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                       <input
-                        required
                         type="tel"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        placeholder="10-digit mobile number"
+                        placeholder="e.g. +91 9876543210 or +1 555..."
                         className={inputClass}
                       />
                     </div>

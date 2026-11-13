@@ -75,7 +75,17 @@ function formatPlanBadge(
 }
 
 export default function AdminPortalPage() {
-  const { profile, isAuthenticated, refundOrGrantCredits } = useApp();
+  const {
+    profile,
+    isAuthenticated,
+    refundOrGrantCredits,
+    supportCases,
+    resolveSupportCase,
+  } = useApp();
+  const [showSalesforceGuide, setShowSalesforceGuide] = useState(false);
+  const [caseResolutionNotes, setCaseResolutionNotes] = useState<
+    Record<string, string>
+  >({});
   const [refundTargetStudent, setRefundTargetStudent] = useState("");
   const [refundAmount, setRefundAmount] = useState<number>(100);
   const [refundReason, setRefundReason] = useState(
@@ -873,6 +883,250 @@ export default function AdminPortalPage() {
                       >
                         Converted 🎉
                       </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* ====================================================================
+          🎧 STUDENT & PARENT SUPPORT & GRIEVANCE CASES + SALESFORCE SYNC
+         ==================================================================== */}
+      <section className="rounded-3xl border-2 border-indigo-400 bg-gradient-to-br from-indigo-50/80 via-white to-sky-50/60 p-5 sm:p-6 shadow-[0_6px_0_0_#6366f1] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-600 px-3 py-0.5 text-xs font-black uppercase tracking-wider text-white shadow-sm">
+                🎧 Student Support &amp; Grievance Cases
+              </span>
+              <span className="rounded-full bg-indigo-100 border border-indigo-300 px-2.5 py-0.5 text-xs font-extrabold text-indigo-900">
+                {
+                  supportCases.filter(
+                    (c) => c.status === "OPEN" || c.status === "IN_REVIEW"
+                  ).length
+                }{" "}
+                Open • {supportCases.length} Total
+              </span>
+              <span className="rounded-full bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 text-[11px] font-extrabold text-emerald-900">
+                ☁️ Connected to Salesforce Org: 00Dak00001QPDb9
+              </span>
+            </div>
+            <p className="text-xs font-medium text-slate-600">
+              All payment, chapter unlock, and formal grievance tickets raised on{" "}
+              <Link href="/support" className="text-indigo-600 font-bold underline">
+                /support
+              </Link>{" "}
+              appear here and auto-sync to your Free Salesforce Developer Edition org when{" "}
+              <code className="font-bold text-slate-800">SALESFORCE_ORG_ID</code> is configured.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setShowSalesforceGuide((prev) => !prev)}
+              className="rounded-xl border border-indigo-300 bg-white px-3.5 py-2 text-xs font-extrabold text-indigo-900 hover:bg-indigo-50 transition cursor-pointer shadow-xs"
+            >
+              ☁️ {showSalesforceGuide ? "Hide" : "How to Connect"} Free Salesforce Dev Org
+            </button>
+            <Link
+              href="/support"
+              className="btn-3d-indigo px-3.5 py-2 text-xs font-extrabold"
+            >
+              Open Public Support Desk →
+            </Link>
+          </div>
+        </div>
+
+        {/* Collapsible 2-Minute Salesforce Developer Edition Setup Guide */}
+        {showSalesforceGuide && (
+          <div className="rounded-2xl border-2 border-sky-300 bg-slate-900 text-white p-5 space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm sm:text-base font-black text-sky-300">
+                ☁️ Connect Your Free Salesforce Developer Edition Account (2-Minute Setup)
+              </h4>
+              <span className="text-[10px] font-black uppercase bg-sky-500/20 border border-sky-400/40 text-sky-200 px-2.5 py-0.5 rounded-full">
+                Zero Cost • No OAuth Needed
+              </span>
+            </div>
+            <ol className="list-decimal pl-5 space-y-1.5 text-xs text-slate-200 leading-relaxed">
+              <li>
+                Sign up for a free forever{" "}
+                <strong className="text-white">Salesforce Developer Edition</strong> account at{" "}
+                <code className="text-amber-300">developer.salesforce.com/signup</code>.
+              </li>
+              <li>
+                In Salesforce Setup (⚙️ top right), type{" "}
+                <strong className="text-white">&ldquo;Web-to-Case&rdquo;</strong> in Quick Find and
+                check <strong>Enable Web-to-Case</strong>. Similarly, type{" "}
+                <strong className="text-white">&ldquo;Web-to-Lead&rdquo;</strong> and ensure{" "}
+                <strong>Web-to-Lead Enabled</strong> is checked.
+              </li>
+              <li>
+                In Quick Find, open <strong className="text-white">&ldquo;Company Information&rdquo;</strong>, copy your 15-character{" "}
+                <strong className="text-amber-300">Salesforce.com Organization ID</strong> (starts
+                with <code className="text-amber-300">00D...</code>), and add it to{" "}
+                <code className="text-emerald-300">.env.local</code> (and Vercel Environment
+                Variables):
+                <pre className="mt-1.5 rounded-xl bg-black/60 border border-slate-700 p-2.5 text-xs font-mono text-emerald-300 overflow-x-auto">
+                  SALESFORCE_ORG_ID=00Dxxxxxxxxxxxx
+                </pre>
+              </li>
+            </ol>
+            <p className="text-[11px] text-slate-300">
+              ✅ Once set, every student support case creates a <strong>Case</strong> in Salesforce
+              Service Cloud, and every failed Razorpay checkout creates a{" "}
+              <strong>Hot Lead</strong> in Salesforce Sales Cloud automatically!
+            </p>
+          </div>
+        )}
+
+        {supportCases.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-indigo-200 bg-white/80 p-6 text-center space-y-1.5">
+            <p className="text-sm font-extrabold text-slate-800">
+              No Support or Grievance Cases Raised Yet
+            </p>
+            <p className="text-xs text-slate-500 max-w-md mx-auto">
+              When a student or parent submits a Payment, Chapter Unlock, or Formal Grievance case
+              on <code className="font-bold">/support</code>, it will appear right here for 1-click
+              credit restoration or WhatsApp follow-up.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-3">
+            {supportCases.map((c) => {
+              const isResolved =
+                c.status === "RESOLVED" || c.status === "RESOLVED_CREDITED";
+              const cleanPhone = (c.studentPhone || "").replace(/[^0-9]/g, "");
+              const waText = encodeURIComponent(
+                `Hi ${c.studentName}! Regarding your VidyaLila Support Case ${c.caseNumber} ("${c.subject}"): `
+              );
+
+              return (
+                <div
+                  key={c.id}
+                  className={`rounded-2xl border-2 p-4 bg-white flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
+                    isResolved ? "border-emerald-200 bg-emerald-50/20" : "border-indigo-200"
+                  }`}
+                >
+                  <div className="space-y-1.5 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-mono text-xs font-black bg-indigo-100 text-indigo-900 px-2.5 py-0.5 rounded-lg border border-indigo-300">
+                        {c.caseNumber}
+                      </span>
+                      <span className="text-[11px] font-black px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
+                        {c.category}
+                      </span>
+                      <span
+                        className={`text-[10px] font-black px-2.5 py-0.5 rounded-full ${
+                          isResolved
+                            ? "bg-emerald-600 text-white"
+                            : "bg-amber-400 text-slate-950"
+                        }`}
+                      >
+                        {c.status === "RESOLVED_CREDITED"
+                          ? `RESOLVED (+${c.creditsRefunded} 🪙 CREDITED)`
+                          : c.status}
+                      </span>
+                      {c.salesforceSynced && (
+                        <span className="text-[10px] font-extrabold text-sky-800 bg-sky-100 px-2 py-0.5 rounded-full border border-sky-200">
+                          ☁️ Synced to Salesforce
+                        </span>
+                      )}
+                    </div>
+
+                    <h4 className="text-sm font-black text-slate-900">
+                      {c.subject}
+                    </h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      {c.description}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-3 text-[11px] font-semibold text-slate-500 pt-1">
+                      <span>
+                        👤 {c.studentName} ({c.studentUsername}) • Class {c.classGrade}{" "}
+                        {c.board}
+                      </span>
+                      {c.studentEmail && <span>📧 {c.studentEmail}</span>}
+                      {c.studentPhone && <span>📞 {c.studentPhone}</span>}
+                      {c.paymentReference && (
+                        <span className="text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                          💳 Ref: {c.paymentReference}
+                        </span>
+                      )}
+                      {c.relatedChapterOrContest && (
+                        <span className="text-indigo-800 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                          📘 {c.relatedChapterOrContest}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Admin 1-Click Resolution & Refund Controls */}
+                  <div className="flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-2 shrink-0">
+                    {!isResolved && (
+                      <input
+                        type="text"
+                        value={caseResolutionNotes[c.id] || ""}
+                        onChange={(e) =>
+                          setCaseResolutionNotes((prev) => ({
+                            ...prev,
+                            [c.id]: e.target.value,
+                          }))
+                        }
+                        placeholder="Optional resolution note for student..."
+                        className="px-3 py-1.5 rounded-xl border border-slate-200 text-xs w-full lg:w-64"
+                      />
+                    )}
+
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      {!isResolved && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              resolveSupportCase(
+                                c.id,
+                                caseResolutionNotes[c.id] ||
+                                  "Verified chapter unlock / technical issue. Restored +100 Vidya Credits to your wallet.",
+                                100
+                              )
+                            }
+                            className="btn-3d-amber px-3 py-1.5 text-xs font-extrabold cursor-pointer"
+                          >
+                            Resolve &amp; Refund +100 🪙
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              resolveSupportCase(
+                                c.id,
+                                caseResolutionNotes[c.id] ||
+                                  "Issue verified and resolved by VidyaLila Support Desk.",
+                                0
+                              )
+                            }
+                            className="rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 px-3 py-1.5 text-xs font-extrabold transition cursor-pointer"
+                          >
+                            Mark Resolved ✓
+                          </button>
+                        </>
+                      )}
+
+                      {cleanPhone && (
+                        <a
+                          href={`https://wa.me/91${cleanPhone}?text=${waText}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-3d-emerald px-3 py-1.5 text-xs font-extrabold inline-flex items-center gap-1"
+                        >
+                          <MessageCircle className="h-3.5 w-3.5" />
+                          <span>WhatsApp</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 </div>

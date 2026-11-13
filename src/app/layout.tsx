@@ -60,11 +60,20 @@ export default function RootLayout({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 font-bold text-slate-600">
-                  <Link href="/terms" className="hover:text-emerald-600 underline underline-offset-4">
-                    Terms of Use &amp; Educational Disclaimer
+                  <Link href="/terms#terms" className="hover:text-emerald-600 underline underline-offset-4">
+                    Terms &amp; Disclaimer
                   </Link>
-                  <Link href="/terms" className="hover:text-emerald-600">
-                    Quiz Fair-Play &amp; Bonus Marks Policy
+                  <Link href="/terms#privacy" className="hover:text-emerald-600">
+                    Privacy Policy (DPDP Act)
+                  </Link>
+                  <Link href="/terms#refunds" className="hover:text-emerald-600">
+                    Credit &amp; Refund Policy
+                  </Link>
+                  <Link href="/terms#grievance" className="hover:text-emerald-600">
+                    Grievance &amp; Contact
+                  </Link>
+                  <Link href="/support" className="text-indigo-600 hover:text-indigo-800 underline underline-offset-4">
+                    Raise Support Case
                   </Link>
                   <Link href="/studio" className="hover:text-emerald-600">
                     Academic Review Studio

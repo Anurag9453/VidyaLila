@@ -620,17 +620,16 @@ export function PaymentModal({
                   <span>Retry Razorpay Checkout</span>
                 </button>
 
-                <a
-                  href={`https://wa.me/919876543210?text=${encodeURIComponent(
-                    `Hi! I was trying to buy the ${activePkg.name} (₹${activePkg.priceInr}) on VidyaLila with phone ${phone}, but the transaction didn't go through (${failureInfo.reason}). Could you please help me activate my pass?`
+                <Link
+                  href={`/support?category=PAYMENT_ISSUE&ref=${encodeURIComponent(
+                    failureInfo.orderId || ""
                   )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  onClick={onClose}
                   className="btn-3d-emerald w-full sm:w-auto px-4 py-2 text-xs font-extrabold inline-flex items-center justify-center gap-1.5"
                 >
                   <MessageCircle className="h-3.5 w-3.5" />
-                  <span>WhatsApp Founder for Instant Pass</span>
-                </a>
+                  <span>Raise Official Payment Support Case</span>
+                </Link>
               </div>
             </div>
           )}
@@ -882,6 +881,17 @@ export function PaymentModal({
                   <Bug className="h-3.5 w-3.5" />
                   <span>Simulate Payment Drop (Test Lead Alert)</span>
                 </button>
+              </div>
+
+              <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between text-[11px] font-bold text-slate-600">
+                <span>Money deducted or chapter didn&apos;t unlock?</span>
+                <Link
+                  href="/support?category=PAYMENT_ISSUE"
+                  onClick={onClose}
+                  className="text-indigo-600 hover:text-indigo-800 underline font-extrabold"
+                >
+                  Raise a Support / Grievance Case →
+                </Link>
               </div>
             </div>
           ) : (

@@ -133,6 +133,35 @@ export interface ContentReport {
   createdAt: string;
 }
 
+export type SupportCaseCategory =
+  | "PAYMENT_ISSUE"
+  | "CHAPTER_UNLOCK"
+  | "TEST_TECHNICAL"
+  | "GRIEVANCE_PRIVACY";
+
+export interface SupportCase {
+  id: string;
+  caseNumber: string; // e.g., VL-CASE-849201
+  category: SupportCaseCategory;
+  subject: string;
+  description: string;
+  studentName: string;
+  studentEmail: string;
+  studentPhone: string;
+  studentUsername: string;
+  board: "CBSE" | "ICSE";
+  classGrade: ClassGrade;
+  paymentReference?: string; // Razorpay Payment ID / Order ID / UPI Ref
+  relatedChapterOrContest?: string; // Chapter title or Contest name
+  priority: "HIGH" | "MEDIUM" | "URGENT_GRIEVANCE";
+  status: "OPEN" | "IN_REVIEW" | "RESOLVED" | "RESOLVED_CREDITED";
+  resolutionNote?: string;
+  creditsRefunded?: number;
+  salesforceSynced?: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 interface CelebrationEvent {
   title: string;
   subtitle: string;
@@ -149,6 +178,7 @@ interface AppContextType {
   modules: LearningModule[];
   contests: QuizContest[];
   contentReports: ContentReport[];
+  supportCases: SupportCase[];
   selectedBoardFilter: BoardType;
   selectedClassFilter: ClassGrade | "ALL";
   contentLanguage: ContentLanguage;
@@ -220,6 +250,23 @@ interface AppContextType {
   addCustomContest: (contest: QuizContest) => void;
   submitContentReport: (report: Omit<ContentReport, "id" | "reportedBy" | "status" | "createdAt">) => void;
   resolveContentReport: (reportId: string) => void;
+  submitSupportCase: (
+    payload: {
+      category: SupportCaseCategory;
+      subject: string;
+      description: string;
+      studentName?: string;
+      studentEmail?: string;
+      studentPhone?: string;
+      paymentReference?: string;
+      relatedChapterOrContest?: string;
+    }
+  ) => Promise<{ ok: boolean; caseItem: SupportCase; salesforceSynced?: boolean }>;
+  resolveSupportCase: (
+    caseId: string,
+    resolutionNote: string,
+    creditsToRefund?: number
+  ) => void;
   dismissCelebration: () => void;
   signUpUser: (payload: SignUpPayload) => Promise<{ ok: boolean; error?: string; message?: string }>;
   signInUser: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
@@ -270,6 +317,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [modules, setModules] = useState<LearningModule[]>(INITIAL_MODULES);
   const [contests, setContests] = useState<QuizContest[]>(INITIAL_CONTESTS);
   const [contentReports, setContentReports] = useState<ContentReport[]>([]);
+  const [supportCases, setSupportCases] = useState<SupportCase[]>([]);
   const [selectedBoardFilter, setSelectedBoardFilter] = useState<BoardType>("BOTH");
   const [selectedClassFilter, setSelectedClassFilter] = useState<ClassGrade | "ALL">("ALL");
   const [contentLanguage, setContentLanguageState] = useState<ContentLanguage>("HINGLISH");
@@ -931,12 +979,40 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       const savedAuth = localStorage.getItem("vidyalila_is_auth_v4");
       if (savedAuth === "true") setIsAuthenticated(true);
-      const savedModules = localStorage.getItem("vidyalila_modules_v13");
+      const savedModules = localStorage.getItem("vidyalila_modules_v14");
       if (savedModules) setModules(JSON.parse(savedModules));
       const savedContests = localStorage.getItem("vidyalila_contests_v11");
       if (savedContests) setContests(JSON.parse(savedContests));
       const savedReports = localStorage.getItem("vidyalila_reports_v1");
       if (savedReports) setContentReports(JSON.parse(savedReports));
+      const savedCases = localStorage.getItem("vidyalila_support_cases_v1");
+      if (savedCases) setSupportCases(JSON.parse(savedCases));
+      fetch("/api/support/cases")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.ok && Array.isArray(data.cases) && data.cases.length > 0) {
+            setSupportCases((prev) => {
+              const map = new Map<string, SupportCase>();
+              data.cases.forEach((c: SupportCase) => map.set(c.id, c));
+              prev.forEach((c) => {
+                if (!map.has(c.id)) map.set(c.id, c);
+              });
+              const merged = Array.from(map.values()).sort((a, b) =>
+                b.createdAt.localeCompare(a.createdAt)
+              );
+              try {
+                localStorage.setItem(
+                  "vidyalila_support_cases_v1",
+                  JSON.stringify(merged)
+                );
+              } catch {
+                // ignore
+              }
+              return merged;
+            });
+          }
+        })
+        .catch(() => {});
       const savedLang = localStorage.getItem("vidyalila_lang_v4") as ContentLanguage | null;
       if (savedLang === "ENGLISH" || savedLang === "HINGLISH") {
         setContentLanguageState(savedLang);
@@ -2275,7 +2351,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const updated = [mod, ...modules];
     setModules(updated);
     try {
-      localStorage.setItem("vidyalila_modules_v13", JSON.stringify(updated));
+      localStorage.setItem("vidyalila_modules_v14", JSON.stringify(updated));
     } catch {
       // ignore
     }
@@ -2358,6 +2434,139 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const submitSupportCase = async (payload: {
+    category: SupportCaseCategory;
+    subject: string;
+    description: string;
+    studentName?: string;
+    studentEmail?: string;
+    studentPhone?: string;
+    paymentReference?: string;
+    relatedChapterOrContest?: string;
+  }): Promise<{ ok: boolean; caseItem: SupportCase; salesforceSynced?: boolean }> => {
+    const randomSix = Math.floor(100000 + Math.random() * 900000);
+    const caseNumber = `VL-CASE-${randomSix}`;
+    const priority: SupportCase["priority"] =
+      payload.category === "GRIEVANCE_PRIVACY"
+        ? "URGENT_GRIEVANCE"
+        : payload.category === "PAYMENT_ISSUE" || payload.category === "CHAPTER_UNLOCK"
+        ? "HIGH"
+        : "MEDIUM";
+
+    const newCase: SupportCase = {
+      id: `case-${Date.now()}-${randomSix}`,
+      caseNumber,
+      category: payload.category,
+      subject: payload.subject.trim(),
+      description: payload.description.trim(),
+      studentName: (payload.studentName || profile.name || "Scholar").trim(),
+      studentEmail: (payload.studentEmail || profile.email || "").trim(),
+      studentPhone: (payload.studentPhone || profile.phone || "").trim(),
+      studentUsername: profile.username || "@scholar",
+      board: profile.board,
+      classGrade: profile.classGrade,
+      paymentReference: payload.paymentReference?.trim() || undefined,
+      relatedChapterOrContest: payload.relatedChapterOrContest?.trim() || undefined,
+      priority,
+      status: "OPEN",
+      salesforceSynced: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    let salesforceSynced = false;
+    try {
+      const res = await fetch("/api/support/cases", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "CREATE", caseItem: newCase }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.salesforceSynced) {
+          salesforceSynced = true;
+          newCase.salesforceSynced = true;
+        }
+      }
+    } catch {
+      // fallback to local persistence
+    }
+
+    const updated = [newCase, ...supportCases];
+    setSupportCases(updated);
+    try {
+      localStorage.setItem("vidyalila_support_cases_v1", JSON.stringify(updated));
+    } catch {
+      // ignore
+    }
+
+    setCelebration({
+      title: `Support Case ${caseNumber} Logged! 🛡️`,
+      subtitle:
+        "Our Student Support & Grievance Desk has received your ticket and will resolve it within 24–48 hours.",
+      xpEarned: 0,
+      badgeEmoji: "🎧",
+    });
+
+    return { ok: true, caseItem: newCase, salesforceSynced };
+  };
+
+  const resolveSupportCase = (
+    caseId: string,
+    resolutionNote: string,
+    creditsToRefund?: number
+  ) => {
+    const cleanCredits =
+      typeof creditsToRefund === "number" && creditsToRefund > 0
+        ? Math.round(creditsToRefund)
+        : 0;
+
+    let targetCase: SupportCase | undefined;
+    const updated = supportCases.map((c) => {
+      if (c.id === caseId) {
+        targetCase = c;
+        const resolvedItem: SupportCase = {
+          ...c,
+          status: cleanCredits > 0 ? "RESOLVED_CREDITED" : "RESOLVED",
+          resolutionNote:
+            resolutionNote.trim() ||
+            (cleanCredits > 0
+              ? `Resolved & credited +${cleanCredits} Vidya Credits to student wallet.`
+              : "Resolved by VidyaLila Support Desk."),
+          creditsRefunded: cleanCredits > 0 ? cleanCredits : c.creditsRefunded,
+          updatedAt: new Date().toISOString(),
+        };
+        return resolvedItem;
+      }
+      return c;
+    });
+
+    setSupportCases(updated);
+    try {
+      localStorage.setItem("vidyalila_support_cases_v1", JSON.stringify(updated));
+    } catch {
+      // ignore
+    }
+
+    if (cleanCredits > 0 && targetCase) {
+      refundOrGrantCredits(
+        cleanCredits,
+        `Support Case ${targetCase.caseNumber} Resolution (${targetCase.subject})`,
+        targetCase.studentEmail || targetCase.studentUsername
+      );
+    }
+
+    fetch("/api/support/cases", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "RESOLVE",
+        caseId,
+        resolutionNote,
+        creditsRefunded: cleanCredits,
+      }),
+    }).catch(() => {});
+  };
+
   const dismissCelebration = () => setCelebration(null);
 
   return (
@@ -2371,6 +2580,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         modules,
         contests,
         contentReports,
+        supportCases,
         selectedBoardFilter,
         selectedClassFilter,
         contentLanguage,
@@ -2397,6 +2607,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         addCustomContest,
         submitContentReport,
         resolveContentReport,
+        submitSupportCase,
+        resolveSupportCase,
         dismissCelebration,
         signUpUser,
         signInUser,

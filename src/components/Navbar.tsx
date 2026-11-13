@@ -22,6 +22,7 @@ import {
   AtSign,
   AlertCircle,
   Lock,
+  Headphones,
 } from "lucide-react";
 import { PaymentModal } from "./PaymentModal";
 import { BrandLogo } from "./BrandLogo";
@@ -131,6 +132,11 @@ export function Navbar() {
       href: "/leaderboard",
       label: "Ranks",
       icon: Trophy,
+    },
+    {
+      href: "/support",
+      label: "Support",
+      icon: Headphones,
     },
   ];
 

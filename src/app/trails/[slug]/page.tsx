@@ -3129,6 +3129,18 @@ function TrailDetailContent({ slug }: { slug: string }) {
                 </>
               )}
 
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-indigo-200">
+                <span>Credits spent or chapter unlock issue?</span>
+                <Link
+                  href={`/support?category=CHAPTER_UNLOCK&chapter=${encodeURIComponent(
+                    `${mod.title} (${mod.subject} Class ${mod.classGrade})`
+                  )}`}
+                  className="font-extrabold text-amber-300 hover:text-amber-200 underline"
+                >
+                  Raise Support Case →
+                </Link>
+              </div>
+
               <p className="text-[11px] text-indigo-200/90 leading-relaxed">
                 🛡️ <strong>Upwork-Style Credit Refund Guarantee:</strong> If a chapter or live exam ever has a technical issue, 100% of your spent credits are refunded directly back to your Vidya Credit Wallet.
               </p>

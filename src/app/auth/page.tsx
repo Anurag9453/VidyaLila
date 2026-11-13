@@ -38,57 +38,67 @@ function getPlanDetails(
 ) {
   const totalLeft = dailyLeft + compLeft;
 
-  if (plan && totalLeft === 0) {
+  if (plan && totalLeft === 0 && plan !== "COMPREHENSIVE") {
     const planLabel =
       plan === "MONTHLY"
-        ? "👑 Pro Pass (Monthly • 30 Daily + 4 Weekly)"
+        ? "💎 Scholar Pack (2,600 Credits)"
         : plan === "WEEKLY"
-        ? "💎 VIP Pass (Weekly • 7 Daily + 1 Weekly)"
-        : "⚡ Basic Pass (Daily • 2 Daily Quizzes)";
+        ? "📘 Subject Pack (1,200 Credits)"
+        : "🪙 Starter Pack (400 Credits)";
     return {
       name: `${planLabel} — Exhausted`,
-      badge: "LIMIT EXHAUSTED • RECHARGE REQUIRED",
+      badge: "CREDITS EXHAUSTED • TOP UP REQUIRED",
       summary:
-        "You have consumed all quiz credits in this pass. Recharge now to add new Daily & Weekly Quiz Passes!",
+        "You have consumed all Vidya Credits in your wallet. Top up anytime to unlock more chapters or live tests!",
       badgeStyle: "bg-rose-100 border-rose-300 text-rose-900",
       cardStyle: "border-rose-300 bg-rose-50/50",
     };
   }
 
+  if (plan === "COMPREHENSIVE") {
+    return {
+      name: "👑 Comprehensive Class Pack (₹1,999 • All PCM Chapters + 1,000 Test Credits)",
+      badge: "👑 COMPREHENSIVE CLASS PACK ACTIVE",
+      summary:
+        "All ~45 Mathematics, Physics & Chemistry chapters of your selected class are unlocked forever + 1,000 Bonus Test Credits.",
+      badgeStyle: "bg-emerald-100 border-emerald-300 text-emerald-900",
+      cardStyle: "border-emerald-300 bg-emerald-50/50",
+    };
+  }
   if (plan === "MONTHLY") {
     return {
-      name: "👑 Pro Pass (Monthly • ₹499 • 30 Daily + 4 Weekly Quizzes)",
-      badge: `👑 PRO PASS • ${totalLeft} QUIZ CREDITS LEFT`,
+      name: "💎 Scholar Pack (₹999 • 2,600 Vidya Credits)",
+      badge: "💎 SCHOLAR PACK ACTIVE",
       summary:
-        "Includes 30 Daily Quiz Credits + 4 Weekly Quiz Credits (1 deducted per quiz attempted)",
+        "2,600 Vidya Credits for permanent chapter unlocks (100 Cr) & live tests (20–100 Cr)",
       badgeStyle: "bg-emerald-100 border-emerald-300 text-emerald-900",
       cardStyle: "border-emerald-300 bg-emerald-50/50",
     };
   }
   if (plan === "WEEKLY") {
     return {
-      name: "💎 VIP Pass (Weekly • ₹149 • 7 Daily + 1 Weekly Quiz)",
-      badge: `💎 VIP PASS • ${totalLeft} QUIZ CREDITS LEFT`,
+      name: "📘 Subject Pack (₹499 • 1,200 Vidya Credits)",
+      badge: "📘 SUBJECT PACK ACTIVE",
       summary:
-        "Includes 7 Daily Quiz Credits + 1 Weekly Quiz Credit (1 deducted per quiz attempted)",
+        "1,200 Vidya Credits for permanent chapter unlocks (100 Cr) & live tests (20–100 Cr)",
       badgeStyle: "bg-indigo-100 border-indigo-300 text-indigo-900",
       cardStyle: "border-indigo-300 bg-indigo-50/50",
     };
   }
   if (plan === "ONE_DAY") {
     return {
-      name: "⚡ Basic Pass (Daily • ₹49 • 2 Daily Quizzes)",
-      badge: `⚡ BASIC PASS • ${totalLeft} QUIZ CREDIT${totalLeft === 1 ? "" : "S"} LEFT`,
-      summary: "Includes 2 Daily Quiz Credits (1 Pass Credit = 1 Daily Quiz)",
+      name: "🪙 Starter Pack (₹199 • 400 Vidya Credits)",
+      badge: "🪙 STARTER PACK ACTIVE",
+      summary: "400 Vidya Credits (Unlocks 4 chapters permanently or 20 Daily Tests)",
       badgeStyle: "bg-amber-100 border-amber-300 text-amber-900",
       cardStyle: "border-amber-300 bg-amber-50/50",
     };
   }
   return {
-    name: "No Active Quiz Pass Purchased",
-    badge: "NO ACTIVE PASS",
+    name: "Welcome Scholar Wallet (300 Free Credits)",
+    badge: "WELCOME WALLET ACTIVE",
     summary:
-      "Chapter study units & unit practice tests are 100% free with your account. Buy a Basic (₹49), VIP (₹149), or Pro (₹499) Pass to unlock Live Daily & Weekly Quizzes.",
+      "First 2 chapters of every subject are 100% Free + 300 Free Welcome Credits on sign-up. Top up anytime from ₹199 or unlock your entire class for ₹1,999.",
     badgeStyle: "bg-slate-200 border-slate-300 text-slate-700",
     cardStyle: "border-slate-200 bg-slate-50",
   };
@@ -1030,7 +1040,7 @@ function AuthAndSettingsContent() {
                   </div>
                 </div>
 
-                {/* Explicit Terms & Educational Disclaimer Acceptance */}
+                {/* Explicit Terms, DPDP Privacy Policy & Parental Consent Acceptance */}
                 <label className="flex items-start gap-2.5 rounded-2xl bg-slate-50 border border-slate-200 p-3.5 text-xs font-medium text-slate-600 cursor-pointer">
                   <input
                     type="checkbox"
@@ -1041,14 +1051,28 @@ function AuthAndSettingsContent() {
                   <span>
                     I agree to VidyaLila&apos;s{" "}
                     <Link
-                      href="/terms"
+                      href="/terms#terms"
                       className="font-extrabold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
                     >
-                      Terms of Use, Educational Disclaimer &amp; Quiz Fair-Play
-                      Policy
-                    </Link>{" "}
-                    and understand that VidyaLila is a supplementary self-study
-                    aid.
+                      Terms of Use &amp; Educational Disclaimer
+                    </Link>
+                    ,{" "}
+                    <Link
+                      href="/terms#privacy"
+                      className="font-extrabold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
+                    >
+                      Student Privacy Policy (DPDP Act, 2023)
+                    </Link>
+                    , and{" "}
+                    <Link
+                      href="/terms#refunds"
+                      className="font-extrabold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
+                    >
+                      Credit Refund Policy
+                    </Link>
+                    . If I am under 18 years of age, I confirm that I am
+                    creating this account with the consent and supervision of my{" "}
+                    <strong>Parent or Legal Guardian</strong>.
                   </span>
                 </label>
               </>

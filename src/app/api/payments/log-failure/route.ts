@@ -113,9 +113,58 @@ export async function POST(req: Request) {
       }
     }
 
+    // 4. Forward Hot Payment Failure Lead to Salesforce Sales Cloud (Web-to-Lead) if SALESFORCE_ORG_ID is set
+    const sfOrgId = (
+      process.env.SALESFORCE_ORG_ID ||
+      process.env.NEXT_PUBLIC_SALESFORCE_ORG_ID ||
+      "00Dak00001QPDb9"
+    ).trim();
+
+    let salesforceLeadSynced = false;
+    if (sfOrgId) {
+      try {
+        const nameParts = (userName || "VidyaLila Scholar").trim().split(/\s+/);
+        const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(" ") : "Scholar";
+        const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : nameParts[0] || "Scholar";
+
+        const leadForm = new URLSearchParams();
+        leadForm.append("oid", sfOrgId);
+        leadForm.append("retURL", "https://vidyalila.com/");
+        leadForm.append("first_name", firstName);
+        leadForm.append("last_name", lastName);
+        leadForm.append("email", userEmail || "student@vidyalila.com");
+        leadForm.append("phone", cleanPhone ? `+91 ${cleanPhone}` : "");
+        leadForm.append("company", `VidyaLila Student (${userUsername || "@scholar"})`);
+        leadForm.append("lead_source", "Razorpay Checkout Failure");
+        leadForm.append("rating", "Hot");
+        leadForm.append(
+          "description",
+          `Plan Attempted: ${packagePlan} (INR ${amountInr}) | Order ID: ${orderId || "N/A"} | Failure Reason: ${failureReason} [${failureCode}]`
+        );
+
+        const sfRes = await fetch(
+          "https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: leadForm.toString(),
+          }
+        );
+
+        if (sfRes.ok || sfRes.status === 200 || sfRes.status === 302) {
+          salesforceLeadSynced = true;
+        }
+      } catch (sfErr) {
+        console.warn("Salesforce Web-to-Lead sync warning:", sfErr);
+      }
+    }
+
     return NextResponse.json({
       ok: true,
       logged: true,
+      salesforceLeadSynced,
       message: "Payment failure recorded and lead queued for recovery.",
     });
   } catch (err: unknown) {

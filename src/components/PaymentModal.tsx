@@ -793,57 +793,65 @@ export function PaymentModal({
 
           {isAuthenticated ? (
             <div className="space-y-4 pt-1">
-              {/* WhatsApp / Phone Number Input (Asked at First Purchase) */}
-              <div className="rounded-2xl border-2 border-indigo-200 bg-indigo-50/50 p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                    <Phone className="h-4 w-4 text-indigo-600" />
-                    <span>WhatsApp / Mobile Number</span>
-                    <span className="text-rose-500">*</span>
-                  </label>
-                  {profile.phone && profile.phone.length >= 10 && (
-                    <span className="rounded-md bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 text-[10px] font-extrabold flex items-center gap-1">
-                      <CheckCircle2 className="h-3 w-3" />
-                      Saved on Account
+              {/* If phone is already saved on profile, do not keep asking for it */}
+              {profile.phone &&
+              profile.phone.replace(/[^0-9]/g, "").length === 10 ? (
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 flex items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center gap-2 font-bold text-slate-800">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>
+                      Account Verified: <strong>{profile.name}</strong> (
+                      {profile.email || profile.username}) •{" "}
+                      <strong>+91 {profile.phone.replace(/[^0-9]/g, "")}</strong>
                     </span>
+                  </div>
+                </div>
+              ) : (
+                /* WhatsApp / Phone Number Input (Asked Only Once if Not in Profile Yet) */
+                <div className="rounded-2xl border-2 border-indigo-200 bg-indigo-50/50 p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                      <Phone className="h-4 w-4 text-indigo-600" />
+                      <span>WhatsApp / Mobile Number (Saved to Profile Once)</span>
+                      <span className="text-rose-500">*</span>
+                    </label>
+                  </div>
+
+                  <div className="relative flex items-center">
+                    <div className="absolute left-3 flex items-center gap-1 text-xs font-extrabold text-slate-600 border-r border-slate-300 pr-2 pointer-events-none select-none">
+                      <span>🇮🇳</span>
+                      <span>+91</span>
+                    </div>
+                    <input
+                      type="tel"
+                      maxLength={10}
+                      value={phone}
+                      onChange={(e) => {
+                        const clean = e.target.value.replace(/[^0-9]/g, "");
+                        setPhone(clean);
+                        if (phoneError) setPhoneError("");
+                      }}
+                      placeholder="Enter 10-digit mobile (e.g. 9876543210)"
+                      className={`w-full rounded-xl border-2 bg-white pl-20 pr-3.5 py-2.5 text-sm font-bold text-slate-900 focus:outline-none transition ${
+                        phoneError
+                          ? "border-rose-500 focus:border-rose-600 bg-rose-50/30"
+                          : "border-slate-300 focus:border-indigo-500"
+                      }`}
+                    />
+                  </div>
+
+                  {phoneError ? (
+                    <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1">
+                      <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                      <span>{phoneError}</span>
+                    </p>
+                  ) : (
+                    <p className="text-[11px] font-medium text-slate-500 leading-snug">
+                      🔒 Saved to your profile so we never have to ask again.
+                    </p>
                   )}
                 </div>
-
-                <div className="relative flex items-center">
-                  <div className="absolute left-3 flex items-center gap-1 text-xs font-extrabold text-slate-600 border-r border-slate-300 pr-2 pointer-events-none select-none">
-                    <span>🇮🇳</span>
-                    <span>+91</span>
-                  </div>
-                  <input
-                    type="tel"
-                    maxLength={10}
-                    value={phone}
-                    onChange={(e) => {
-                      const clean = e.target.value.replace(/[^0-9]/g, "");
-                      setPhone(clean);
-                      if (phoneError) setPhoneError("");
-                    }}
-                    placeholder="Enter 10-digit mobile (e.g. 9876543210)"
-                    className={`w-full rounded-xl border-2 bg-white pl-20 pr-3.5 py-2.5 text-sm font-bold text-slate-900 focus:outline-none transition ${
-                      phoneError
-                        ? "border-rose-500 focus:border-rose-600 bg-rose-50/30"
-                        : "border-slate-300 focus:border-indigo-500"
-                    }`}
-                  />
-                </div>
-
-                {phoneError ? (
-                  <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1">
-                    <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                    <span>{phoneError}</span>
-                  </p>
-                ) : (
-                  <p className="text-[11px] font-medium text-slate-500 leading-snug">
-                    🔒 Pre-filled into Razorpay Checkout for 1-tap UPI &amp;
-                    instant pass activation.
-                  </p>
-                )}
-              </div>
+              )}
 
               {/* Pay Button */}
               <button

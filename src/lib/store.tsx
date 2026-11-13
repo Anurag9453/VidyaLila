@@ -1491,6 +1491,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ...DEFAULT_PROFILE,
         id: `local-${Date.now()}`,
         email: cleanEmail,
+        phone: (payload.phone || "").trim(),
         name: payload.fullName.trim(),
         username: cleanUsername,
         board: payload.board,

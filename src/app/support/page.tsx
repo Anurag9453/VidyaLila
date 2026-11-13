@@ -95,17 +95,18 @@ function SupportDeskContent() {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [createdCase, setCreatedCase] = useState<SupportCase | null>(null);
+  const [editingContact, setEditingContact] = useState(false);
 
-  // Sync profile fields when loaded
+  // Sync profile fields whenever profile updates
   useEffect(() => {
     if (profile.name && profile.name !== "Guest Scholar") {
-      setStudentName((prev) => prev || profile.name);
+      setStudentName(profile.name);
     }
     if (profile.email) {
-      setStudentEmail((prev) => prev || profile.email || "");
+      setStudentEmail(profile.email);
     }
     if (profile.phone) {
-      setStudentPhone((prev) => prev || profile.phone || "");
+      setStudentPhone(profile.phone);
     }
   }, [profile.name, profile.email, profile.phone]);
 
@@ -139,15 +140,27 @@ function SupportDeskContent() {
     e.preventDefault();
     setErrorMsg(null);
 
-    if (!studentName.trim()) {
-      setErrorMsg("Please enter Student or Parent Name.");
-      return;
-    }
-    if (!studentEmail.trim() && !studentPhone.trim()) {
-      setErrorMsg(
-        "Please provide at least an Email address or 10-digit Phone/WhatsApp number so we can update you."
-      );
-      return;
+    const finalName = isAuthenticated && !editingContact
+      ? profile.name || studentName
+      : studentName;
+    const finalEmail = isAuthenticated && !editingContact
+      ? profile.email || studentEmail
+      : studentEmail;
+    const finalPhone = isAuthenticated && !editingContact
+      ? profile.phone || studentPhone
+      : studentPhone;
+
+    if (!isAuthenticated || editingContact) {
+      if (!finalName.trim()) {
+        setErrorMsg("Please enter Student or Parent Name.");
+        return;
+      }
+      if (!finalEmail.trim() && !finalPhone.trim()) {
+        setErrorMsg(
+          "Please provide at least an Email address or 10-digit Phone/WhatsApp number so we can update you."
+        );
+        return;
+      }
     }
     if (!subject.trim()) {
       setErrorMsg("Please enter a brief subject for your issue.");
@@ -166,9 +179,9 @@ function SupportDeskContent() {
         category,
         subject,
         description,
-        studentName,
-        studentEmail,
-        studentPhone,
+        studentName: finalName,
+        studentEmail: finalEmail,
+        studentPhone: finalPhone,
         paymentReference,
         relatedChapterOrContest,
       });
@@ -340,61 +353,107 @@ function SupportDeskContent() {
               </div>
             </div>
 
-            {/* Student / Parent Contact Details */}
+            {/* Student / Parent Contact Details: Auto-fetched when logged in, only asked when guest */}
             <div className="pt-2 border-t border-slate-100">
-              <h2 className="text-base font-black text-slate-900 mb-3">
-                2. Student / Parent Contact Details
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Student / Parent Name *
-                  </label>
-                  <div className="relative">
-                    <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                    <input
-                      type="text"
-                      value={studentName}
-                      onChange={(e) => setStudentName(e.target.value)}
-                      placeholder="e.g. Aarav Sharma"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-indigo-600"
-                      required
-                    />
+              {isAuthenticated && !editingContact ? (
+                <div className="rounded-2xl bg-emerald-50/70 border border-emerald-200 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+                      <CheckCircle2 className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <span className="text-[11px] font-black uppercase tracking-wider text-emerald-800">
+                        ✓ Account Details Fetched Automatically from Your Profile
+                      </span>
+                      <p className="text-sm font-black text-slate-900 mt-0.5">
+                        {profile.name}{" "}
+                        <span className="text-slate-500 font-bold">
+                          ({profile.username})
+                        </span>
+                      </p>
+                      <p className="text-xs text-slate-600 mt-0.5">
+                        {profile.email ? `📧 ${profile.email}` : ""}{" "}
+                        {profile.phone ? `• 📞 +91 ${profile.phone}` : ""} • Class{" "}
+                        {profile.classGrade} ({profile.board})
+                      </p>
+                    </div>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setEditingContact(true)}
+                    className="text-xs font-extrabold text-indigo-600 hover:text-indigo-800 underline shrink-0 self-start sm:self-center cursor-pointer"
+                  >
+                    Edit Contact Info
+                  </button>
                 </div>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-base font-black text-slate-900">
+                      2. Student / Parent Contact Details
+                    </h2>
+                    {isAuthenticated && editingContact && (
+                      <button
+                        type="button"
+                        onClick={() => setEditingContact(false)}
+                        className="text-xs font-bold text-slate-500 hover:text-slate-800 underline cursor-pointer"
+                      >
+                        Use Profile Defaults
+                      </button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Student / Parent Name *
+                      </label>
+                      <div className="relative">
+                        <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                        <input
+                          type="text"
+                          value={studentName}
+                          onChange={(e) => setStudentName(e.target.value)}
+                          placeholder="e.g. Aarav Sharma"
+                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-indigo-600"
+                          required
+                        />
+                      </div>
+                    </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Registered Email *
-                  </label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                    <input
-                      type="email"
-                      value={studentEmail}
-                      onChange={(e) => setStudentEmail(e.target.value)}
-                      placeholder="student@email.com"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-indigo-600"
-                    />
-                  </div>
-                </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Registered Email *
+                      </label>
+                      <div className="relative">
+                        <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                        <input
+                          type="email"
+                          value={studentEmail}
+                          onChange={(e) => setStudentEmail(e.target.value)}
+                          placeholder="student@email.com"
+                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-indigo-600"
+                        />
+                      </div>
+                    </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Phone / WhatsApp No. *
-                  </label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                    <input
-                      type="tel"
-                      value={studentPhone}
-                      onChange={(e) => setStudentPhone(e.target.value)}
-                      placeholder="10-digit mobile"
-                      className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-indigo-600"
-                    />
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                        Phone / WhatsApp No. *
+                      </label>
+                      <div className="relative">
+                        <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                        <input
+                          type="tel"
+                          value={studentPhone}
+                          onChange={(e) => setStudentPhone(e.target.value)}
+                          placeholder="10-digit mobile"
+                          className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-indigo-600"
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
 
             {/* Contextual Fields for Payment or Chapter Unlock */}

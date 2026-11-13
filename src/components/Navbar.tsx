@@ -25,6 +25,7 @@ import {
   Headphones,
 } from "lucide-react";
 import { PaymentModal } from "./PaymentModal";
+import { DailyStreakModal } from "./DailyStreakModal";
 import { BrandLogo } from "./BrandLogo";
 
 export function Navbar() {
@@ -37,6 +38,8 @@ export function Navbar() {
     signOutUser,
     checkUsernameAvailability,
     completeOnboardingPreferences,
+    hasPlayedDailyTrickToday,
+    setShowDailyTrickModal,
   } = useApp();
   const [showPassModal, setShowPassModal] = useState(false);
 
@@ -182,14 +185,20 @@ export function Navbar() {
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {isAuthenticated ? (
               <>
-                <Link
-                  href="/leaderboard"
-                  title="Daily Streak"
-                  className="hidden sm:flex items-center gap-1 rounded-xl bg-orange-50 border border-orange-200 px-2.5 py-1.5 text-xs font-bold text-orange-700 hover:bg-orange-100 transition"
+                <button
+                  type="button"
+                  onClick={() => setShowDailyTrickModal(true)}
+                  title="Click to play your Daily Streak Golden Trick Question (+15 🪙 Credits!)"
+                  className="flex items-center gap-1 rounded-xl bg-orange-50 border border-orange-300 px-2.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-extrabold text-orange-800 hover:bg-orange-100 transition cursor-pointer relative"
                 >
                   <Flame className="h-4 w-4 text-orange-500 fill-orange-500" />
-                  <span>{profile.streak}d</span>
-                </Link>
+                  <span>{profile.streak || 1}d</span>
+                  {!hasPlayedDailyTrickToday && (
+                    <span className="ml-0.5 rounded-full bg-amber-400 text-slate-950 px-1.5 py-0.2 text-[9px] font-black animate-pulse">
+                      +15🪙
+                    </span>
+                  )}
+                </button>
 
                 <Link
                   href="/leaderboard"
@@ -531,6 +540,7 @@ export function Navbar() {
         defaultPackage="WEEKLY"
         onSuccessPackage={(pkg) => activateProPass(pkg)}
       />
+      <DailyStreakModal />
     </>
   );
 }

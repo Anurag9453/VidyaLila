@@ -83,6 +83,9 @@ export interface StudentProfile {
   xp: number;
   rating: number;
   streak: number;
+  lastStreakDate?: string;
+  lastDailyChallengeDate?: string;
+  dailyTrickWins?: number;
   credits: number;
   unlockedModuleIds: string[];
   unlockedClassGrades?: ClassGrade[];
@@ -220,9 +223,17 @@ interface AppContextType {
   unlockContestSingle: (contestId: string) => void;
   isChapterFreeStarter: (moduleIdOrSlug: string) => boolean;
   isChapterUnlocked: (moduleIdOrSlug: string) => boolean;
+  getAlreadyUnlockedPaidChaptersCount: (targetClassGrade: ClassGrade) => number;
   unlockChapterWithCredits: (
     moduleIdOrSlug: string
   ) => { ok: boolean; error?: string; remainingCredits?: number };
+  hasPlayedDailyTrickToday: boolean;
+  showDailyTrickModal: boolean;
+  setShowDailyTrickModal: (open: boolean) => void;
+  submitDailyTrickAnswer: (
+    isCorrect: boolean,
+    questionTitle: string
+  ) => { creditsEarned: number; newStreak: number };
   getContestCreditCost: (contestType: "DAILY" | "WEEKLY" | "MONTHLY") => number;
   activateProPass: (
     plan: CreditPlanType,
@@ -322,6 +333,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [selectedClassFilter, setSelectedClassFilter] = useState<ClassGrade | "ALL">("ALL");
   const [contentLanguage, setContentLanguageState] = useState<ContentLanguage>("HINGLISH");
   const [celebration, setCelebration] = useState<CelebrationEvent | null>(null);
+  const [showDailyTrickModal, setShowDailyTrickModal] = useState<boolean>(false);
+
+  const getTodayIstDate = (): string => {
+    try {
+      return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(new Date());
+    } catch {
+      return new Date().toISOString().slice(0, 10);
+    }
+  };
+
+  const getYesterdayIstDate = (): string => {
+    try {
+      const d = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(d);
+    } catch {
+      return new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    }
+  };
 
   // Helper to check local onboarding map for a user ID or email
   const getLocalOnboardingRecord = (
@@ -1835,6 +1874,36 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return false;
   };
 
+  // Counts how many paid (Chapter 3+) modules in targetClassGrade this signed-in user has already unlocked individually
+  const getAlreadyUnlockedPaidChaptersCount = (
+    targetClassGrade: ClassGrade
+  ): number => {
+    if (!isAuthenticated) return 0;
+    const perm = getPermanentUnlocks(
+      profile.id,
+      profile.email,
+      profile.username
+    );
+    const unlockedClasses = [
+      ...(profile.unlockedClassGrades || []),
+      ...perm.classGrades,
+    ];
+    // If the entire class is already unlocked via Comprehensive Pack, no individual chapter refund applies
+    if (unlockedClasses.includes(targetClassGrade)) return 0;
+
+    const unlockedIds = new Set([
+      ...(profile.unlockedModuleIds || []),
+      ...perm.moduleIds,
+    ]);
+
+    return modules.filter(
+      (m) =>
+        m.classGrade === targetClassGrade &&
+        !isChapterFreeStarter(m.id) &&
+        (unlockedIds.has(m.id) || unlockedIds.has(m.slug))
+    ).length;
+  };
+
   const unlockChapterWithCredits = (
     moduleIdOrSlug: string
   ): { ok: boolean; error?: string; remainingCredits?: number } => {
@@ -1938,7 +2007,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const nextUnlockedContests = [...(profile.unlockedContestIds || [])];
     const nextUnlockedModules = [...(profile.unlockedModuleIds || [])];
 
+    // Calculate Zero-Waste Upgrade Bonus if buying COMPREHENSIVE and user already unlocked paid chapters in this class
+    const alreadyUnlockedPaidCount =
+      plan === "COMPREHENSIVE"
+        ? getAlreadyUnlockedPaidChaptersCount(classToUnlock)
+        : 0;
+    const zeroWasteRefundCredits =
+      alreadyUnlockedPaidCount * CHAPTER_UNLOCK_COST;
+
     if (plan === "COMPREHENSIVE") {
+      nextCredits += zeroWasteRefundCredits;
       // Immediately unlock every chapter of the target class
       modules
         .filter((m) => m.classGrade === classToUnlock)
@@ -1948,11 +2026,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
 
     const nextTransactions: CreditTransaction[] = [
+      ...(zeroWasteRefundCredits > 0
+        ? [
+            {
+              id: `tx-zerowaste-${Date.now() + 1}`,
+              type: "ADMIN_REFUND" as const,
+              amount: zeroWasteRefundCredits,
+              balanceAfter: nextCredits,
+              description: `🎁 Zero-Waste Upgrade Bonus: +${zeroWasteRefundCredits.toLocaleString()} Credits refunded back to wallet for ${alreadyUnlockedPaidCount} already-unlocked Class ${classToUnlock} chapter(s)`,
+              createdAt: "Just now",
+            },
+          ]
+        : []),
       {
         id: `tx-pack-${Date.now()}`,
         type: "PACK_PURCHASE",
         amount: pack.credits,
-        balanceAfter: nextCredits,
+        balanceAfter: nextCredits - zeroWasteRefundCredits,
         description:
           plan === "COMPREHENSIVE"
             ? `👑 Comprehensive Class ${classToUnlock} Pack (₹${pack.priceInr} → All Class ${classToUnlock} PCM Chapters Unlocked + ${pack.credits.toLocaleString()} Test Credits)`
@@ -2043,11 +2133,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setCelebration({
       title:
         plan === "COMPREHENSIVE"
-          ? `👑 All Class ${classToUnlock} PCM Chapters Unlocked + 1,000 Test Credits!`
+          ? zeroWasteRefundCredits > 0
+            ? `👑 All Class ${classToUnlock} Chapters Unlocked + ${(1000 + zeroWasteRefundCredits).toLocaleString()} Credits!`
+            : `👑 All Class ${classToUnlock} PCM Chapters Unlocked + 1,000 Test Credits!`
           : `🪙 +${pack.credits.toLocaleString()} Vidya Credits Added (${pack.label})!`,
       subtitle:
         plan === "COMPREHENSIVE"
-          ? `Every Class ${classToUnlock} Maths, Physics & Chemistry chapter is now 100% unlocked permanently, plus you have 🪙 ${nextCredits.toLocaleString()} Credits in your wallet for Live Tests!`
+          ? zeroWasteRefundCredits > 0
+            ? `Includes 🎁 +${zeroWasteRefundCredits.toLocaleString()} Zero-Waste Refund Credits for your ${alreadyUnlockedPaidCount} already-unlocked chapter(s)! Total Wallet Balance: 🪙 ${nextCredits.toLocaleString()} Credits.`
+            : `Every Class ${classToUnlock} Maths, Physics & Chemistry chapter is now 100% unlocked permanently, plus you have 🪙 ${nextCredits.toLocaleString()} Credits in your wallet for Live Tests!`
           : `Your wallet now has 🪙 ${nextCredits.toLocaleString()} Vidya Credits. Use them anytime to unlock chapters (${CHAPTER_UNLOCK_COST} Credits) or enter live tests (20–100 Credits)!`,
       xpEarned: 0,
       badgeEmoji:
@@ -2570,6 +2664,175 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const dismissCelebration = () => setCelebration(null);
 
+  const todayIst = getTodayIstDate();
+  const hasPlayedDailyTrickToday = Boolean(
+    profile.lastDailyChallengeDate === todayIst
+  );
+
+  // Automatic Daily Streak Tracker & 8-Ball Pool Style Daily Trick Question Trigger
+  useEffect(() => {
+    if (!isAuthenticated || authLoading) return;
+    if (!profile.username || profile.username === "@guest_scholar") return;
+
+    const today = getTodayIstDate();
+    const yesterday = getYesterdayIstDate();
+    const acctKey = (
+      profile.id ||
+      profile.email ||
+      profile.username
+    ).toLowerCase();
+
+    try {
+      const rawStreakMap = localStorage.getItem("vidyalila_daily_streak_map_v1");
+      const streakMap: Record<
+        string,
+        {
+          streak: number;
+          lastStreakDate: string;
+          lastDailyChallengeDate?: string;
+          dailyTrickWins?: number;
+        }
+      > = rawStreakMap ? JSON.parse(rawStreakMap) : {};
+
+      const savedRec = streakMap[acctKey];
+      const prevStreakDate =
+        savedRec?.lastStreakDate || profile.lastStreakDate || "";
+      const prevChallengeDate =
+        savedRec?.lastDailyChallengeDate ||
+        profile.lastDailyChallengeDate ||
+        "";
+      let nextStreak = Math.max(savedRec?.streak || 1, profile.streak || 1);
+
+      if (prevStreakDate !== today) {
+        if (prevStreakDate === yesterday) {
+          nextStreak = nextStreak + 1;
+        } else if (prevStreakDate && prevStreakDate < yesterday) {
+          nextStreak = 1;
+        } else if (!prevStreakDate) {
+          nextStreak = Math.max(nextStreak, 1);
+        }
+
+        const updatedRec = {
+          streak: nextStreak,
+          lastStreakDate: today,
+          lastDailyChallengeDate: prevChallengeDate,
+          dailyTrickWins: savedRec?.dailyTrickWins ?? profile.dailyTrickWins ?? 0,
+        };
+        streakMap[acctKey] = updatedRec;
+        localStorage.setItem(
+          "vidyalila_daily_streak_map_v1",
+          JSON.stringify(streakMap)
+        );
+
+        setProfile((prev) => ({
+          ...prev,
+          streak: nextStreak,
+          lastStreakDate: today,
+          lastDailyChallengeDate: prevChallengeDate || prev.lastDailyChallengeDate,
+        }));
+      } else if (
+        prevChallengeDate === today &&
+        profile.lastDailyChallengeDate !== today
+      ) {
+        setProfile((prev) => ({
+          ...prev,
+          streak: nextStreak,
+          lastStreakDate: today,
+          lastDailyChallengeDate: today,
+        }));
+      }
+
+      // If student hasn't played today's Daily Streak Trick Question yet, pop open the modal once per session
+      const sessionPopupKey = `vidyalila_daily_popup_shown_${acctKey}_${today}`;
+      if (
+        prevChallengeDate !== today &&
+        !sessionStorage.getItem(sessionPopupKey)
+      ) {
+        sessionStorage.setItem(sessionPopupKey, "true");
+        const timer = setTimeout(() => {
+          setShowDailyTrickModal(true);
+        }, 1200);
+        return () => clearTimeout(timer);
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, [
+    isAuthenticated,
+    authLoading,
+    profile.id,
+    profile.email,
+    profile.username,
+  ]);
+
+  const submitDailyTrickAnswer = (
+    isCorrect: boolean,
+    questionTitle: string
+  ): { creditsEarned: number; newStreak: number } => {
+    const today = getTodayIstDate();
+    const acctKey = (
+      profile.id ||
+      profile.email ||
+      profile.username ||
+      "guest"
+    ).toLowerCase();
+
+    const alreadyPlayedToday = profile.lastDailyChallengeDate === today;
+    const rewardCredits = isCorrect && !alreadyPlayedToday ? 15 : 0;
+    const rewardXp = isCorrect && !alreadyPlayedToday ? 25 : 0;
+    const nextStreak = Math.max(profile.streak || 1, 1);
+    const curCredits =
+      typeof profile.credits === "number" ? profile.credits : 0;
+    const nextCredits = curCredits + rewardCredits;
+    const nextWins =
+      (profile.dailyTrickWins || 0) + (rewardCredits > 0 ? 1 : 0);
+
+    try {
+      const rawStreakMap = localStorage.getItem("vidyalila_daily_streak_map_v1");
+      const streakMap = rawStreakMap ? JSON.parse(rawStreakMap) : {};
+      streakMap[acctKey] = {
+        streak: nextStreak,
+        lastStreakDate: today,
+        lastDailyChallengeDate: today,
+        dailyTrickWins: nextWins,
+      };
+      localStorage.setItem(
+        "vidyalila_daily_streak_map_v1",
+        JSON.stringify(streakMap)
+      );
+    } catch {
+      // ignore
+    }
+
+    const nextTransactions: CreditTransaction[] =
+      rewardCredits > 0
+        ? [
+            {
+              id: `tx-daily-trick-${Date.now()}`,
+              type: "GOODIE_REWARD",
+              amount: rewardCredits,
+              balanceAfter: nextCredits,
+              description: `🎯 Daily Streak Trick Shot Winner (Day ${nextStreak} Streak • "${questionTitle}")`,
+              createdAt: "Just now",
+            },
+            ...(profile.creditTransactions || []),
+          ]
+        : profile.creditTransactions || [];
+
+    saveProfile({
+      ...profile,
+      streak: nextStreak,
+      lastStreakDate: today,
+      lastDailyChallengeDate: today,
+      dailyTrickWins: nextWins,
+      credits: nextCredits,
+      xp: (profile.xp || 0) + rewardXp,
+      creditTransactions: nextTransactions,
+    });
+
+    return { creditsEarned: rewardCredits, newStreak: nextStreak };
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -2597,7 +2860,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         completeUnit,
         isChapterFreeStarter,
         isChapterUnlocked,
+        getAlreadyUnlockedPaidChaptersCount,
         unlockChapterWithCredits,
+        hasPlayedDailyTrickToday,
+        showDailyTrickModal,
+        setShowDailyTrickModal,
+        submitDailyTrickAnswer,
         getContestCreditCost,
         unlockContestSingle,
         activateProPass,

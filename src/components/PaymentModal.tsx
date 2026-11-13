@@ -358,8 +358,13 @@ export function PaymentModal({
   targetClassGrade,
   onSuccessPackage,
 }: PaymentModalProps) {
-  const { isAuthenticated, signInWithGoogle, profile, updateProfilePhone } =
-    useApp();
+  const {
+    isAuthenticated,
+    signInWithGoogle,
+    profile,
+    updateProfilePhone,
+    getAlreadyUnlockedPaidChaptersCount,
+  } = useApp();
   const [selectedPkg, setSelectedPkg] =
     useState<PassPackageType>(defaultPackage);
   const [currency, setCurrency] = useState<SupportedCurrency>("INR");
@@ -440,6 +445,9 @@ export function PaymentModal({
   const activeCurrencyMeta =
     GLOBAL_CURRENCIES.find((c) => c.code === currency) || GLOBAL_CURRENCIES[0];
   const formattedActivePrice = formatGlobalPrice(activePkg, currency);
+  const alreadyUnlockedCount =
+    getAlreadyUnlockedPaidChaptersCount(selectedClassForComp);
+  const zeroWasteRefundCredits = alreadyUnlockedCount * 100;
 
   // Check if user already has verified contact details on profile
   const hasSavedContact = Boolean(
@@ -888,9 +896,17 @@ export function PaymentModal({
                         <p className="flex items-center gap-1 text-indigo-900 font-extrabold">
                           <span>🪙</span>
                           <span>
-                            + 1,000 Bonus Wallet Credits for Live Tests
+                            + {(1000 + zeroWasteRefundCredits).toLocaleString()} Wallet Credits for Live Tests
                           </span>
                         </p>
+                        {zeroWasteRefundCredits > 0 && (
+                          <p className="flex items-center gap-1 text-amber-900 bg-amber-200/80 rounded-lg px-2 py-0.5 text-[10px] font-black mt-1">
+                            <span>🎁</span>
+                            <span>
+                              +{zeroWasteRefundCredits} Cr Refunded ({alreadyUnlockedCount} Unlocked Ch)
+                            </span>
+                          </p>
+                        )}
                       </>
                     ) : (
                       <>
@@ -920,31 +936,45 @@ export function PaymentModal({
 
           {/* Class Selector when COMPREHENSIVE is selected */}
           {selectedPkg === "COMPREHENSIVE" && (
-            <div className="rounded-2xl border-2 border-emerald-400 bg-emerald-50/80 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-extrabold text-emerald-950 uppercase tracking-wider">
-                  👑 Select Class for Instant Full-Syllabus Unlock ({formattedActivePrice}):
-                </p>
-                <p className="text-xs font-semibold text-emerald-800">
-                  All Maths, Physics &amp; Chemistry chapters of this Class will be unlocked immediately + 1,000 Bonus Test Credits!
-                </p>
+            <div className="rounded-2xl border-2 border-emerald-400 bg-emerald-50/80 p-4 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-extrabold text-emerald-950 uppercase tracking-wider">
+                    👑 Select Class for Instant Full-Syllabus Unlock ({formattedActivePrice}):
+                  </p>
+                  <p className="text-xs font-semibold text-emerald-800">
+                    All Maths, Physics &amp; Chemistry chapters of this Class will be unlocked immediately + 1,000 Bonus Test Credits!
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {([9, 10] as const).map((grade) => (
+                    <button
+                      key={grade}
+                      type="button"
+                      onClick={() => setSelectedClassForComp(grade)}
+                      className={`rounded-xl border-2 px-4 py-2 text-xs font-extrabold transition cursor-pointer ${
+                        selectedClassForComp === grade
+                          ? "border-emerald-700 bg-emerald-600 text-white shadow-sm"
+                          : "border-emerald-300 bg-white text-emerald-900 hover:bg-emerald-100"
+                      }`}
+                    >
+                      Class {grade} Full PCM
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                {([9, 10] as const).map((grade) => (
-                  <button
-                    key={grade}
-                    type="button"
-                    onClick={() => setSelectedClassForComp(grade)}
-                    className={`rounded-xl border-2 px-4 py-2 text-xs font-extrabold transition cursor-pointer ${
-                      selectedClassForComp === grade
-                        ? "border-emerald-700 bg-emerald-600 text-white shadow-sm"
-                        : "border-emerald-300 bg-white text-emerald-900 hover:bg-emerald-100"
-                    }`}
-                  >
-                    Class {grade} Full PCM
-                  </button>
-                ))}
-              </div>
+
+              {zeroWasteRefundCredits > 0 && (
+                <div className="rounded-xl bg-amber-100/90 border border-amber-300 p-3 text-xs font-extrabold text-amber-950 flex items-start gap-2">
+                  <span className="text-base leading-none">🎁</span>
+                  <div>
+                    <strong>Zero-Waste Upgrade Bonus Applied:</strong> You have already unlocked{" "}
+                    <strong>{alreadyUnlockedCount} paid chapter(s)</strong> in Class {selectedClassForComp}. We will automatically refund{" "}
+                    <strong>+{zeroWasteRefundCredits.toLocaleString()} Vidya Credits</strong> back to your wallet on top of the 1,000 base credits (Total:{" "}
+                    <strong>🪙 {(1000 + zeroWasteRefundCredits).toLocaleString()} Test Credits</strong>)!
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

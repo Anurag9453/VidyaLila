@@ -97,18 +97,28 @@ function SupportDeskContent() {
   const [createdCase, setCreatedCase] = useState<SupportCase | null>(null);
   const [editingContact, setEditingContact] = useState(false);
 
-  // Sync profile fields whenever profile updates
+  // Sync profile fields strictly to the active signed-in user (or clear on sign-out)
   useEffect(() => {
-    if (profile.name && profile.name !== "Guest Scholar") {
-      setStudentName(profile.name);
+    if (isAuthenticated && profile.username !== "@guest_scholar") {
+      setStudentName(profile.name || "");
+      setStudentEmail(profile.email || "");
+      setStudentPhone(profile.phone || "");
+      setEditingContact(false);
+    } else {
+      setStudentName("");
+      setStudentEmail("");
+      setStudentPhone("");
+      setEditingContact(false);
+      setCreatedCase(null);
     }
-    if (profile.email) {
-      setStudentEmail(profile.email);
-    }
-    if (profile.phone) {
-      setStudentPhone(profile.phone);
-    }
-  }, [profile.name, profile.email, profile.phone]);
+  }, [
+    isAuthenticated,
+    profile.id,
+    profile.username,
+    profile.name,
+    profile.email,
+    profile.phone,
+  ]);
 
   // Pre-fill from URL query parameters (?category=...&chapter=...&ref=...)
   useEffect(() => {
@@ -197,15 +207,28 @@ function SupportDeskContent() {
     }
   };
 
-  // Filter cases belonging to the current student (or all created in this browser session)
-  const myCases = supportCases.filter((c) => {
-    if (!isAuthenticated) return true;
-    return (
-      c.studentEmail?.toLowerCase() === profile.email?.toLowerCase() ||
-      c.studentUsername?.toLowerCase() === profile.username?.toLowerCase() ||
-      c.studentName?.toLowerCase() === profile.name?.toLowerCase()
-    );
-  });
+  // Strictly filter cases belonging ONLY to the currently signed-in student (no cross-user overlap)
+  const myCases = isAuthenticated
+    ? supportCases.filter((c) => {
+        const myEmail = (profile.email || "").trim().toLowerCase();
+        const myUsername = (profile.username || "").trim().toLowerCase();
+        const caseEmail = (c.studentEmail || "").trim().toLowerCase();
+        const caseUsername = (c.studentUsername || "").trim().toLowerCase();
+
+        if (myEmail && caseEmail && myEmail === caseEmail) return true;
+        if (
+          myUsername &&
+          myUsername !== "@guest_scholar" &&
+          caseUsername &&
+          myUsername === caseUsername
+        ) {
+          return true;
+        }
+        return false;
+      })
+    : createdCase
+    ? [createdCase]
+    : [];
 
   return (
     <div className="min-h-screen bg-slate-50/70 pb-20">

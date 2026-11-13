@@ -497,7 +497,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Persistent local credit wallet store keyed strictly by signed-in user ID, email, and username
+  // Persistent local student vault store keyed strictly by signed-in user ID, email, and username
   const getLocalCreditWallet = (
     userId?: string,
     email?: string,
@@ -508,6 +508,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     unlockedClassGrades?: ClassGrade[];
     unlockedContestIds?: string[];
     creditTransactions: CreditTransaction[];
+    completedUnitIds?: string[];
+    xp?: number;
+    streak?: number;
+    lastStreakDate?: string;
+    lastDailyChallengeDate?: string;
+    dailyTrickWins?: number;
+    phone?: string;
+    earnedBadges?: StudentProfile["earnedBadges"];
+    contestHistory?: StudentProfile["contestHistory"];
   } | null => {
     try {
       const keys = getAccountKeys(userId, email, username);
@@ -568,6 +577,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ])
       );
 
+      const mergedCompletedUnits = Array.from(
+        new Set([
+          ...(Array.isArray(existing?.completedUnitIds)
+            ? existing.completedUnitIds
+            : []),
+          ...(Array.isArray(p.completedUnitIds) ? p.completedUnitIds : []),
+        ])
+      );
+
       recordPermanentUnlocks(
         mergedModules,
         mergedClasses,
@@ -586,6 +604,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         unlockedModuleIds: mergedModules,
         unlockedClassGrades: mergedClasses,
         unlockedContestIds: mergedContests,
+        completedUnitIds: mergedCompletedUnits,
+        xp: Math.max(
+          typeof p.xp === "number" ? p.xp : 0,
+          typeof existing?.xp === "number" ? existing.xp : 0
+        ),
+        streak: Math.max(
+          typeof p.streak === "number" ? p.streak : 1,
+          typeof existing?.streak === "number" ? existing.streak : 1
+        ),
+        lastStreakDate: p.lastStreakDate || existing?.lastStreakDate,
+        lastDailyChallengeDate:
+          p.lastDailyChallengeDate || existing?.lastDailyChallengeDate,
+        dailyTrickWins: Math.max(
+          p.dailyTrickWins || 0,
+          existing?.dailyTrickWins || 0
+        ),
+        phone: p.phone || existing?.phone || "",
+        earnedBadges:
+          Array.isArray(p.earnedBadges) && p.earnedBadges.length > 0
+            ? p.earnedBadges
+            : existing?.earnedBadges || [],
+        contestHistory:
+          Array.isArray(p.contestHistory) && p.contestHistory.length > 0
+            ? p.contestHistory
+            : existing?.contestHistory || [],
         creditTransactions:
           Array.isArray(p.creditTransactions) && p.creditTransactions.length > 0
             ? p.creditTransactions
@@ -683,8 +726,38 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ? raw.creditTransactions
         : DEFAULT_PROFILE.creditTransactions;
 
+    const resolvedCompletedUnits = Array.from(
+      new Set([
+        ...(Array.isArray(raw.completedUnitIds) ? raw.completedUnitIds : []),
+        ...(Array.isArray(savedWallet?.completedUnitIds)
+          ? savedWallet.completedUnitIds
+          : []),
+      ])
+    );
+
+    const resolvedXp = Math.max(
+      typeof raw.xp === "number" ? raw.xp : 0,
+      typeof savedWallet?.xp === "number" ? savedWallet.xp : 0
+    );
+
+    const resolvedStreak = Math.max(
+      typeof raw.streak === "number" ? raw.streak : 1,
+      typeof savedWallet?.streak === "number" ? savedWallet.streak : 1
+    );
+
     return {
       ...raw,
+      phone: raw.phone || savedWallet?.phone || "",
+      xp: resolvedXp,
+      streak: resolvedStreak,
+      lastStreakDate: raw.lastStreakDate || savedWallet?.lastStreakDate,
+      lastDailyChallengeDate:
+        raw.lastDailyChallengeDate || savedWallet?.lastDailyChallengeDate,
+      dailyTrickWins: Math.max(
+        raw.dailyTrickWins || 0,
+        savedWallet?.dailyTrickWins || 0
+      ),
+      completedUnitIds: resolvedCompletedUnits,
       credits: resolvedCredits,
       unlockedModuleIds: resolvedUnlockedModules,
       unlockedClassGrades: resolvedUnlockedClasses,
@@ -1591,9 +1664,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           const users = rawUsers ? JSON.parse(rawUsers) : {};
           const record = users[cleanEmail];
           if (record && record.password === password) {
-            setProfile(record.profile);
+            const hydrated = hydrateCreditWallet(record.profile);
+            setProfile(hydrated);
             setIsAuthenticated(true);
-            localStorage.setItem("vidyalila_profile_v6", JSON.stringify(record.profile));
+            setSelectedClassFilter(hydrated.classGrade || 9);
+            if (hydrated.preferredLanguage) {
+              setContentLanguageState(hydrated.preferredLanguage);
+            }
+            localStorage.setItem("vidyalila_profile_v6", JSON.stringify(hydrated));
             localStorage.setItem("vidyalila_is_auth_v4", "true");
             return { ok: true };
           }
@@ -1630,9 +1708,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         };
       }
 
-      setProfile(record.profile);
+      const hydrated = hydrateCreditWallet(record.profile);
+      setProfile(hydrated);
       setIsAuthenticated(true);
-      localStorage.setItem("vidyalila_profile_v6", JSON.stringify(record.profile));
+      setSelectedClassFilter(hydrated.classGrade || 9);
+      if (hydrated.preferredLanguage) {
+        setContentLanguageState(hydrated.preferredLanguage);
+      }
+      localStorage.setItem("vidyalila_profile_v6", JSON.stringify(hydrated));
       localStorage.setItem("vidyalila_is_auth_v4", "true");
       return { ok: true };
     } catch {
@@ -1696,7 +1779,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
 
     setIsAuthenticated(false);
-    setProfile(DEFAULT_PROFILE);
+    setShowDailyTrickModal(false);
+    setProfile({ ...DEFAULT_PROFILE });
+    setSelectedClassFilter("ALL");
     try {
       localStorage.removeItem("vidyalila_is_auth_v4");
       localStorage.removeItem("vidyalila_profile_v6");

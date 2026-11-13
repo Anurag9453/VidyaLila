@@ -102,25 +102,37 @@ function ContestArenaContent() {
   const dailyPassesLeft = profile.dailyPassesRemaining || 0;
   const compPassesLeft = profile.competitionPassesRemaining || 0;
 
+  // Strictly scope CBT test recovery storage key to the signed-in student's account
+  const userCbtStorageKey = `${CBT_STORAGE_KEY}_${(
+    profile.id ||
+    profile.email ||
+    profile.username ||
+    "guest"
+  ).toLowerCase()}`;
+
   useEffect(() => {
     setSelectedQuizClass(profile.classGrade === 10 ? 10 : 9);
   }, [profile.classGrade]);
 
-  // Check if there is an unfinished CBT test session in localStorage (Crash / Refresh Recovery)
+  // Check if there is an unfinished CBT test session in localStorage for THIS user (Crash / Refresh Recovery)
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(CBT_STORAGE_KEY);
-      if (!raw) return;
+      const raw = localStorage.getItem(userCbtStorageKey);
+      if (!raw) {
+        setSavedSessionBanner(null);
+        return;
+      }
       const parsed: SavedCbtSession = JSON.parse(raw);
       if (parsed && parsed.deadlineMs > Date.now() + 2000) {
         setSavedSessionBanner(parsed);
       } else {
-        localStorage.removeItem(CBT_STORAGE_KEY);
+        localStorage.removeItem(userCbtStorageKey);
+        setSavedSessionBanner(null);
       }
     } catch {
       // ignore storage errors
     }
-  }, []);
+  }, [userCbtStorageKey]);
 
   // Persist active CBT session to localStorage on every option click / navigation
   useEffect(() => {
@@ -136,7 +148,7 @@ function ContestArenaContent() {
         currentQIdx,
         tabWarnings,
       };
-      localStorage.setItem(CBT_STORAGE_KEY, JSON.stringify(payload));
+      localStorage.setItem(userCbtStorageKey, JSON.stringify(payload));
       const now = new Date();
       setLastSavedTime(
         now.toLocaleTimeString([], {
@@ -158,6 +170,7 @@ function ContestArenaContent() {
     visitedIds,
     currentQIdx,
     tabWarnings,
+    userCbtStorageKey,
   ]);
 
   // Proctoring: detect tab switches during live CBT examination
@@ -206,7 +219,7 @@ function ContestArenaContent() {
       setSubmissionReceiptId(receipt);
 
       try {
-        localStorage.removeItem(CBT_STORAGE_KEY);
+        localStorage.removeItem(userCbtStorageKey);
         setSavedSessionBanner(null);
       } catch {
         // ignore
@@ -275,7 +288,7 @@ function ContestArenaContent() {
   const resumeSavedCbtSession = (session: SavedCbtSession) => {
     const found = contests.find((c) => c.id === session.contestId);
     if (!found) {
-      localStorage.removeItem(CBT_STORAGE_KEY);
+      localStorage.removeItem(userCbtStorageKey);
       setSavedSessionBanner(null);
       return;
     }
@@ -1462,7 +1475,7 @@ function ContestArenaContent() {
             </button>
             <button
               onClick={() => {
-                localStorage.removeItem(CBT_STORAGE_KEY);
+                localStorage.removeItem(userCbtStorageKey);
                 setSavedSessionBanner(null);
               }}
               className="rounded-xl border border-amber-300 bg-white px-3 py-2.5 text-xs font-bold text-slate-600 hover:text-slate-900"

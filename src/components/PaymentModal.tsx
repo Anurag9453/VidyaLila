@@ -427,10 +427,10 @@ export function PaymentModal({
   }, [targetClassGrade, profile.classGrade]);
 
   useEffect(() => {
-    if (profile.phone && !phone) {
-      setPhone(profile.phone);
-    }
-  }, [profile.phone, phone]);
+    setPhone(profile.phone || "");
+    setPhoneError("");
+    setFailureInfo(null);
+  }, [isAuthenticated, profile.id, profile.email, profile.phone]);
 
   useEffect(() => {
     if (isOpen) {

@@ -459,10 +459,12 @@ function FormattedStudyBody({
   text,
   isVocabSection,
   isConstructions,
+  isHinglish,
 }: {
   text: string;
   isVocabSection?: boolean;
   isConstructions?: boolean;
+  isHinglish?: boolean;
 }) {
   if (!text) return null;
   const lines = text.split("\n");
@@ -551,11 +553,11 @@ function FormattedStudyBody({
                       </span>
                     </div>
 
-                    {/* 2. Fir Definition / Matlab */}
+                    {/* 2. Definition / Meaning */}
                     {definition && (
                       <div className="space-y-1 pt-0.5">
                         <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 block">
-                          Matlab (Meaning):
+                          {isHinglish ? "Matlab (Meaning):" : "Definition / Meaning:"}
                         </span>
                         <p className="text-sm sm:text-base font-semibold text-slate-800 leading-relaxed">
                           {renderInlineMarkdown(definition)}
@@ -914,31 +916,31 @@ function StudySectionCard({
         {sectionType === "STORY" && (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-black uppercase tracking-wider">
             <Sparkles className="h-3.5 w-3.5 text-amber-600" />
-            Real-Life Kahani (Story Hook)
+            {isHinglish ? "Real-Life Kahani (Story Hook)" : "Real-World Story Hook"}
           </span>
         )}
         {sectionType === "VOCABULARY" && (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-100 text-violet-900 border border-violet-300 text-xs font-black uppercase tracking-wider">
             <BookOpen className="h-3.5 w-3.5 text-violet-600" />
-            Naye Shabd (Key Vocabulary Bank)
+            {isHinglish ? "Naye Shabd (Key Vocabulary Bank)" : "Key Vocabulary & Definitions"}
           </span>
         )}
         {sectionType === "MISTAKES" && (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 text-rose-900 border border-rose-300 text-xs font-black uppercase tracking-wider">
             <AlertTriangle className="h-3.5 w-3.5 text-rose-600" />
-            Common Pitfalls (Bachke Rehna!)
+            {isHinglish ? "Common Pitfalls (Bachke Rehna!)" : "Common Pitfalls to Watch Out For"}
           </span>
         )}
         {sectionType === "RECAP" && (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300 text-xs font-black uppercase tracking-wider">
             <Zap className="h-3.5 w-3.5 text-emerald-600" />
-            Quick Recap & Cheatsheet
+            Quick Recap &amp; Cheatsheet
           </span>
         )}
         {sectionType === "PRACTICE" && (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 border border-indigo-300 text-xs font-black uppercase tracking-wider">
             <Calculator className="h-3.5 w-3.5 text-indigo-600" />
-            Self-Practice Questions & Solutions
+            Self-Practice Questions &amp; Solutions
           </span>
         )}
         {partBadge && (
@@ -973,6 +975,7 @@ function StudySectionCard({
           text={hasAnswers ? questionsPart : bodyText}
           isVocabSection={sectionType === "VOCABULARY"}
           isConstructions={isConstructions}
+          isHinglish={isHinglish}
         />
 
         {/* Interactive Answer Reveal for Practice Questions */}
@@ -3208,10 +3211,10 @@ function TrailDetailContent({ slug }: { slug: string }) {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
-                        {unit.title}
+                        {isHinglish && unit.titleHinglish ? unit.titleHinglish : unit.title}
                       </h3>
                       <p className="text-xs text-slate-500 font-medium mt-0.5">
-                        {unit.summary}
+                        {isHinglish && unit.summaryHinglish ? unit.summaryHinglish : unit.summary}
                       </p>
                     </div>
 
@@ -3248,11 +3251,39 @@ function TrailDetailContent({ slug }: { slug: string }) {
                   </span>
                 </div>
                 <h2 className="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-900">
-                  {activeUnit.title}
+                  {isHinglish && activeUnit.titleHinglish
+                    ? activeUnit.titleHinglish
+                    : activeUnit.title}
                 </h2>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
+                {/* Language Switcher: International English vs Hinglish */}
+                <div className="inline-flex items-center rounded-xl bg-slate-100 border border-slate-200 p-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setContentLanguage("ENGLISH")}
+                    className={`rounded-lg px-2.5 py-1.5 text-xs font-extrabold transition cursor-pointer ${
+                      !isHinglish
+                        ? "bg-white text-indigo-950 shadow-2xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    🇬🇧 English
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setContentLanguage("HINGLISH")}
+                    className={`rounded-lg px-2.5 py-1.5 text-xs font-extrabold transition cursor-pointer ${
+                      isHinglish
+                        ? "bg-white text-emerald-900 shadow-2xs"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    🇮🇳 Hinglish
+                  </button>
+                </div>
+
                 {/* Contextual Peer & @VidyaBot Discussion Drawer Button */}
                 <button
                   type="button"
@@ -3713,7 +3744,10 @@ function TrailDetailContent({ slug }: { slug: string }) {
                       <p className="text-sm sm:text-base font-extrabold text-slate-900 flex items-start gap-2">
                         <HelpCircle className="h-5 w-5 text-indigo-600 shrink-0 mt-0.5" />
                         <span>
-                          Q{qIdx + 1}. {q.question}
+                          Q{qIdx + 1}.{" "}
+                          {isHinglish && q.questionHinglish
+                            ? q.questionHinglish
+                            : q.question}
                         </span>
                       </p>
                       <div className="flex items-center gap-2 shrink-0">
@@ -3806,7 +3840,9 @@ function TrailDetailContent({ slug }: { slug: string }) {
                     {isLockedCorrect && (
                       <div className="rounded-xl p-3 text-xs font-bold bg-emerald-100 border border-emerald-300 text-emerald-900">
                         <strong>✅ Correct (+{questionMarks} Marks): </strong>
-                        {q.explanation}
+                        {isHinglish && q.explanationHinglish
+                          ? q.explanationHinglish
+                          : q.explanation}
                       </div>
                     )}
 

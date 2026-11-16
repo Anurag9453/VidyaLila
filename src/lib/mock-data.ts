@@ -21,6 +21,7 @@ export interface CheckpointQuestion {
 export interface UnitItem {
   id: string;
   title: string;
+  titleHinglish?: string;
   durationMinutes: number;
   xpReward: number;
   summary: string;

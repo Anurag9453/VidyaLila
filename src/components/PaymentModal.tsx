@@ -18,7 +18,13 @@ import {
   MessageCircle,
   Bug,
   Globe,
+  Tag,
 } from "lucide-react";
+import {
+  CouponDefinition,
+  DEFAULT_COUPONS,
+  validateAndApplyCoupon,
+} from "@/lib/coupons";
 
 export type PassPackageType =
   | "ONE_DAY"
@@ -336,17 +342,24 @@ export const PASS_PACKAGES: {
   },
 ];
 
-export function formatGlobalPrice(
-  pkg: (typeof PASS_PACKAGES)[number],
+export function formatCurrencyAmount(
+  amount: number,
   currency: SupportedCurrency
 ): string {
   const meta =
     GLOBAL_CURRENCIES.find((c) => c.code === currency) || GLOBAL_CURRENCIES[0];
-  const val = pkg.prices[currency] ?? pkg.priceInr;
   if (currency === "INR" || currency === "AED") {
-    return `${meta.symbol}${val.toLocaleString()}`;
+    return `${meta.symbol}${Math.round(amount).toLocaleString()}`;
   }
-  return `${meta.symbol}${val.toFixed(2)}`;
+  return `${meta.symbol}${amount.toFixed(2)}`;
+}
+
+export function formatGlobalPrice(
+  pkg: (typeof PASS_PACKAGES)[number],
+  currency: SupportedCurrency
+): string {
+  const val = pkg.prices[currency] ?? pkg.priceInr;
+  return formatCurrencyAmount(val, currency);
 }
 
 export function PaymentModal({
@@ -374,6 +387,10 @@ export function PaymentModal({
   );
   const [phone, setPhone] = useState(profile.phone || "");
   const [phoneError, setPhoneError] = useState("");
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCouponCode, setAppliedCouponCode] = useState<string>("");
+  const [couponError, setCouponError] = useState<string>("");
+  const [customCoupons, setCustomCoupons] = useState<CouponDefinition[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [failureInfo, setFailureInfo] = useState<{
     reason: string;
@@ -435,6 +452,31 @@ export function PaymentModal({
   useEffect(() => {
     if (isOpen) {
       ensureRazorpayCheckoutScript();
+      // Load any custom coupons created by admin from localStorage & server
+      try {
+        const rawLocal = localStorage.getItem("vidyalila_custom_coupons_v1");
+        if (rawLocal) {
+          const parsed = JSON.parse(rawLocal);
+          if (Array.isArray(parsed)) setCustomCoupons(parsed);
+        }
+      } catch {
+        // ignore
+      }
+      fetch("/api/payments/coupons")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.ok && Array.isArray(data.customCoupons)) {
+            setCustomCoupons((prev) => {
+              const map = new Map<string, CouponDefinition>();
+              prev.forEach((c) => map.set(c.code.toUpperCase(), c));
+              data.customCoupons.forEach((c: CouponDefinition) =>
+                map.set(c.code.toUpperCase(), c)
+              );
+              return Array.from(map.values());
+            });
+          }
+        })
+        .catch(() => {});
     }
   }, [isOpen]);
 
@@ -444,7 +486,60 @@ export function PaymentModal({
     PASS_PACKAGES.find((p) => p.id === selectedPkg) || PASS_PACKAGES[1];
   const activeCurrencyMeta =
     GLOBAL_CURRENCIES.find((c) => c.code === currency) || GLOBAL_CURRENCIES[0];
-  const formattedActivePrice = formatGlobalPrice(activePkg, currency);
+  const baseDisplayPrice = activePkg.prices[currency] ?? activePkg.priceInr;
+  const couponResult = appliedCouponCode
+    ? validateAndApplyCoupon({
+        rawCode: appliedCouponCode,
+        packagePlan: selectedPkg,
+        currency,
+        baseDisplayPrice,
+        customCoupons,
+      })
+    : null;
+  const isCouponValid = Boolean(couponResult && couponResult.valid);
+  const finalDisplayPrice =
+    isCouponValid && couponResult ? couponResult.finalAmount : baseDisplayPrice;
+  const formattedOriginalPrice = formatCurrencyAmount(
+    baseDisplayPrice,
+    currency
+  );
+  const formattedActivePrice = formatCurrencyAmount(
+    finalDisplayPrice,
+    currency
+  );
+  const formattedDiscountSaved =
+    isCouponValid && couponResult
+      ? formatCurrencyAmount(couponResult.discountAmount, currency)
+      : "";
+
+  const handleApplyCouponCode = (codeToApply?: string) => {
+    const raw = (codeToApply ?? couponInput).trim().toUpperCase();
+    if (!raw) {
+      setCouponError("Please enter a coupon code (e.g. WELCOME20).");
+      return;
+    }
+    const res = validateAndApplyCoupon({
+      rawCode: raw,
+      packagePlan: selectedPkg,
+      currency,
+      baseDisplayPrice,
+      customCoupons,
+    });
+    if (!res.valid) {
+      setAppliedCouponCode("");
+      setCouponError(res.error || "Invalid coupon code.");
+      return;
+    }
+    setCouponInput(raw);
+    setAppliedCouponCode(raw);
+    setCouponError("");
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCouponCode("");
+    setCouponInput("");
+    setCouponError("");
+  };
   const alreadyUnlockedCount =
     getAlreadyUnlockedPaidChaptersCount(selectedClassForComp);
   const zeroWasteRefundCredits = alreadyUnlockedCount * 100;
@@ -537,6 +632,8 @@ export function PaymentModal({
           userUsername: profile.username,
           userEmail: profile.email,
           contestTitle: contestTitle || "",
+          couponCode: isCouponValid ? appliedCouponCode : undefined,
+          customCoupons,
         }),
       });
 
@@ -844,6 +941,24 @@ export function PaymentModal({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {PASS_PACKAGES.map((pkg) => {
               const isSelected = selectedPkg === pkg.id;
+              const pkgBasePrice = pkg.prices[currency] ?? pkg.priceInr;
+              const pkgCouponCalc = appliedCouponCode
+                ? validateAndApplyCoupon({
+                    rawCode: appliedCouponCode,
+                    packagePlan: pkg.id,
+                    currency,
+                    baseDisplayPrice: pkgBasePrice,
+                    customCoupons,
+                  })
+                : null;
+              const pkgHasDiscount = Boolean(
+                pkgCouponCalc && pkgCouponCalc.valid
+              );
+              const pkgFinalPrice =
+                pkgHasDiscount && pkgCouponCalc
+                  ? pkgCouponCalc.finalAmount
+                  : pkgBasePrice;
+
               return (
                 <button
                   key={pkg.id}
@@ -875,13 +990,23 @@ export function PaymentModal({
                       <span>{pkg.symbol}</span>
                       <span>{pkg.name}</span>
                     </h4>
-                    <p className="mt-1 text-2xl font-extrabold text-slate-900">
-                      {formatGlobalPrice(pkg, currency)}
+                    <div className="mt-1 flex items-baseline flex-wrap gap-1.5">
+                      {pkgHasDiscount && (
+                        <span className="text-xs font-bold text-slate-400 line-through">
+                          {formatCurrencyAmount(pkgBasePrice, currency)}
+                        </span>
+                      )}
+                      <span
+                        className={`text-2xl font-extrabold ${
+                          pkgHasDiscount ? "text-emerald-700" : "text-slate-900"
+                        }`}
+                      >
+                        {formatCurrencyAmount(pkgFinalPrice, currency)}
+                      </span>
                       <span className="text-xs font-bold text-slate-500">
-                        {" "}
                         {pkg.durationLabel}
                       </span>
-                    </p>
+                    </div>
                   </div>
 
                   <div className="mt-3 pt-2.5 border-t border-slate-200/80 space-y-1 text-[11px] font-bold text-slate-700">
@@ -934,6 +1059,106 @@ export function PaymentModal({
             })}
           </div>
 
+          {/* Welcome & Scholarship Coupon Code Section (Prominent right below Package Cards) */}
+          <div className="rounded-2xl border-2 border-dashed border-indigo-300 bg-indigo-50/40 p-4 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <label className="text-xs font-extrabold text-indigo-950 flex items-center gap-1.5">
+                <Tag className="h-4 w-4 text-indigo-600" />
+                <span>Have a Welcome or Scholarship Coupon Code?</span>
+              </label>
+
+              {!isCouponValid && (
+                <button
+                  type="button"
+                  onClick={() => handleApplyCouponCode("WELCOME20")}
+                  className="inline-flex items-center gap-1 rounded-full bg-amber-300/90 hover:bg-amber-400 border border-amber-500 px-2.5 py-0.5 text-[11px] font-black text-slate-950 transition cursor-pointer"
+                >
+                  <span>🎁 Tap to Apply WELCOME20 (20% OFF)</span>
+                </button>
+              )}
+            </div>
+
+            {isCouponValid && couponResult?.coupon ? (
+              <div className="rounded-xl border-2 border-emerald-400 bg-emerald-50 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-1.5 text-xs font-black text-emerald-950">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                    <span>
+                      Code &ldquo;{couponResult.coupon.code}&rdquo; Applied (
+                      {couponResult.discountPercentEffective}% OFF)!
+                    </span>
+                  </div>
+                  <p className="text-[11px] font-bold text-emerald-800">
+                    {couponResult.coupon.title} • You save{" "}
+                    <strong>{formattedDiscountSaved}</strong> (Final Price:{" "}
+                    <span className="line-through opacity-70">
+                      {formattedOriginalPrice}
+                    </span>{" "}
+                    <strong>{formattedActivePrice}</strong>)
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveCoupon}
+                  className="self-start sm:self-center rounded-lg bg-white border border-rose-200 hover:bg-rose-50 px-2.5 py-1 text-[11px] font-extrabold text-rose-700 transition cursor-pointer shrink-0"
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={couponInput}
+                    onChange={(e) => {
+                      setCouponInput(e.target.value.toUpperCase());
+                      if (couponError) setCouponError("");
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleApplyCouponCode();
+                      }
+                    }}
+                    placeholder="Enter coupon code (e.g. WELCOME20, FIRST25)"
+                    className="flex-1 rounded-xl border-2 border-slate-300 bg-white px-3.5 py-2 text-xs sm:text-sm font-extrabold uppercase tracking-wider text-slate-900 placeholder:normal-case placeholder:tracking-normal placeholder:font-semibold focus:outline-none focus:border-indigo-600"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleApplyCouponCode()}
+                    className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 text-xs sm:text-sm font-extrabold shadow-xs transition cursor-pointer shrink-0"
+                  >
+                    Apply Coupon
+                  </button>
+                </div>
+
+                {couponError && (
+                  <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1">
+                    <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                    <span>{couponError}</span>
+                  </p>
+                )}
+
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                    Available Offers:
+                  </span>
+                  {DEFAULT_COUPONS.slice(0, 3).map((c) => (
+                    <button
+                      key={c.code}
+                      type="button"
+                      onClick={() => handleApplyCouponCode(c.code)}
+                      className="rounded-md bg-white border border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50 px-2 py-0.5 text-[10px] font-extrabold text-indigo-800 transition cursor-pointer"
+                    >
+                      {c.code} ({c.discountValue}% OFF)
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Class Selector when COMPREHENSIVE is selected */}
           {selectedPkg === "COMPREHENSIVE" && (
             <div className="rounded-2xl border-2 border-emerald-400 bg-emerald-50/80 p-4 space-y-3">
@@ -980,16 +1205,23 @@ export function PaymentModal({
 
           {/* Selected Package Details Box */}
           <div className="rounded-2xl bg-slate-50 border-2 border-slate-200 p-4 space-y-2.5 text-xs text-slate-700">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <p className="font-extrabold text-slate-900 flex items-center gap-1.5 text-sm">
                 <span className="text-base">{activePkg.symbol}</span>
                 <span>
                   {activePkg.name}: {activePkg.summary}
                 </span>
               </p>
-              <span className="rounded-lg bg-white border border-slate-200 px-2.5 py-1 font-extrabold text-slate-900">
-                {formattedActivePrice}
-              </span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                {isCouponValid && (
+                  <span className="text-xs font-bold text-slate-400 line-through">
+                    {formattedOriginalPrice}
+                  </span>
+                )}
+                <span className="rounded-lg bg-white border border-slate-200 px-2.5 py-1 font-extrabold text-slate-900">
+                  {formattedActivePrice}
+                </span>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-bold text-slate-700">
@@ -1096,8 +1328,11 @@ export function PaymentModal({
                   <>
                     <Sparkles className="h-5 w-5" />
                     <span>
-                      Pay {formattedActivePrice} ({currency}) &amp; Activate{" "}
-                      {activePkg.name}
+                      Pay {formattedActivePrice} ({currency})
+                      {isCouponValid && couponResult?.coupon
+                        ? ` with ${couponResult.coupon.code} (${couponResult.discountPercentEffective}% OFF)`
+                        : ""}{" "}
+                      &amp; Activate {activePkg.name}
                     </span>
                   </>
                 )}

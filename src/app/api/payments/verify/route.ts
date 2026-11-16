@@ -127,11 +127,11 @@ export async function POST(req: Request) {
           );
         }
 
-        if (order.amount_inr && order.amount_inr !== credits.amountInr) {
+        if (order.amount_inr && (order.amount_inr <= 0 || order.amount_inr > credits.amountInr)) {
           return NextResponse.json(
             {
               ok: false,
-              error: `Payment amount mismatch: expected ₹${credits.amountInr}, recorded ₹${order.amount_inr}`,
+              error: `Invalid order amount recorded: ₹${order.amount_inr}`,
             },
             { status: 400 }
           );

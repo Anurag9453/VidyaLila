@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { validateAndApplyCoupon, CouponDefinition } from "@/lib/coupons";
+import { getServerCustomCoupons } from "@/app/api/payments/coupons/route";
 
 export type SupportedCurrency = "INR" | "USD" | "GBP" | "EUR" | "AED" | "SGD";
 
@@ -98,6 +100,8 @@ export async function POST(req: Request) {
       userUsername,
       userEmail,
       contestTitle,
+      couponCode,
+      customCoupons,
     } = body as {
       userId?: string;
       packagePlan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE";
@@ -107,6 +111,8 @@ export async function POST(req: Request) {
       userUsername?: string;
       userEmail?: string;
       contestTitle?: string;
+      couponCode?: string;
+      customCoupons?: CouponDefinition[];
     };
 
     const config = PLAN_CONFIG[packagePlan] || PLAN_CONFIG.WEEKLY;
@@ -114,10 +120,51 @@ export async function POST(req: Request) {
       currency && currency in config.prices ? currency : "INR";
     const priceInfo = config.prices[validCurrency];
 
+    const mergedCustomCoupons = [
+      ...getServerCustomCoupons(),
+      ...(Array.isArray(customCoupons) ? customCoupons : []),
+    ];
+
+    const couponCalc = couponCode
+      ? validateAndApplyCoupon({
+          rawCode: couponCode,
+          packagePlan,
+          currency: validCurrency,
+          baseDisplayPrice: priceInfo.display,
+          customCoupons: mergedCustomCoupons,
+        })
+      : null;
+
+    const inrCouponCalc = couponCode
+      ? validateAndApplyCoupon({
+          rawCode: couponCode,
+          packagePlan,
+          currency: "INR",
+          baseDisplayPrice: config.amountInr,
+          customCoupons: mergedCustomCoupons,
+        })
+      : null;
+
+    const finalDisplayPrice =
+      couponCalc && couponCalc.valid ? couponCalc.finalAmount : priceInfo.display;
+    const finalAmountInr =
+      inrCouponCalc && inrCouponCalc.valid
+        ? inrCouponCalc.finalAmount
+        : config.amountInr;
+
     const dbSafePlan =
       packagePlan === "COMPREHENSIVE" ? "MONTHLY" : packagePlan;
     const cleanPhone = (phone || "").replace(/[^0-9+]/g, "").slice(0, 16);
-    const amountSubunits = priceInfo.subunits;
+    const amountSubunits =
+      couponCalc && couponCalc.valid ? couponCalc.finalSubunits : priceInfo.subunits;
+    const fallbackInrSubunits =
+      inrCouponCalc && inrCouponCalc.valid
+        ? inrCouponCalc.finalSubunits
+        : config.prices.INR.subunits;
+    const appliedCouponCode =
+      couponCalc && couponCalc.valid && couponCalc.coupon
+        ? couponCalc.coupon.code
+        : "";
     const receiptId = `rcpt_vl_${Date.now()}_${Math.floor(100 + Math.random() * 900)}`;
 
     const keyId = (
@@ -152,6 +199,7 @@ export async function POST(req: Request) {
               packagePlan,
               packageLabel: config.label,
               requestedCurrency: validCurrency,
+              couponCode: appliedCouponCode,
               phone: cleanPhone || "",
               userName: userName || "",
               userUsername: userUsername || "",
@@ -167,11 +215,11 @@ export async function POST(req: Request) {
 
       // If international currency is not yet enabled on the merchant's test key, fallback seamlessly to INR so international cards still work
       if ((!rzpResponse.ok || !rzpData?.id) && validCurrency !== "INR") {
-        rzpResponse = await createRzpOrder("INR", config.prices.INR.subunits);
+        rzpResponse = await createRzpOrder("INR", fallbackInrSubunits);
         rzpData = await rzpResponse.json();
         if (rzpResponse.ok && rzpData?.id) {
           resolvedCurrency = "INR";
-          resolvedSubunits = config.prices.INR.subunits;
+          resolvedSubunits = fallbackInrSubunits;
         }
       }
 
@@ -203,7 +251,7 @@ export async function POST(req: Request) {
           package_plan: dbSafePlan,
           daily_passes_granted: config.dailyPasses,
           competition_passes_granted: config.compPasses,
-          amount_inr: config.amountInr,
+          amount_inr: finalAmountInr,
           razorpay_order_id: orderId,
           status: "created",
           phone: cleanPhone || null,
@@ -231,8 +279,11 @@ export async function POST(req: Request) {
       isTestKey: keyId.startsWith("rzp_test_"),
       orderId,
       receiptId,
-      amountInr: config.amountInr,
-      displayAmount: priceInfo.display,
+      amountInr: finalAmountInr,
+      originalAmountInr: config.amountInr,
+      displayAmount: finalDisplayPrice,
+      originalDisplayAmount: priceInfo.display,
+      couponApplied: appliedCouponCode || null,
       amountPaise: resolvedSubunits,
       currency: resolvedCurrency,
       requestedCurrency: validCurrency,

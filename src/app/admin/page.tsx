@@ -26,7 +26,14 @@ import {
   AlertTriangle,
   Clock,
   Bug,
+  Tag,
+  Copy,
 } from "lucide-react";
+import {
+  CouponDefinition,
+  CouponPlanScope,
+  DEFAULT_COUPONS,
+} from "@/lib/coupons";
 
 function formatPlanBadge(
   plan: "ONE_DAY" | "WEEKLY" | "MONTHLY" | "COMPREHENSIVE" | null | undefined,
@@ -111,6 +118,113 @@ export default function AdminPortalPage() {
   const [sortBy, setSortBy] = useState<
     "NEWEST" | "GP_DESC" | "STREAK_DESC" | "PLAN_DESC"
   >("NEWEST");
+
+  // Coupon Manager State
+  const [customCoupons, setCustomCoupons] = useState<CouponDefinition[]>([]);
+  const [newCouponCode, setNewCouponCode] = useState("");
+  const [newCouponTitle, setNewCouponTitle] = useState("");
+  const [newCouponDiscount, setNewCouponDiscount] = useState<number>(20);
+  const [newCouponScope, setNewCouponScope] =
+    useState<CouponPlanScope>("ALL");
+  const [copiedCouponCode, setCopiedCouponCode] = useState<string>("");
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("vidyalila_custom_coupons_v1");
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) setCustomCoupons(parsed);
+      }
+    } catch {
+      // ignore
+    }
+    fetch("/api/payments/coupons")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.ok && Array.isArray(data.customCoupons)) {
+          setCustomCoupons((prev) => {
+            const map = new Map<string, CouponDefinition>();
+            prev.forEach((c) => map.set(c.code.toUpperCase(), c));
+            data.customCoupons.forEach((c: CouponDefinition) =>
+              map.set(c.code.toUpperCase(), c)
+            );
+            const merged = Array.from(map.values());
+            try {
+              localStorage.setItem(
+                "vidyalila_custom_coupons_v1",
+                JSON.stringify(merged)
+              );
+            } catch {
+              // ignore
+            }
+            return merged;
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const allActiveCoupons = useMemo(() => {
+    const map = new Map<string, CouponDefinition>();
+    for (const c of DEFAULT_COUPONS) {
+      map.set(c.code.toUpperCase(), c);
+    }
+    for (const c of customCoupons) {
+      if (c?.code) {
+        map.set(c.code.toUpperCase(), c);
+      }
+    }
+    return Array.from(map.values());
+  }, [customCoupons]);
+
+  const handleCreateCustomCoupon = async () => {
+    const cleanCode = newCouponCode.trim().toUpperCase().replace(/[^A-Z0-9_-]/g, "");
+    if (!cleanCode || cleanCode.length < 3) return;
+    const pct = Math.min(Math.max(Number(newCouponDiscount) || 15, 5), 90);
+    const created: CouponDefinition = {
+      code: cleanCode,
+      title: newCouponTitle.trim() || `${pct}% OFF Welcome / Scholarship Coupon`,
+      description: `Special ${pct}% discount code created by Admin`,
+      discountType: "PERCENT",
+      discountValue: pct,
+      scope: newCouponScope,
+      active: true,
+      createdAt: new Date().toISOString(),
+    };
+    const nextCustom = [
+      created,
+      ...customCoupons.filter((c) => c.code.toUpperCase() !== cleanCode),
+    ];
+    setCustomCoupons(nextCustom);
+    try {
+      localStorage.setItem(
+        "vidyalila_custom_coupons_v1",
+        JSON.stringify(nextCustom)
+      );
+    } catch {
+      // ignore
+    }
+    await fetch("/api/payments/coupons", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "CREATE", coupon: created }),
+    }).catch(() => {});
+    setNewCouponCode("");
+    setNewCouponTitle("");
+  };
+
+  const handleCopyWelcomeCouponMessage = (c: CouponDefinition) => {
+    const discountLabel =
+      c.discountType === "PERCENT"
+        ? `${c.discountValue}% OFF`
+        : `Flat ₹${c.discountValue} OFF`;
+    const msg = `🎁 Welcome to VidyaLila! Use your special scholarship coupon code *${c.code}* at checkout to get an instant *${discountLabel}* on your Vidya Credit Pack or Full-Class Comprehensive Pack!`;
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(msg).catch(() => {});
+    }
+    setCopiedCouponCode(c.code);
+    setTimeout(() => setCopiedCouponCode(""), 2500);
+  };
 
   const loadAnalytics = useCallback(async () => {
     setLoading(true);
@@ -1603,6 +1717,141 @@ export default function AdminPortalPage() {
             <span>🪙</span>
             <span>Credit +{refundAmount} Credits to Wallet</span>
           </button>
+        </div>
+      </section>
+
+      {/* ====================================================================
+          WELCOME & SCHOLARSHIP DISCOUNT COUPON MANAGER
+         ==================================================================== */}
+      <section className="rounded-3xl border-2 border-indigo-300 bg-gradient-to-r from-indigo-50/70 via-white to-emerald-50/60 p-6 sm:p-8 shadow-sm space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-indigo-200/70 pb-4">
+          <div className="space-y-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100 border border-indigo-300 px-3 py-0.5 text-[11px] font-extrabold text-indigo-900 uppercase tracking-wider">
+              <Tag className="h-3.5 w-3.5 text-indigo-700" />
+              <span>Welcome &amp; Scholarship Discount Coupons</span>
+            </span>
+            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900">
+              Create &amp; Share Student Discount Coupons (Live in Global Checkout)
+            </h2>
+            <p className="text-xs font-semibold text-slate-600">
+              Students can apply these codes in the Checkout Modal across all 6 global currencies (INR, USD, AED, GBP, EUR, SGD). Click any coupon to copy a ready-to-send Welcome Message!
+            </p>
+          </div>
+        </div>
+
+        {/* Create New Custom Coupon Bar */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end rounded-2xl bg-white border border-indigo-200 p-4">
+          <div>
+            <label className="block text-xs font-extrabold text-slate-700 mb-1">
+              New Coupon Code
+            </label>
+            <input
+              type="text"
+              value={newCouponCode}
+              onChange={(e) => setNewCouponCode(e.target.value.toUpperCase())}
+              placeholder="e.g. WELCOME40, TOPPER25"
+              className="w-full rounded-xl border-2 border-slate-200 bg-slate-50 px-3.5 py-2 text-xs font-extrabold uppercase tracking-wider text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-extrabold text-slate-700 mb-1">
+              Discount Percentage (%)
+            </label>
+            <div className="flex items-center gap-1.5">
+              {[15, 20, 30, 50].map((pct) => (
+                <button
+                  key={pct}
+                  type="button"
+                  onClick={() => setNewCouponDiscount(pct)}
+                  className={`rounded-xl border-2 px-3 py-2 text-xs font-extrabold transition cursor-pointer ${
+                    newCouponDiscount === pct
+                      ? "border-indigo-600 bg-indigo-600 text-white"
+                      : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                  }`}
+                >
+                  {pct}% OFF
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-extrabold text-slate-700 mb-1">
+              Applicable Packs
+            </label>
+            <select
+              value={newCouponScope}
+              onChange={(e) =>
+                setNewCouponScope(e.target.value as CouponPlanScope)
+              }
+              className="w-full rounded-xl border-2 border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-900 focus:border-indigo-500 focus:outline-none"
+            >
+              <option value="ALL">All Packs (Starter, Subject, Scholar, Full Class)</option>
+              <option value="COMPREHENSIVE_AND_MONTHLY">
+                Scholar &amp; Comprehensive Packs Only
+              </option>
+              <option value="COMPREHENSIVE_ONLY">
+                Comprehensive Full-Class Pack Only
+              </option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleCreateCustomCoupon}
+            disabled={!newCouponCode.trim()}
+            className="btn-3d-indigo py-2.5 px-4 text-xs font-extrabold flex items-center justify-center gap-1.5 disabled:opacity-50 cursor-pointer"
+          >
+            <Tag className="h-3.5 w-3.5" />
+            <span>Create {newCouponDiscount}% OFF Coupon</span>
+          </button>
+        </div>
+
+        {/* Active Coupons Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {allActiveCoupons.map((c) => {
+            const isCopied = copiedCouponCode === c.code;
+            return (
+              <div
+                key={c.code}
+                className="rounded-2xl border-2 border-slate-200 bg-white p-4 flex flex-col justify-between gap-3 shadow-xs"
+              >
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-950 px-2.5 py-1 text-xs font-black tracking-wider text-amber-300">
+                      <Tag className="h-3 w-3" />
+                      <span>{c.code}</span>
+                    </span>
+                    <span className="rounded-full bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 text-[11px] font-black text-emerald-900">
+                      {c.discountType === "PERCENT"
+                        ? `${c.discountValue}% OFF`
+                        : `Flat ₹${c.discountValue} OFF`}
+                    </span>
+                  </div>
+                  <p className="text-xs font-extrabold text-slate-900">
+                    {c.title}
+                  </p>
+                  <p className="text-[11px] font-medium text-slate-500 leading-snug">
+                    {c.description}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleCopyWelcomeCouponMessage(c)}
+                  className="w-full rounded-xl border border-indigo-200 bg-indigo-50/70 hover:bg-indigo-100 px-3 py-2 text-[11px] font-extrabold text-indigo-900 flex items-center justify-center gap-1.5 transition cursor-pointer"
+                >
+                  <Copy className="h-3.5 w-3.5 text-indigo-600" />
+                  <span>
+                    {isCopied
+                      ? "Copied Welcome Message!"
+                      : `Copy Welcome Message (${c.code})`}
+                  </span>
+                </button>
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>

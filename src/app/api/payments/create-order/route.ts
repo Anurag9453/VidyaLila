@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { validateAndApplyCoupon, CouponDefinition } from "@/lib/coupons";
-import { getServerCustomCoupons } from "@/app/api/payments/coupons/route";
+import { getServerCustomCoupons } from "@/lib/coupon-store";
 
 export type SupportedCurrency = "INR" | "USD" | "GBP" | "EUR" | "AED" | "SGD";
 

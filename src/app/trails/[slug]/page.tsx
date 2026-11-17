@@ -3555,7 +3555,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                 </aside>
               </div>
 
-              {/* Main Study Content Sections (Cards with specialized themes) */}
+              {/* Main Study Content Sections + Game Arcade + Unit Practice Test */}
               <div className="space-y-6 sm:space-y-8 min-w-0">
                 {activeUnit.contentSections.map((sec, idx) => (
                   <React.Fragment key={idx}>
@@ -3568,18 +3568,15 @@ function TrailDetailContent({ slug }: { slug: string }) {
                     {idx === 0 && <UnitVisualDiagram unitId={activeUnit.id} />}
                   </React.Fragment>
                 ))}
-              </div>
-            </div>
-          </div>
 
-          {/* INTERACTIVE UNIT CONCEPT GAME ARCADE (4 Mini-Games • English Questions • Bonus GP) */}
-          <UnitGameArcade unit={activeUnit} />
+                {/* INTERACTIVE UNIT CONCEPT GAME ARCADE (4 Mini-Games • English Questions • Bonus GP) */}
+                <UnitGameArcade unit={activeUnit} />
 
-          {/* UNIT PRACTICE TEST BOX (10 Questions • Requires Login to Access) */}
-          <div
-            id="unit-practice-test"
-            className="scroll-mt-28 rounded-3xl border-2 border-slate-200 bg-white shadow-[0_6px_0_0_#e2e8f0] p-5 sm:p-8 space-y-6"
-          >
+                {/* UNIT PRACTICE TEST BOX (10 Questions • Requires Login to Access) */}
+                <div
+                  id="unit-practice-test"
+                  className="scroll-mt-36 rounded-3xl border-2 border-slate-200 bg-white shadow-[0_6px_0_0_#e2e8f0] p-5 sm:p-8 space-y-6"
+                >
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
               <div>
                 <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-600">
@@ -3961,6 +3958,9 @@ function TrailDetailContent({ slug }: { slug: string }) {
             </div>
             </>
             )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

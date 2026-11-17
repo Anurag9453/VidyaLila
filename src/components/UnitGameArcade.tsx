@@ -624,7 +624,7 @@ export function UnitGameArcade({ unit }: { unit: UnitItem }) {
   return (
     <div
       id="unit-game-arcade"
-      className="scroll-mt-28 rounded-3xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-950 via-slate-900 to-violet-950 text-white shadow-[0_8px_0_0_#312e81] p-5 sm:p-8 space-y-6"
+      className="scroll-mt-36 rounded-3xl border-2 border-indigo-200 bg-gradient-to-br from-indigo-950 via-slate-900 to-violet-950 text-white shadow-[0_8px_0_0_#312e81] p-5 sm:p-8 space-y-6"
     >
       {/* Arcade Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">

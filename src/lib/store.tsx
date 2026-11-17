@@ -220,6 +220,10 @@ interface AppContextType {
     answers?: Record<string, number>,
     wrongAttempts?: Record<string, number>
   ) => void;
+  awardMiniGameXp: (
+    unitId: string,
+    gameKey: string
+  ) => { xpEarned: number; isFirstWin: boolean };
   unlockContestSingle: (contestId: string) => void;
   isChapterFreeStarter: (moduleIdOrSlug: string) => boolean;
   isChapterUnlocked: (moduleIdOrSlug: string) => boolean;
@@ -1930,6 +1934,33 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const awardMiniGameXp = (
+    unitId: string,
+    gameKey: string
+  ): { xpEarned: number; isFirstWin: boolean } => {
+    const compositeKey = `${profile.id || profile.username || "guest"}:${unitId}:${gameKey}`;
+    let isFirstWin = true;
+    try {
+      const raw = localStorage.getItem("vidyalila_minigames_won_v1");
+      const map: Record<string, boolean> = raw ? JSON.parse(raw) : {};
+      if (map[compositeKey]) {
+        isFirstWin = false;
+      } else {
+        map[compositeKey] = true;
+        localStorage.setItem("vidyalila_minigames_won_v1", JSON.stringify(map));
+      }
+    } catch {
+      // ignore storage errors
+    }
+
+    const xpEarned = isFirstWin ? 15 : 5;
+    saveProfile({
+      ...profile,
+      xp: (profile.xp || 0) + xpEarned,
+    });
+    return { xpEarned, isFirstWin };
+  };
+
   const isChapterFreeStarter = (moduleIdOrSlug: string): boolean => {
     const mod = modules.find(
       (m) => m.id === moduleIdOrSlug || m.slug === moduleIdOrSlug
@@ -2954,6 +2985,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         updateUniqueUsername,
         updateProfilePhone,
         completeUnit,
+        awardMiniGameXp,
         isChapterFreeStarter,
         isChapterUnlocked,
         getAlreadyUnlockedPaidChaptersCount,

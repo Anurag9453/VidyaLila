@@ -36,6 +36,7 @@ import {
 import { DoubtDrawer } from "@/components/DoubtDrawer";
 import { QuestionReference } from "@/lib/discussions-data";
 import { PaymentModal, PassPackageType } from "@/components/PaymentModal";
+import { UnitGameArcade, formatReadableMath } from "@/components/UnitGameArcade";
 
 /**
  * Calculates remaining marks for a single 10-mark question based on wrong attempts:
@@ -350,10 +351,11 @@ function splitTableRow(rowStr: string): string[] {
 }
 
 function renderInlineMarkdown(
-  text: string,
+  rawText: string,
   isVocabFirstCol?: boolean
 ): React.ReactNode {
-  if (!text) return null;
+  if (!rawText) return null;
+  const text = formatReadableMath(rawText);
 
   if (isVocabFirstCol) {
     const cleanWord = text.replace(/\*\*/g, "").trim();
@@ -3412,6 +3414,18 @@ function TrailDetailContent({ slug }: { slug: string }) {
                 <button
                   type="button"
                   onClick={() => {
+                    const el = document.getElementById("unit-game-arcade");
+                    if (el) {
+                      el.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
+                  }}
+                  className="shrink-0 rounded-xl px-3 py-1.5 border border-amber-300 bg-amber-500 text-slate-950 hover:bg-amber-400 transition cursor-pointer font-extrabold"
+                >
+                  🎮 Concept Games
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
                     const el = document.getElementById("unit-practice-test");
                     if (el) {
                       el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3509,6 +3523,22 @@ function TrailDetailContent({ slug }: { slug: string }) {
                     <button
                       type="button"
                       onClick={() => {
+                        const el = document.getElementById("unit-game-arcade");
+                        if (el) {
+                          el.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }
+                      }}
+                      className="mt-1 w-full text-left rounded-xl px-3 py-2.5 border border-amber-400 bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black transition cursor-pointer flex items-center justify-between shadow-xs"
+                    >
+                      <span>🎮 Concept Games</span>
+                      <span className="text-[10px] bg-slate-950 text-amber-300 px-1.5 py-0.5 rounded-md font-extrabold">
+                        4 Games
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
                         const el = document.getElementById("unit-practice-test");
                         if (el) {
                           el.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3541,6 +3571,9 @@ function TrailDetailContent({ slug }: { slug: string }) {
               </div>
             </div>
           </div>
+
+          {/* INTERACTIVE UNIT CONCEPT GAME ARCADE (4 Mini-Games • English Questions • Bonus GP) */}
+          <UnitGameArcade unit={activeUnit} />
 
           {/* UNIT PRACTICE TEST BOX (10 Questions • Requires Login to Access) */}
           <div

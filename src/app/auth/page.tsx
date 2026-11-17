@@ -565,8 +565,8 @@ function AuthAndSettingsContent() {
                 </div>
                 <p className="mt-2 text-[11px] font-bold text-slate-500">
                   {activeUserLang === "ENGLISH"
-                    ? "✓ Currently in International English: all theory, worked examples, and unit tests will appear in English."
-                    : "✓ Currently in Hinglish: lessons, real-life analogies, and tests appear in friendly conversational Hinglish."}
+                    ? "✓ Currently in International English: all theory lessons, vocabulary, and analogies appear in standard English. (Practice tests, quizzes, and competitions are always conducted in English)."
+                    : "✓ Currently in Hinglish: theory lessons, stories, and vocabulary appear in friendly conversational Hinglish. (Practice tests, quizzes, and competitions remain in English for exam readiness)."}
                 </p>
               </div>
             </div>

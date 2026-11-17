@@ -3768,10 +3768,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                       <p className="text-sm sm:text-base font-extrabold text-slate-900 flex items-start gap-2">
                         <HelpCircle className="h-5 w-5 text-indigo-600 shrink-0 mt-0.5" />
                         <span>
-                          Q{qIdx + 1}.{" "}
-                          {isHinglish && q.questionHinglish
-                            ? q.questionHinglish
-                            : q.question}
+                          Q{qIdx + 1}. {q.question}
                         </span>
                       </p>
                       <div className="flex items-center gap-2 shrink-0">
@@ -3864,9 +3861,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                     {isLockedCorrect && (
                       <div className="rounded-xl p-3 text-xs font-bold bg-emerald-100 border border-emerald-300 text-emerald-900">
                         <strong>✅ Correct (+{questionMarks} Marks): </strong>
-                        {isHinglish && q.explanationHinglish
-                          ? q.explanationHinglish
-                          : q.explanation}
+                        {q.explanation}
                       </div>
                     )}
 

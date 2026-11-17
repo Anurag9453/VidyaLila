@@ -295,7 +295,7 @@ export function DailyStreakModal() {
           {/* Question Box */}
           <div className="rounded-2xl border-2 border-slate-200 bg-slate-50 p-4 sm:p-5">
             <p className="text-sm sm:text-base font-extrabold text-slate-900 leading-relaxed">
-              {isHinglish ? currentQ.questionHi : currentQ.questionEn}
+              {currentQ.questionEn}
             </p>
           </div>
 
@@ -393,9 +393,7 @@ export function DailyStreakModal() {
 
               <p className="text-xs sm:text-sm font-semibold leading-relaxed">
                 <strong>💡 Concept Explanation:</strong>{" "}
-                {isHinglish
-                  ? currentQ.trickExplanationHi
-                  : currentQ.trickExplanationEn}
+                {currentQ.trickExplanationEn}
               </p>
             </div>
           )}

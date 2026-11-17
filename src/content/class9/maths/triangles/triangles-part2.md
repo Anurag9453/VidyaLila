@@ -574,4 +574,6 @@ Sawaal angles maange to x ki value rakh kar **teeno angles** likho, aur jaanch k
 
 ---
 
+## Chapter Wrap-Up: Triangles
+
 Is topic mein bahut saare naye naam aaye: centroid, orthocentre, circumcentre, incentre. Agar ek baar mein yaad na ho, to Part E ki table dobara dekh lo. Aur 180° wala rule to ab aapka pakka dost ban gaya hai. Triangle ka koi bhi "find x" sawaal isi se shuru hota hai. Aap kar loge!

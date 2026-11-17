@@ -503,4 +503,6 @@ Dono ko standard form (descending power) mein hi likho, nahi to terms galat jaga
 
 ---
 
+## Chapter Wrap-up: Polynomials
+
 Agar teeno ek saath yaad rakhna mushkil lage, to bas ye yaad rakho: **remainder jaanna hai to x = a rakho. Remainder 0 aaye to wo factor hai.** Baaki sab isi ek baat se nikalta hai.

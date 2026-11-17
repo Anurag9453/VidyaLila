@@ -292,6 +292,7 @@ const DEFAULT_PROFILE: StudentProfile = {
   avatar: "🚀",
   board: "CBSE",
   classGrade: 9,
+  preferredLanguage: "HINGLISH",
   city: "New Delhi",
   school: "VidyaLila Academy",
   role: "student",
@@ -1081,13 +1082,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
+      const savedLang = localStorage.getItem("vidyalila_lang_v4") as ContentLanguage | null;
       const savedProfile = localStorage.getItem("vidyalila_profile_v6");
       if (savedProfile) {
         const parsed = hydrateCreditWallet(JSON.parse(savedProfile));
+        const resolvedLang: ContentLanguage =
+          parsed.preferredLanguage ||
+          (savedLang === "ENGLISH" || savedLang === "HINGLISH" ? savedLang : "HINGLISH");
+        parsed.preferredLanguage = resolvedLang;
         setProfile(parsed);
+        setContentLanguageState(resolvedLang);
       } else {
         const guestHydrated = hydrateCreditWallet(DEFAULT_PROFILE);
+        const resolvedLang: ContentLanguage =
+          savedLang === "ENGLISH" || savedLang === "HINGLISH" ? savedLang : "HINGLISH";
+        guestHydrated.preferredLanguage = resolvedLang;
         setProfile(guestHydrated);
+        setContentLanguageState(resolvedLang);
       }
       const savedAuth = localStorage.getItem("vidyalila_is_auth_v4");
       if (savedAuth === "true") setIsAuthenticated(true);
@@ -1125,10 +1136,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           }
         })
         .catch(() => {});
-      const savedLang = localStorage.getItem("vidyalila_lang_v4") as ContentLanguage | null;
-      if (savedLang === "ENGLISH" || savedLang === "HINGLISH") {
-        setContentLanguageState(savedLang);
-      }
     } catch {
       // ignore storage errors
     }
@@ -1188,25 +1195,29 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const setContentLanguage = (lang: ContentLanguage) => {
     setContentLanguageState(lang);
+    setProfile((prev) => {
+      const updated: StudentProfile = { ...prev, preferredLanguage: lang };
+      try {
+        localStorage.setItem("vidyalila_profile_v6", JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
+      return updated;
+    });
     try {
       localStorage.setItem("vidyalila_lang_v4", lang);
-      if (isAuthenticated) {
-        const updated = { ...profile, preferredLanguage: lang };
-        setProfile(updated);
-        localStorage.setItem("vidyalila_profile_v6", JSON.stringify(updated));
-        saveLocalOnboardingRecord(
-          profile.id,
-          profile.email,
-          profile.classGrade,
-          lang
-        );
-        if (isSupabaseConfigured) {
-          supabase.auth
-            .updateUser({
-              data: { preferred_language: lang, onboarding_completed: true },
-            })
-            .catch(() => {});
-        }
+      saveLocalOnboardingRecord(
+        profile.id,
+        profile.email,
+        profile.classGrade,
+        lang
+      );
+      if (isAuthenticated && isSupabaseConfigured) {
+        supabase.auth
+          .updateUser({
+            data: { preferred_language: lang, onboarding_completed: true },
+          })
+          .catch(() => {});
       }
     } catch {
       // ignore
@@ -2932,7 +2943,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         supportCases,
         selectedBoardFilter,
         selectedClassFilter,
-        contentLanguage,
+        contentLanguage: (profile.preferredLanguage || contentLanguage) as ContentLanguage,
         celebration,
         setSelectedBoardFilter,
         setSelectedClassFilter,

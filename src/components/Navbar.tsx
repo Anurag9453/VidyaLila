@@ -40,8 +40,12 @@ export function Navbar() {
     completeOnboardingPreferences,
     hasPlayedDailyTrickToday,
     setShowDailyTrickModal,
+    contentLanguage,
+    setContentLanguage,
   } = useApp();
   const [showPassModal, setShowPassModal] = useState(false);
+
+  const activeLang = profile.preferredLanguage || contentLanguage;
 
   // First-time onboarding modal state (Unique @username + Class 9-12 + Language Preference)
   const [onboardUsername, setOnboardUsername] = useState("");
@@ -181,8 +185,39 @@ export function Navbar() {
             })}
           </nav>
 
-          {/* Right Controls: Only show Streak, GP & Pass when Signed In */}
+          {/* Right Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Quick Study Language Switcher: 🇬🇧 English / 🇮🇳 Hinglish */}
+            <div
+              className="inline-flex items-center rounded-xl bg-slate-100 border border-slate-200 p-0.5"
+              title={`Study Language: ${activeLang === "ENGLISH" ? "International English" : "Hinglish"} (Click to switch)`}
+            >
+              <button
+                type="button"
+                onClick={() => setContentLanguage("ENGLISH")}
+                className={`rounded-lg px-2 sm:px-2.5 py-1 text-[11px] font-extrabold transition cursor-pointer flex items-center gap-1 ${
+                  activeLang === "ENGLISH"
+                    ? "bg-white text-indigo-950 shadow-xs"
+                    : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                <span>🇬🇧</span>
+                <span className="hidden sm:inline">English</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setContentLanguage("HINGLISH")}
+                className={`rounded-lg px-2 sm:px-2.5 py-1 text-[11px] font-extrabold transition cursor-pointer flex items-center gap-1 ${
+                  activeLang === "HINGLISH"
+                    ? "bg-white text-emerald-950 shadow-xs"
+                    : "text-slate-500 hover:text-slate-900"
+                }`}
+              >
+                <span>🇮🇳</span>
+                <span className="hidden sm:inline">Hinglish</span>
+              </button>
+            </div>
+
             {isAuthenticated ? (
               <>
                 <button

@@ -554,7 +554,7 @@ function AuthAndSettingsContent() {
                         "ENGLISH"
                       )
                     }
-                    className={`rounded-2xl border-2 py-2.5 px-3 text-xs sm:text-sm font-extrabold transition ${
+                    className={`rounded-2xl border-2 py-2.5 px-3 text-xs sm:text-sm font-extrabold transition cursor-pointer ${
                       activeUserLang === "ENGLISH"
                         ? "border-emerald-600 bg-emerald-600 text-white shadow-sm"
                         : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
@@ -563,6 +563,11 @@ function AuthAndSettingsContent() {
                     🇬🇧 English
                   </button>
                 </div>
+                <p className="mt-2 text-[11px] font-bold text-slate-500">
+                  {activeUserLang === "ENGLISH"
+                    ? "✓ Currently in International English: all theory, worked examples, and unit tests will appear in English."
+                    : "✓ Currently in Hinglish: lessons, real-life analogies, and tests appear in friendly conversational Hinglish."}
+                </p>
               </div>
             </div>
           </div>

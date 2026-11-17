@@ -36,7 +36,10 @@ function HomeContent() {
     isChapterUnlocked,
     unlockChapterWithCredits,
     activateProPass,
+    contentLanguage,
   } = useApp();
+
+  const isHinglish = (profile.preferredLanguage || contentLanguage) === "HINGLISH";
 
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [defaultModalPkg, setDefaultModalPkg] =
@@ -559,7 +562,9 @@ function HomeContent() {
                         {chap.title}
                       </h3>
                       <p className="text-xs sm:text-sm text-slate-500 font-medium line-clamp-2">
-                        {chap.subtitle}
+                        {isHinglish && chap.subtitleHinglish
+                          ? chap.subtitleHinglish
+                          : chap.subtitle}
                       </p>
                     </div>
                   </div>

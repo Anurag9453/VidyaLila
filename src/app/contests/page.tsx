@@ -58,7 +58,10 @@ function ContestArenaContent() {
     consumePassForContest,
     getContestCreditCost,
     submitContestResult,
+    contentLanguage,
   } = useApp();
+
+  const isHinglish = (profile.preferredLanguage || contentLanguage) === "HINGLISH";
 
   const [selectedQuizClass, setSelectedQuizClass] = useState<ClassGrade>(
     profile.classGrade === 10 ? 10 : 9
@@ -791,7 +794,9 @@ function ContestArenaContent() {
                   <div className="p-6 sm:p-8 space-y-6">
                     <div className="flex items-start justify-between gap-3">
                       <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-relaxed">
-                        {currentQ.question}
+                        {isHinglish && currentQ.questionHinglish
+                          ? currentQ.questionHinglish
+                          : currentQ.question}
                       </h2>
                       {isCurrentMarked && (
                         <span className="shrink-0 inline-flex items-center gap-1 rounded-lg bg-violet-100 border border-violet-300 px-2.5 py-1 text-[11px] font-black text-violet-900">
@@ -999,7 +1004,10 @@ function ContestArenaContent() {
                       >
                         <div className="flex items-start justify-between gap-3">
                           <p className="text-sm font-bold text-slate-900">
-                            Q{idx + 1}. {q.question}
+                            Q{idx + 1}.{" "}
+                            {isHinglish && q.questionHinglish
+                              ? q.questionHinglish
+                              : q.question}
                           </p>
                           {!isAttempted ? (
                             <span className="shrink-0 rounded-md bg-slate-200 px-2.5 py-0.5 text-[11px] font-black text-slate-700">
@@ -1048,9 +1056,13 @@ function ContestArenaContent() {
 
                         <p className="text-xs font-medium text-slate-700 bg-white border border-slate-200 p-3 rounded-lg leading-relaxed">
                           <strong className="text-slate-900">
-                            Explanation:
+                            {isHinglish
+                              ? "Vistrit Samjhauta (Explanation):"
+                              : "Explanation:"}
                           </strong>{" "}
-                          {q.explanation}
+                          {isHinglish && q.explanationHinglish
+                            ? q.explanationHinglish
+                            : q.explanation}
                         </p>
                       </div>
                     );

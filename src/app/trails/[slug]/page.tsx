@@ -889,9 +889,10 @@ function StudySectionCard({
 
   // Split practice questions if it contains answers
   const isPractice = sectionType === "PRACTICE";
-  const hasAnswers = isPractice && /###\s*Answers/i.test(bodyText);
+  const hasAnswers =
+    isPractice && /###\s*(?:Answers|Uttar|Jawab|Solutions)/i.test(bodyText);
   const [questionsPart, answersPart] = hasAnswers
-    ? bodyText.split(/###\s*Answers/i)
+    ? bodyText.split(/###\s*(?:Answers|Uttar|Jawab|Solutions)/i)
     : [bodyText, ""];
 
   return (
@@ -987,16 +988,32 @@ function StudySectionCard({
               className="inline-flex items-center gap-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm px-5 py-2.5 transition shadow-sm cursor-pointer"
             >
               {showAnswers ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              <span>{showAnswers ? "Hide Detailed Solutions" : "Reveal Step-by-Step Solutions"}</span>
+              <span>
+                {showAnswers
+                  ? isHinglish
+                    ? "Solutions Chhupayein"
+                    : "Hide Detailed Solutions"
+                  : isHinglish
+                  ? "Step-by-Step Solutions Dekhein"
+                  : "Reveal Step-by-Step Solutions"}
+              </span>
             </button>
 
             {showAnswers && (
               <div className="mt-4 rounded-2xl bg-emerald-50/90 border-2 border-emerald-300 p-5 sm:p-6 space-y-3 shadow-xs">
                 <div className="flex items-center gap-2 text-emerald-900 font-black text-sm sm:text-base border-b border-emerald-200 pb-2.5">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
-                  <span>Step-by-Step Solutions & Answer Key</span>
+                  <span>
+                    {isHinglish
+                      ? "Kadam-dar-Kadam Hal (Step-by-Step Solutions)"
+                      : "Step-by-Step Solutions & Answer Key"}
+                  </span>
                 </div>
-                <FormattedStudyBody text={answersPart} isConstructions={isConstructions} />
+                <FormattedStudyBody
+                  text={answersPart}
+                  isConstructions={isConstructions}
+                  isHinglish={isHinglish}
+                />
               </div>
             )}
           </div>
@@ -2751,7 +2768,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
   }, [unitParam, mod.units.length]);
 
   const activeUnit = mod.units[activeUnitIdx] || mod.units[0];
-  const isHinglish = contentLanguage === "HINGLISH";
+  const isHinglish = (profile.preferredLanguage || contentLanguage) === "HINGLISH";
 
   // Viewport-locked Quick Jump sidebar & active section tracker
   const sidebarColRef = useRef<HTMLDivElement | null>(null);
@@ -2982,7 +2999,14 @@ function TrailDetailContent({ slug }: { slug: string }) {
                   {mod.title}
                 </h1>
                 <p className="text-sm text-slate-600 font-medium">
-                  {mod.subtitle} • {mod.units.length} Interactive Units &amp; Practice Tests (+{mod.totalXp} GP)
+                  {isHinglish && mod.subtitleHinglish
+                    ? mod.subtitleHinglish
+                    : mod.subtitle}{" "}
+                  • {mod.units.length}{" "}
+                  {isHinglish
+                    ? "Interactive Units aur Tests"
+                    : "Interactive Units & Practice Tests"}{" "}
+                  (+{mod.totalXp} GP)
                 </p>
               </div>
             </div>
@@ -3015,10 +3039,10 @@ function TrailDetailContent({ slug }: { slug: string }) {
                       </span>
                       <div>
                         <p className="text-sm font-extrabold text-slate-900">
-                          {u.title}
+                          {isHinglish && u.titleHinglish ? u.titleHinglish : u.title}
                         </p>
                         <p className="text-xs text-slate-500 font-medium line-clamp-1">
-                          {u.summary}
+                          {isHinglish && u.summaryHinglish ? u.summaryHinglish : u.summary}
                         </p>
                       </div>
                     </div>

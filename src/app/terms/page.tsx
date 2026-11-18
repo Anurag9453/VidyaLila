@@ -25,7 +25,7 @@ export default function TermsAndDisclaimerPage() {
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white border border-slate-200 px-5 py-3 shadow-sm">
         <div className="flex items-center gap-2 text-xs font-extrabold text-slate-700">
           <ShieldCheck className="h-4 w-4 text-emerald-600" />
-          <span>VidyaLila Indian Legal, Privacy &amp; Regulatory Compliance Hub</span>
+          <span>Global &amp; Indian Legal, Privacy (GDPR • COPPA • DPDP) &amp; Regulatory Hub</span>
         </div>
         <Link
           href="/"
@@ -44,18 +44,19 @@ export default function TermsAndDisclaimerPage() {
         </div>
 
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-          Student, Parent &amp; Regulatory Compliance Terms (India)
+          Global Student, Parent &amp; Regulatory Compliance Terms (India • US • UK • EU • Global)
         </h1>
 
         <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
           Welcome to <strong>VidyaLila</strong>. This document governs your use
-          of the VidyaLila learning platform and is compliant with the{" "}
-          <strong>Information Technology Act, 2000</strong>, the{" "}
-          <strong>Information Technology (Intermediary Guidelines) Rules, 2021</strong>,{" "}
-          the <strong>Consumer Protection (E-Commerce) Rules, 2020</strong>, the{" "}
-          <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>,
-          and applicable <strong>Reserve Bank of India (RBI)</strong> guidelines
-          for closed-system digital platform credits.
+          of the VidyaLila learning platform worldwide and is compliant with the{" "}
+          <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>,{" "}
+          the <strong>EU &amp; UK General Data Protection Regulation (GDPR / UK-GDPR)</strong>,{" "}
+          the <strong>US Children&apos;s Online Privacy Protection Act (COPPA)</strong>,{" "}
+          the <strong>Information Technology Act, 2000</strong>, the{" "}
+          <strong>Consumer Protection (E-Commerce) Rules, 2020</strong>, and
+          applicable <strong>Reserve Bank of India (RBI)</strong> guidelines for
+          closed-system digital platform credits.
         </p>
 
         {/* Quick Navigation Pills */}
@@ -364,7 +365,7 @@ export default function TermsAndDisclaimerPage() {
           </ul>
         </div>
 
-        {/* 6. Student & Minor Privacy Policy (DPDP Act, 2023 Compliance) */}
+        {/* 6. Global Student & Minor Privacy Policy (India DPDP Act 2023 • EU/UK GDPR • US COPPA) */}
         <div
           id="privacy"
           className="scroll-mt-24 rounded-3xl border-2 border-slate-200 bg-white p-6 sm:p-7 shadow-[0_4px_0_0_#e2e8f0] space-y-3"
@@ -374,55 +375,78 @@ export default function TermsAndDisclaimerPage() {
               <Lock className="h-5 w-5" />
             </span>
             <h2 className="text-lg font-extrabold text-slate-900">
-              6. Student &amp; Minor Privacy Policy (DPDP Act, 2023 Compliance)
+              6. Global Student &amp; Minor Privacy Policy (DPDP Act 2023 • EU/UK GDPR • US COPPA)
             </h2>
           </div>
           <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
             VidyaLila is committed to protecting the privacy and safety of
-            students and parents in accordance with the{" "}
-            <strong>Digital Personal Data Protection (DPDP) Act, 2023</strong>{" "}
-            and the Information Technology (Reasonable Security Practices and
-            Procedures and Sensitive Personal Data or Information) Rules, 2011:
+            students and parents worldwide in accordance with the{" "}
+            <strong>Digital Personal Data Protection (DPDP) Act, 2023 (India)</strong>,{" "}
+            the <strong>European Union &amp; United Kingdom General Data Protection Regulation (GDPR / UK-GDPR)</strong>,{" "}
+            and the <strong>United States Children&apos;s Online Privacy Protection Act (COPPA)</strong>:
           </p>
           <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm font-medium text-slate-600">
             <li>
-              <strong>Parental Consent for Minors (Under 18 Years):</strong>{" "}
-              Pursuant to Section 9 of the DPDP Act, 2023 and the Indian
-              Contract Act, 1872, students under 18 years of age must register
-              and make any credit/pack purchases strictly with the verifiable
-              consent and supervision of their Parent or Legal Guardian. By
-              completing sign-up or checkout, the Parent/Guardian consents to
-              the student&apos;s use of the platform.
+              <strong>Age Requirement (13+ Years) &amp; Parental Consent (COPPA / GDPR Art. 8 / DPDP Sec. 9):</strong>{" "}
+              VidyaLila is designed for high-school scholars in{" "}
+              <strong>Class 9 to Class 12 (Ages 14–18)</strong>. Users must be at
+              least <strong>13 years of age</strong> to create an account (in
+              compliance with US COPPA). Students under 18 years of age (or under
+              the applicable age of digital consent in their country,{" "}
+              13–16 under EU/UK GDPR and 18 under India&apos;s DPDP Act, 2023)
+              must register and make any credit/pack purchases strictly with the
+              verifiable consent and supervision of their Parent or Legal
+              Guardian.
             </li>
             <li>
-              <strong>Minimal Data Collection &amp; Purpose:</strong> We collect
-              only essential profile information—Full Name, Email Address,
-              Parent/Student Mobile Number, Class Grade, School Name, City, and
-              unique <code>@username</code>—strictly to synchronize study
-              progress, maintain your Vidya Credit Wallet passbook, display
-              leaderboard rankings, and send important test/payment updates.
+              <strong>Cross-Border Data Storage &amp; SOC-2 / ISO-27001 Cloud Security:</strong>{" "}
+              By using the platform, international and domestic users acknowledge
+              and consent that their basic learning profile data is processed and
+              stored across globally distributed, encrypted cloud infrastructure
+              (powered by <strong>Supabase / AWS</strong> and{" "}
+              <strong>Vercel</strong>, certified under{" "}
+              <strong>SOC-2 Type II</strong> and <strong>ISO-27001</strong> with
+              TLS 1.3 encryption in transit and AES-256 encryption at rest) and
+              governed by Standard Contractual Clauses (SCCs) for lawful
+              cross-border transfers under GDPR Chapter V and India&apos;s DPDP
+              Act, 2023.
+            </li>
+            <li>
+              <strong>Data Minimization &amp; Lawful Educational Purpose (GDPR Art. 5 &amp; 6):</strong>{" "}
+              We collect only minimal, low-risk educational account data—Full
+              Name, Email Address, optional Parent/Student Phone Number, Class
+              Grade, School/City, and unique <code>@username</code>—strictly to
+              synchronize study progress, maintain your Credit Wallet passbook,
+              display leaderboard rankings, and provide customer support. We
+              never collect government IDs, biometric data, health data, or
+              precise GPS geolocation.
             </li>
             <li>
               <strong>Zero Child Behavioral Tracking &amp; Zero Data Selling:</strong>{" "}
-              In strict compliance with Section 9(3) of the DPDP Act, 2023,
-              VidyaLila <strong>never</strong> conducts behavioral monitoring,
-              profiling, or targeted advertising directed at children. We{" "}
+              In strict compliance with Section 9(3) of the DPDP Act, 2023, GDPR
+              Recital 38, and COPPA, VidyaLila <strong>never</strong> conducts
+              behavioral monitoring, profiling, or targeted third-party
+              advertising directed at students. We{" "}
               <strong>never sell, rent, or trade</strong> student or parent
-              phone numbers or emails to third-party telecallers or coaching
-              agencies.
+              personal data to third-party telecallers, data brokers, or
+              advertising networks.
             </li>
             <li>
-              <strong>PCI-DSS Payment Security:</strong> All online payments are
-              processed directly through <strong>Razorpay</strong> using 256-bit
-              SSL encryption. VidyaLila never collects or stores your credit/debit
-              card numbers, CVV, net-banking passwords, or UPI PINs on its
-              servers.
+              <strong>PCI-DSS Level 1 Payment Isolation:</strong> All domestic
+              (INR) and international (USD, GBP, EUR, AED, SGD) payments are
+              processed directly by <strong>Razorpay</strong> on PCI-DSS Level 1
+              compliant vaults. VidyaLila never collects, sees, or stores your
+              credit/debit card numbers, CVV, bank logins, or UPI PINs on its
+              database.
             </li>
             <li>
-              <strong>Right to Correction, Erasure &amp; Account Deletion:</strong>{" "}
-              Parents and students have the right to review, update, or request
-              permanent deletion of their account and personal data at any time
-              by emailing our Grievance Officer.
+              <strong>Right to Access, Portability &amp; 1-Click Account Erasure (&ldquo;Right to be Forgotten&rdquo; — GDPR Art. 17 / DPDP Sec. 12):</strong>{" "}
+              Students and parents worldwide have the absolute right to review,
+              update, export, or request permanent deletion of their account and
+              all associated personal data at any time directly from{" "}
+              <strong>User Settings (/auth)</strong> or via our Support &amp;
+              Privacy Desk. Verified erasure requests are permanently executed
+              within <strong>72 hours</strong>.
             </li>
           </ul>
         </div>

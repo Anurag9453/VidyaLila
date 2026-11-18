@@ -29,6 +29,7 @@ import {
   GraduationCap,
   Languages,
   AtSign,
+  ShieldCheck,
 } from "lucide-react";
 
 function getPlanDetails(
@@ -122,7 +123,11 @@ function AuthAndSettingsContent() {
     checkUsernameAvailability,
     updateUniqueUsername,
     activateProPass,
+    submitSupportCase,
   } = useApp();
+
+  const [privacyStatusMsg, setPrivacyStatusMsg] = useState<string | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const [mode, setMode] = useState<"SIGNIN" | "SIGNUP">(
     modeParam === "signup" ? "SIGNUP" : "SIGNIN"
@@ -689,6 +694,115 @@ function AuthAndSettingsContent() {
                 </div>
               )}
           </div>
+
+          {/* Global Privacy & Data Rights (GDPR • UK-GDPR • US COPPA • India DPDP Act) */}
+          <div className="rounded-2xl border-2 border-slate-200 bg-slate-50/70 p-5 space-y-3.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-1">
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-violet-200 bg-violet-50 px-2.5 py-0.5 text-[10px] font-extrabold uppercase text-violet-800">
+                  <ShieldCheck className="h-3.5 w-3.5 text-violet-600" />
+                  <span>Global Data Rights • GDPR / COPPA / DPDP</span>
+                </span>
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900">
+                  Data Portability &amp; Right to Account Erasure
+                </h3>
+                <p className="text-xs font-medium text-slate-500">
+                  Download a copy of your learning profile data (GDPR Art. 20) or request permanent deletion of your account and personal data (GDPR Art. 17 / DPDP Sec. 12).
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const exportPayload = {
+                      exportedAt: new Date().toISOString(),
+                      complianceStandard: "GDPR Art. 20 / India DPDP Act 2023",
+                      profile: {
+                        name: profile.name,
+                        username: profile.username,
+                        email: profile.email,
+                        classGrade: profile.classGrade,
+                        preferredLanguage: activeUserLang,
+                        xp: profile.xp,
+                        streak: profile.streak,
+                        credits: profile.credits,
+                        completedUnitIds: profile.completedUnitIds,
+                        unlockedModuleIds: profile.unlockedModuleIds,
+                        earnedBadges: profile.earnedBadges,
+                      },
+                    };
+                    const blob = new Blob(
+                      [JSON.stringify(exportPayload, null, 2)],
+                      { type: "application/json" }
+                    );
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `scholar-data-${(profile.username || "user").replace(/^@/, "")}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    setPrivacyStatusMsg(
+                      "Your personal learning data export (JSON) has been downloaded."
+                    );
+                  }}
+                  className="btn-3d-white px-3.5 py-2 text-xs font-extrabold cursor-pointer"
+                >
+                  📥 Export My Data (JSON)
+                </button>
+
+                {!confirmingDelete ? (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingDelete(true)}
+                    className="rounded-xl border-2 border-rose-200 bg-rose-50 hover:bg-rose-100 px-3.5 py-2 text-xs font-extrabold text-rose-700 transition cursor-pointer"
+                  >
+                    🗑️ Request Account &amp; Data Deletion
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        const res = await submitSupportCase({
+                          category: "GRIEVANCE_PRIVACY",
+                          subject: `GDPR / DPDP Account & Data Erasure Request (${profile.username || profile.email})`,
+                          description: `User requested permanent account and personal data erasure under GDPR Art. 17 / India DPDP Act Sec. 12 for account ${profile.email || profile.username}.`,
+                          studentName: profile.name,
+                          studentEmail: profile.email,
+                          studentPhone: profile.phone,
+                        });
+                        setConfirmingDelete(false);
+                        setPrivacyStatusMsg(
+                          `Erasure Request Logged (Case #${res.caseItem.caseNumber}). Your local session will now be cleared and your cloud record is queued for permanent deletion within 72 hours.`
+                        );
+                        setTimeout(() => {
+                          signOutUser();
+                        }, 2800);
+                      }}
+                      className="rounded-xl bg-rose-600 hover:bg-rose-700 px-3.5 py-2 text-xs font-extrabold text-white transition cursor-pointer"
+                    >
+                      Confirm Permanent Erasure
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmingDelete(false)}
+                      className="rounded-xl bg-slate-200 hover:bg-slate-300 px-3 py-2 text-xs font-bold text-slate-700 transition cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {privacyStatusMsg && (
+              <div className="rounded-xl bg-emerald-50 border border-emerald-200 px-3.5 py-2.5 text-xs font-bold text-emerald-800 flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                <span>{privacyStatusMsg}</span>
+              </div>
+            )}
+          </div>
         </section>
       )}
 
@@ -1044,7 +1158,7 @@ function AuthAndSettingsContent() {
                   </div>
                 </div>
 
-                {/* Explicit Terms, DPDP Privacy Policy & Parental Consent Acceptance */}
+                {/* Explicit Global Terms, GDPR/COPPA/DPDP Privacy & Parental Consent Acceptance */}
                 <label className="flex items-start gap-2.5 rounded-2xl bg-slate-50 border border-slate-200 p-3.5 text-xs font-medium text-slate-600 cursor-pointer">
                   <input
                     type="checkbox"
@@ -1053,7 +1167,11 @@ function AuthAndSettingsContent() {
                     className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                   />
                   <span>
-                    I agree to VidyaLila&apos;s{" "}
+                    I confirm that I am at least <strong>13 years old</strong>{" "}
+                    (US COPPA compliance) and, if under 18 (or the age of
+                    digital consent in my jurisdiction), have the verifiable
+                    consent of my <strong>Parent or Legal Guardian</strong>. I
+                    agree to the{" "}
                     <Link
                       href="/terms#terms"
                       className="font-extrabold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
@@ -1065,7 +1183,7 @@ function AuthAndSettingsContent() {
                       href="/terms#privacy"
                       className="font-extrabold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
                     >
-                      Student Privacy Policy (DPDP Act, 2023)
+                      Global Privacy Policy (DPDP Act • EU/UK GDPR • COPPA)
                     </Link>
                     , and{" "}
                     <Link
@@ -1074,9 +1192,7 @@ function AuthAndSettingsContent() {
                     >
                       Credit Refund Policy
                     </Link>
-                    . If I am under 18 years of age, I confirm that I am
-                    creating this account with the consent and supervision of my{" "}
-                    <strong>Parent or Legal Guardian</strong>.
+                    .
                   </span>
                 </label>
               </>

@@ -237,7 +237,7 @@ export function Navbar() {
 
                 <Link
                   href="/leaderboard"
-                  title="Gyan Points (GP)"
+                  title="Scholar XP / GP"
                   className="flex items-center gap-1 rounded-xl bg-emerald-50 border border-emerald-200 px-2 sm:px-2.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition"
                 >
                   <span>{currentRank.badgeEmoji}</span>

@@ -3120,7 +3120,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                       className="w-full btn-3d-emerald py-3.5 text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <Sparkles className="h-4 w-4" />
-                      <span>Buy Vidya Credits (From ₹199 • 400 Credits)</span>
+                      <span>Get Credit Pack (Starter Pack • 400 Credits)</span>
                     </button>
                   )}
 
@@ -3129,7 +3129,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                     onClick={() => setShowChapterCreditModal(true)}
                     className="w-full rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 py-2.5 px-3 text-xs font-extrabold text-emerald-200 transition cursor-pointer"
                   >
-                    👑 Or Unlock ALL Class {mod.classGrade} PCM Chapters + 1,000 Test Cr (₹1,999)
+                    👑 Or Unlock ALL Grade / Class {mod.classGrade} STEM Chapters + 1,000 Test Credits
                   </button>
                 </>
               ) : (

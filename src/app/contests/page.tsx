@@ -1511,7 +1511,7 @@ function ContestArenaContent() {
               Attempt timed <strong>🌍 Full Syllabus Papers</strong> or{" "}
               <strong>📌 Selected Chapter Tests</strong> in our official CBT
               examination environment with question palette tracking, mark-for-review,
-              and All-India test rank lists.
+              and Global test rank lists.
             </p>
           </div>
 
@@ -1570,7 +1570,7 @@ function ContestArenaContent() {
             <p className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
               <Clock className="h-4 w-4 text-indigo-600" />
               <span>
-                Staggered Examination Slots (3 PM, 4 PM, 5 PM IST) • Prevents
+                Staggered Global Examination Windows (15:00, 16:00, 17:00 UTC) • Prevents
                 Server Congestion &amp; Allows Attempting Previous Class Papers:
               </span>
             </p>

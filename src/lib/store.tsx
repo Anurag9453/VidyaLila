@@ -297,7 +297,7 @@ const DEFAULT_PROFILE: StudentProfile = {
   board: "CBSE",
   classGrade: 9,
   preferredLanguage: "HINGLISH",
-  city: "New Delhi",
+  city: "Global",
   school: "VidyaLila Academy",
   role: "student",
   xp: 0,
@@ -997,7 +997,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             classGrade: resolvedClass,
             preferredLanguage: resolvedLang,
             hasCompletedOnboarding: hasOnboarded,
-            city: data.city || "Delhi",
+            city: data.city || "Global",
             school: data.school_name || "VidyaLila Academy",
             role: (data.role as "student" | "admin") || "student",
             xp: typeof data.xp_points === "number" ? data.xp_points : 0,
@@ -1064,7 +1064,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             classGrade: resolvedClass,
             preferredLanguage: resolvedLang,
             hasCompletedOnboarding: hasOnboarded,
-            city: (meta.city as string) || "Delhi",
+            city: (meta.city as string) || "Global",
             school: (meta.school_name as string) || "VidyaLila Academy",
             xp: 0,
           },
@@ -1108,7 +1108,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (savedAuth === "true") setIsAuthenticated(true);
       const savedModules = localStorage.getItem("vidyalila_modules_v16");
       if (savedModules) setModules(JSON.parse(savedModules));
-      const savedContests = localStorage.getItem("vidyalila_contests_v11");
+      const savedContests = localStorage.getItem("vidyalila_contests_v12");
       if (savedContests) setContests(JSON.parse(savedContests));
       const savedReports = localStorage.getItem("vidyalila_reports_v1");
       if (savedReports) setContentReports(JSON.parse(savedReports));
@@ -2589,13 +2589,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const updated = [contest, ...contests];
     setContests(updated);
     try {
-      localStorage.setItem("vidyalila_contests_v11", JSON.stringify(updated));
+      localStorage.setItem("vidyalila_contests_v12", JSON.stringify(updated));
     } catch {
       // ignore
     }
     setCelebration({
       title: "New Paid Quiz Contest Launched! ⚡",
-      subtitle: `"${contest.title}" (₹${contest.entryFeeInr}) is now live in the Contest Arena!`,
+      subtitle: `"${contest.title}" is now live in the Contest Arena!`,
       xpEarned: 0,
       badgeEmoji: "🎯",
     });

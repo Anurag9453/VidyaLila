@@ -418,7 +418,7 @@ function LeaderboardContent() {
               Number(row.class_grade) === 9 || Number(row.class_grade) === 10
                 ? Number(row.class_grade)
                 : 10,
-            city: row.city || "Delhi",
+            city: row.city || "Global",
             xp: Number(row.xp_points || 0),
             rating: Number(row.contest_rating || 1500),
             streak: Number(row.current_streak || 1),
@@ -772,7 +772,7 @@ function LeaderboardContent() {
                 <TrendingUp className="h-4 w-4 shrink-0" /> {profile.rating}
               </p>
               <p className="text-[11px] font-bold text-emerald-600">
-                {percentile}%ile India
+                {percentile}%ile Global
               </p>
             </div>
 
@@ -817,7 +817,7 @@ function LeaderboardContent() {
               </span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900">
-              All-India Test-Wise &amp; Monthly Rank Board
+              Global Test-Wise &amp; Monthly Rank Board
             </h2>
             <p className="text-xs font-semibold text-slate-500">
               Check your exact rank for every <strong>Daily Test</strong> and{" "}
@@ -861,7 +861,7 @@ function LeaderboardContent() {
               }`}
             >
               <Trophy className="h-3.5 w-3.5" />
-              <span>🌍 Overall All-India GP</span>
+              <span>🌍 Overall Global Standings</span>
             </button>
           </div>
         </div>

@@ -58,7 +58,7 @@ function getPlanDetails(
 
   if (plan === "COMPREHENSIVE") {
     return {
-      name: "👑 Comprehensive Class Pack (₹1,999 • All PCM Chapters + 1,000 Test Credits)",
+      name: "👑 Comprehensive Class Pack (All STEM Chapters + 1,000 Test Credits)",
       badge: "👑 COMPREHENSIVE CLASS PACK ACTIVE",
       summary:
         "All ~45 Mathematics, Physics & Chemistry chapters of your selected class are unlocked forever + 1,000 Bonus Test Credits.",
@@ -68,29 +68,29 @@ function getPlanDetails(
   }
   if (plan === "MONTHLY") {
     return {
-      name: "💎 Scholar Pack (₹999 • 2,600 Vidya Credits)",
+      name: "💎 Scholar Pack (2,600 Credits)",
       badge: "💎 SCHOLAR PACK ACTIVE",
       summary:
-        "2,600 Vidya Credits for permanent chapter unlocks (100 Cr) & live tests (20–100 Cr)",
+        "2,600 Credits for permanent chapter unlocks (100 Cr) & live tests (20–100 Cr)",
       badgeStyle: "bg-emerald-100 border-emerald-300 text-emerald-900",
       cardStyle: "border-emerald-300 bg-emerald-50/50",
     };
   }
   if (plan === "WEEKLY") {
     return {
-      name: "📘 Subject Pack (₹499 • 1,200 Vidya Credits)",
+      name: "📘 Subject Pack (1,200 Credits)",
       badge: "📘 SUBJECT PACK ACTIVE",
       summary:
-        "1,200 Vidya Credits for permanent chapter unlocks (100 Cr) & live tests (20–100 Cr)",
+        "1,200 Credits for permanent chapter unlocks (100 Cr) & live tests (20–100 Cr)",
       badgeStyle: "bg-indigo-100 border-indigo-300 text-indigo-900",
       cardStyle: "border-indigo-300 bg-indigo-50/50",
     };
   }
   if (plan === "ONE_DAY") {
     return {
-      name: "🪙 Starter Pack (₹199 • 400 Vidya Credits)",
+      name: "🪙 Starter Pack (400 Credits)",
       badge: "🪙 STARTER PACK ACTIVE",
-      summary: "400 Vidya Credits (Unlocks 4 chapters permanently or 20 Daily Tests)",
+      summary: "400 Credits (Unlocks 4 chapters permanently or 20 Daily Tests)",
       badgeStyle: "bg-amber-100 border-amber-300 text-amber-900",
       cardStyle: "border-amber-300 bg-amber-50/50",
     };
@@ -99,7 +99,7 @@ function getPlanDetails(
     name: "Welcome Scholar Wallet (300 Free Credits)",
     badge: "WELCOME WALLET ACTIVE",
     summary:
-      "First 2 chapters of every subject are 100% Free + 300 Free Welcome Credits on sign-up. Top up anytime from ₹199 or unlock your entire class for ₹1,999.",
+      "First 2 chapters of every subject are 100% Free + 300 Free Welcome Credits on sign-up. Top up credits anytime in your local currency (USD, GBP, EUR, AED, SGD, INR) or unlock your entire class.",
     badgeStyle: "bg-slate-200 border-slate-300 text-slate-700",
     cardStyle: "border-slate-200 bg-slate-50",
   };
@@ -300,7 +300,7 @@ function AuthAndSettingsContent() {
         board,
         classGrade,
         preferredLanguage,
-        city: city || "Delhi",
+        city: city || "Global",
         school: school || "VidyaLila Scholar",
       });
       setSubmitting(false);
@@ -642,7 +642,7 @@ function AuthAndSettingsContent() {
 
               <div className="rounded-xl bg-white border border-slate-200 p-3.5">
                 <p className="text-[11px] font-extrabold uppercase text-slate-400">
-                  Earned Gyan Points (GP)
+                  Earned Scholar XP (GP)
                 </p>
                 <p className="text-xl font-extrabold text-emerald-600 mt-1">
                   {profile.xp.toLocaleString()} GP
@@ -1135,7 +1135,7 @@ function AuthAndSettingsContent() {
                         type="text"
                         value={city}
                         onChange={(e) => setCity(e.target.value)}
-                        placeholder="e.g., Delhi, Mumbai"
+                        placeholder="e.g., London, New York, Singapore, Dubai, Delhi"
                         className={inputClass}
                       />
                     </div>

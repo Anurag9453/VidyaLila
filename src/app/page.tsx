@@ -92,8 +92,8 @@ function HomeContent() {
   }[] = [
     {
       grade: 9,
-      title: "Class 9",
-      subtitle: "Foundation • Motion, Atoms & Polynomials",
+      title: "Grade 9 / Class 9",
+      subtitle: "Year 10 / High School Foundation • Motion, Atoms & Algebra",
       emoji: "🌱",
       bg: "bg-emerald-50/70",
       border: "border-emerald-200 hover:border-emerald-400",
@@ -103,8 +103,8 @@ function HomeContent() {
     },
     {
       grade: 10,
-      title: "Class 10",
-      subtitle: "Core Concepts • Light, Electricity, Reactions & Trigonometry",
+      title: "Grade 10 / Class 10",
+      subtitle: "Year 11 / GCSE / IGCSE / Board • Optics, Electricity & Reactions",
       emoji: "🎯",
       bg: "bg-amber-50/70",
       border: "border-amber-200 hover:border-amber-400",
@@ -114,8 +114,8 @@ function HomeContent() {
     },
     {
       grade: 11,
-      title: "Class 11",
-      subtitle: "Senior Secondary • Vectors, Chemical Bonding & Calculus",
+      title: "Grade 11 / Class 11",
+      subtitle: "Year 12 / Senior High • Vectors, Chemical Bonding & Calculus",
       emoji: "🚀",
       bg: "bg-slate-100/90",
       border: "border-slate-300",
@@ -125,8 +125,8 @@ function HomeContent() {
     },
     {
       grade: 12,
-      title: "Class 12",
-      subtitle: "Board Exam Focus • Electrostatics, Solutions & Integrals",
+      title: "Grade 12 / Class 12",
+      subtitle: "Year 13 / AP / A-Level • Electrostatics, Solutions & Integrals",
       emoji: "👑",
       bg: "bg-slate-100/90",
       border: "border-slate-300",
@@ -254,11 +254,11 @@ function HomeContent() {
       {currentStep === 1 && (
         <section className="text-center max-w-4xl mx-auto space-y-4 pt-2">
           <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            Which class are you in?
+            Which grade or class are you in?
           </h1>
 
           <p className="text-sm sm:text-base text-slate-500 font-medium">
-            Select your class below to explore interactive chapters and earn GP (Gyan Points).
+            Select your grade below to explore interactive chapters, play concept games, and earn XP.
           </p>
 
           {comingSoonAlert && (
@@ -432,7 +432,7 @@ function HomeContent() {
                       className="btn-3d-emerald px-4 py-3 text-xs font-extrabold flex items-center gap-1.5 cursor-pointer"
                     >
                       <span>👑</span>
-                      <span>Unlock All Class {selectedClass} (₹1,999)</span>
+                      <span>Unlock All Grade / Class {selectedClass} Chapters</span>
                     </button>
                   )}
                   <button
@@ -634,7 +634,7 @@ function HomeContent() {
                   Ready for today&apos;s Daily &amp; Weekly Live Quizzes?
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                  Compete from home with students across India and boost your All-India rank.
+                  Compete from anywhere in the world and climb the Global Leaderboard.
                 </p>
               </div>
             </div>

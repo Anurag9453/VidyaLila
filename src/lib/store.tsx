@@ -1106,7 +1106,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       const savedAuth = localStorage.getItem("vidyalila_is_auth_v4");
       if (savedAuth === "true") setIsAuthenticated(true);
-      const savedModules = localStorage.getItem("vidyalila_modules_v15");
+      const savedModules = localStorage.getItem("vidyalila_modules_v16");
       if (savedModules) setModules(JSON.parse(savedModules));
       const savedContests = localStorage.getItem("vidyalila_contests_v11");
       if (savedContests) setContests(JSON.parse(savedContests));
@@ -2573,7 +2573,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const updated = [mod, ...modules];
     setModules(updated);
     try {
-      localStorage.setItem("vidyalila_modules_v15", JSON.stringify(updated));
+      localStorage.setItem("vidyalila_modules_v16", JSON.stringify(updated));
     } catch {
       // ignore
     }

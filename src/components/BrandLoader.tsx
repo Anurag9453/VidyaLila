@@ -8,7 +8,7 @@ import { Sparkles, BookOpen, ShieldCheck } from "lucide-react";
 const ROUTE_LOADING_MESSAGES: Record<string, string> = {
   "/": "Loading Interactive Study Chapters...",
   "/contests": "Preparing Live & Upcoming Subject Quiz Arena...",
-  "/leaderboard": "Calculating All-India Scholar GP & Contest Rankings...",
+  "/leaderboard": "Calculating Global Scholar XP & Contest Rankings...",
   "/studio": "Opening Academic CMS & Review Studio...",
   "/auth": "Loading Scholar Profile & Quiz Pass Wallet...",
   "/terms": "Loading Academic Safeguards & Fair-Play Terms...",

@@ -25,7 +25,7 @@ export function CelebrationModal() {
 
         {celebration.xpEarned > 0 ? (
           <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 border-2 border-emerald-300 px-4 py-1 text-xs font-black uppercase tracking-wider text-emerald-800 mb-3">
-            <Sparkles className="h-4 w-4 text-emerald-600" />+{celebration.xpEarned} GP (Gyan Points) Credited!
+            <Sparkles className="h-4 w-4 text-emerald-600" />+{celebration.xpEarned} XP Credited!
           </div>
         ) : (
           <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100 border-2 border-indigo-300 px-4 py-1 text-xs font-black uppercase tracking-wider text-indigo-800 mb-3">
@@ -55,9 +55,9 @@ export function CelebrationModal() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs font-bold text-slate-500">Total GP</p>
+            <p className="text-xs font-bold text-slate-500">Total XP</p>
             <p className="text-lg font-black text-amber-600">
-              {profile.xp.toLocaleString()} GP
+              {profile.xp.toLocaleString()} XP
             </p>
           </div>
         </div>

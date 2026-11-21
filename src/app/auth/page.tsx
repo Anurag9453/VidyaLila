@@ -642,10 +642,10 @@ function AuthAndSettingsContent() {
 
               <div className="rounded-xl bg-white border border-slate-200 p-3.5">
                 <p className="text-[11px] font-extrabold uppercase text-slate-400">
-                  Earned Scholar XP (GP)
+                  Earned Scholar XP
                 </p>
                 <p className="text-xl font-extrabold text-emerald-600 mt-1">
-                  {profile.xp.toLocaleString()} GP
+                  {profile.xp.toLocaleString()} XP
                 </p>
                 <p className="text-[10px] font-bold text-slate-400 mt-0.5">
                   Earned strictly by studying &amp; unit tests

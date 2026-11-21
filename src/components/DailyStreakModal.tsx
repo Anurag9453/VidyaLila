@@ -386,7 +386,7 @@ export function DailyStreakModal() {
 
                 {earnedCreditsThisShot > 0 && (
                   <span className="rounded-full bg-emerald-600 px-3 py-0.5 text-xs font-black text-white">
-                    +15 🪙 &amp; +25 GP
+                    +15 🪙 &amp; +25 XP
                   </span>
                 )}
               </div>

@@ -1880,7 +1880,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (alreadyDone) {
       setCelebration({
         title: "Revision Complete! 🔄",
-        subtitle: "You revised this unit and earned +25 Revision GP!",
+        subtitle: "You revised this unit and earned +25 Revision XP!",
         xpEarned: 25,
         badgeEmoji: "✨",
       });
@@ -1927,8 +1927,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         ? `Chapter Completed! Unlocked "${bonusBadge.name}" Badge!`
         : "Unit Test Passed! Awesome Job! 🎉",
       subtitle: bonusBadge
-        ? `You finished every unit in ${targetModule?.title} and earned a +100 GP Chapter Completion Bonus!`
-        : "Your GP (Gyan Points) have been credited to your VidyaLila Scholar profile.",
+        ? `You finished every unit in ${targetModule?.title} and earned a +100 XP Chapter Completion Bonus!`
+        : "Your XP has been credited to your VidyaLila Scholar profile.",
       xpEarned: totalEarned,
       badgeEmoji: bonusBadge ? bonusBadge.emoji : "⚡",
     });

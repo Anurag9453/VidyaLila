@@ -917,7 +917,7 @@ export function DoubtDrawer({
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder={
                     replyingTo
-                      ? `Write your Hinglish explanation for ${replyingTo.senderName} (+5 GP if marked helpful)...`
+                      ? `Write your explanation for ${replyingTo.senderName} (+5 XP if marked helpful)...`
                       : `Ask a doubt on ${chapterTag} (No foul language allowed)...`
                   }
                   className="flex-1 rounded-2xl border-2 border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none resize-none"

@@ -624,7 +624,7 @@ export default function WriterStudioPage() {
 
             <div>
               <label className="block text-xs font-black text-slate-700 mb-1.5">
-                Unit GP (Gyan Points) Reward
+                Unit XP Reward
               </label>
               <input
                 type="number"

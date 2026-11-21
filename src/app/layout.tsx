@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "VidyaLila | Interactive Story-Driven Study Units & Live Quiz Arena",
   description:
-    "India's interactive school learning platform offering free chapter-wise study units, GP (Gyan Points) rewards, scholar ranks, and live daily & monthly quizzes for Class 9-12.",
+    "Interactive global school learning platform offering free chapter-wise study units, XP rewards, scholar ranks, and live daily & monthly quizzes for Grade / Class 9-12.",
 };
 
 export default function RootLayout({

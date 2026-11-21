@@ -3008,7 +3008,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                   {isHinglish
                     ? "Interactive Units aur Tests"
                     : "Interactive Units & Practice Tests"}{" "}
-                  (+{mod.totalXp} GP)
+                  (+{mod.totalXp} XP)
                 </p>
               </div>
             </div>
@@ -3569,7 +3569,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                   </React.Fragment>
                 ))}
 
-                {/* INTERACTIVE UNIT CONCEPT GAME ARCADE (4 Mini-Games • English Questions • Bonus GP) */}
+                {/* INTERACTIVE UNIT CONCEPT GAME ARCADE (4 Mini-Games • English Questions • Bonus XP) */}
                 <UnitGameArcade unit={activeUnit} />
 
                 {/* UNIT PRACTICE TEST BOX (10 Questions • Requires Login to Access) */}
@@ -3580,13 +3580,13 @@ function TrailDetailContent({ slug }: { slug: string }) {
             <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
               <div>
                 <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-600">
-                  {totalQuestions} Practice Questions • Earn up to {totalMarks} GP
+                  {totalQuestions} Practice Questions • Earn up to {totalMarks} XP
                 </span>
                 <h3 className="mt-1 text-xl sm:text-2xl font-extrabold text-slate-900">
                   Unit Practice Test
                 </h3>
                 <p className="mt-1 text-xs font-medium text-slate-500">
-                  Earn up to 10 GP per question (1st retry: 5 GP, subsequent retry: 2 GP floor when solved).
+                  Earn up to 10 XP per question (1st retry: 5 XP, subsequent retry: 2 XP floor when solved).
                 </p>
               </div>
 
@@ -3602,7 +3602,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                         : "bg-emerald-50 border-emerald-200 text-emerald-700"
                     }`}
                   >
-                    Score: {currentTotalScore} / {totalMarks} GP
+                    Score: {currentTotalScore} / {totalMarks} XP
                   </span>
                 </div>
               ) : (
@@ -3656,7 +3656,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                     </h4>
                     <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
                       All chapter study guides and diagrams are <strong>100% open to read</strong>! Sign in or create your free student account in 30 seconds to attempt the Practice Test, view step-by-step solutions, and earn up to{" "}
-                      <strong className="text-emerald-700">+{totalMarks} GP</strong>.
+                      <strong className="text-emerald-700">+{totalMarks} XP</strong>.
                     </p>
                   </div>
 
@@ -3768,7 +3768,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                 <div className="flex items-center gap-2.5">
                   <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0" />
                   <span>
-                    Quiz Completed! All {totalQuestions} checkpoint questions solved. Final Score: {currentTotalScore} / {totalMarks} GP.
+                    Quiz Completed! All {totalQuestions} checkpoint questions solved. Final Score: {currentTotalScore} / {totalMarks} XP.
                   </span>
                 </div>
               </div>
@@ -3929,7 +3929,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                 ) : (
                   <span className="inline-flex items-center gap-2 rounded-2xl bg-emerald-100 border border-emerald-300 px-5 py-3 text-xs font-extrabold text-emerald-800">
                     <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                    Quiz Completed • Final Score: {currentTotalScore} / {totalMarks} GP
+                    Quiz Completed • Final Score: {currentTotalScore} / {totalMarks} XP
                   </span>
                 )}
               </div>

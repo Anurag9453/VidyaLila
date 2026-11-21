@@ -552,7 +552,7 @@ export default function AdminPortalPage() {
       "Daily Quiz Credits Left",
       "Weekly Quiz Credits Left",
       "Daily Streak (Days)",
-      "Gyan Points (GP)",
+      "Scholar XP",
       "Units Completed",
       "Contest Rating",
       "School",
@@ -630,7 +630,7 @@ export default function AdminPortalPage() {
               Founder &amp; Student Performance Analytics
             </h1>
             <p className="text-xs sm:text-sm font-medium text-slate-300 max-w-2xl">
-              Track total onboarded students, new sign-ups in the last 30 days, active Quiz Pass plans (Basic / VIP / Pro / Free), daily study streaks, and earned Gyan Points (GP) in real time.
+              Track total onboarded students, new sign-ups in the last 30 days, active Quiz Pass plans (Basic / VIP / Pro / Free), daily study streaks, and earned Scholar XP in real time.
             </p>
           </div>
 
@@ -752,11 +752,11 @@ export default function AdminPortalPage() {
           </p>
         </div>
 
-        {/* 5. Total & Average Gyan Points (GP) */}
+        {/* 5. Total & Average Scholar XP */}
         <div className="rounded-3xl border-2 border-indigo-200 bg-indigo-50/40 p-5 shadow-[0_6px_0_0_#c7d2fe] space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-indigo-800">
-              Student GPs Earned
+              Student XP Earned
             </span>
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white">
               <TrendingUp className="h-5 w-5" />
@@ -764,10 +764,10 @@ export default function AdminPortalPage() {
           </div>
           <p className="text-3xl font-extrabold text-indigo-950">
             {kpis.totalGp.toLocaleString()}
-            <span className="text-xs font-bold text-indigo-700 ml-1">GP</span>
+            <span className="text-xs font-bold text-indigo-700 ml-1">XP</span>
           </p>
           <p className="text-xs font-bold text-indigo-800">
-            Avg per student: {kpis.avgGp.toLocaleString()} GP
+            Avg per student: {kpis.avgGp.toLocaleString()} XP
           </p>
         </div>
       </section>
@@ -1393,7 +1393,7 @@ export default function AdminPortalPage() {
                 className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 pl-8 pr-3 py-2.5 text-xs sm:text-sm font-extrabold text-slate-800 focus:border-indigo-500 focus:bg-white focus:outline-none"
               >
                 <option value="NEWEST">Sort: Newest Joined</option>
-                <option value="GP_DESC">Sort: Highest GPs</option>
+                <option value="GP_DESC">Sort: Highest XP</option>
                 <option value="STREAK_DESC">Sort: Highest Streak 🔥</option>
                 <option value="PLAN_DESC">Sort: Active Plan Tier</option>
               </select>
@@ -1442,7 +1442,7 @@ export default function AdminPortalPage() {
                   <th className="py-3.5 px-4">Class &amp; Language</th>
                   <th className="py-3.5 px-4">Current Plan &amp; Credits</th>
                   <th className="py-3.5 px-4">Daily Streak 🔥</th>
-                  <th className="py-3.5 px-4">Gyan Points (GP) &amp; Units</th>
+                  <th className="py-3.5 px-4">Scholar XP &amp; Units</th>
                   <th className="py-3.5 px-4">Onboarded Date</th>
                 </tr>
               </thead>
@@ -1574,11 +1574,11 @@ export default function AdminPortalPage() {
                         </div>
                       </td>
 
-                      {/* Gyan Points (GP) & Units */}
+                      {/* Scholar XP & Units */}
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-1.5">
                           <span className="text-base font-extrabold text-emerald-700">
-                            {student.gp.toLocaleString()} GP
+                            {student.gp.toLocaleString()} XP
                           </span>
                         </div>
                         <p className="text-[11px] font-bold text-slate-500 flex items-center gap-1 mt-0.5">

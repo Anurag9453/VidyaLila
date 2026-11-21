@@ -237,12 +237,12 @@ export function Navbar() {
 
                 <Link
                   href="/leaderboard"
-                  title="Scholar XP / GP"
+                  title="Scholar XP"
                   className="flex items-center gap-1 rounded-xl bg-emerald-50 border border-emerald-200 px-2 sm:px-2.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold text-emerald-800 hover:bg-emerald-100 transition"
                 >
                   <span>{currentRank.badgeEmoji}</span>
                   <span>{profile.xp.toLocaleString()}</span>
-                  <span className="hidden sm:inline">GP</span>
+                  <span className="hidden sm:inline">XP</span>
                 </Link>
 
                 <div className="flex items-center gap-1 rounded-xl bg-amber-50 border border-amber-300 px-2.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-extrabold text-amber-900">

@@ -380,7 +380,7 @@ function DoubtsLoungeContent() {
     });
 
     if (msg.senderRole === "student") {
-      setGpToast(`Marked ${msg.senderName}'s explanation as Helpful (+5 GP awarded!)`);
+      setGpToast(`Marked ${msg.senderName}'s explanation as Helpful (+5 XP awarded!)`);
       setTimeout(() => setGpToast(null), 3500);
     }
 
@@ -1187,7 +1187,7 @@ function DoubtsLoungeContent() {
                               {msg.isHelpfulSolution && (
                                 <span className="inline-flex items-center gap-1 rounded-xl bg-emerald-100 border border-emerald-300 px-2.5 py-1 text-xs font-black text-emerald-800">
                                   <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                                  <span>Helpful Solution (+5 GP)</span>
+                                  <span>Helpful Solution (+5 XP)</span>
                                 </span>
                               )}
 
@@ -1303,7 +1303,7 @@ function DoubtsLoungeContent() {
                                       )}
                                       {rep.isHelpfulSolution && !isRepBot && (
                                         <span className="inline-flex items-center gap-1 rounded-md bg-emerald-100 border border-emerald-300 px-2 py-0.5 text-[10px] font-black text-emerald-800">
-                                          <CheckCircle2 className="h-3 w-3 text-emerald-600" /> +5 GP Helpful
+                                          <CheckCircle2 className="h-3 w-3 text-emerald-600" /> +5 XP Helpful
                                         </span>
                                       )}
                                       <span className="text-[11px] font-semibold text-slate-400">
@@ -1452,8 +1452,8 @@ function DoubtsLoungeContent() {
                     onChange={(e) => setInputText(e.target.value)}
                     placeholder={
                       replyingTo
-                        ? `Write a respectful Hinglish explanation for ${replyingTo.senderName} (+5 GP when upvoted)...`
-                        : `Ask a Class ${selectedGrade} doubt in Hinglish or tag @VidyaBot (No foul language allowed)...`
+                        ? `Write a respectful explanation for ${replyingTo.senderName} (+5 XP when upvoted)...`
+                        : `Ask a Class ${selectedGrade} doubt or tag @VidyaBot (No foul language allowed)...`
                     }
                     className="flex-1 rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3 text-xs sm:text-sm font-semibold text-slate-900 focus:border-indigo-500 focus:bg-white focus:outline-none resize-none"
                   />

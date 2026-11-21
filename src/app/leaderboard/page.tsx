@@ -760,7 +760,7 @@ function LeaderboardContent() {
                 {currentRank.badgeEmoji} {currentRank.name}
               </p>
               <p className="text-[11px] font-bold text-slate-500">
-                {profile.xp.toLocaleString()} GP
+                {profile.xp.toLocaleString()} XP
               </p>
             </div>
 
@@ -937,7 +937,7 @@ function LeaderboardContent() {
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  📚 Sort by Study GP
+                  📚 Sort by Study XP
                 </button>
                 <button
                   onClick={() => setSortMode("RATING")}
@@ -1255,7 +1255,7 @@ function LeaderboardContent() {
                     </div>
                     <div className="text-right">
                       <p className="text-xs font-black text-emerald-700">
-                        {row.xp.toLocaleString()} GP
+                        {row.xp.toLocaleString()} XP
                       </p>
                       <p className="text-[10px] font-bold text-sky-700">
                         {row.rating} Elo
@@ -1320,7 +1320,7 @@ function LeaderboardContent() {
                   <th className="py-3 px-4">Score</th>
                   <th className="py-3 px-4">Accuracy</th>
                   <th className="py-3 px-4">Time Taken</th>
-                  <th className="py-3 px-4 text-right">GP &amp; Rating</th>
+                  <th className="py-3 px-4 text-right">XP &amp; Rating</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 text-sm">
@@ -1387,7 +1387,7 @@ function LeaderboardContent() {
                     </td>
                     <td className="py-3.5 px-4 text-right">
                       <span className="font-black text-emerald-600">
-                        +{row.xpEarned} GP
+                        +{row.xpEarned} XP
                       </span>
                       <span className="ml-2 text-xs font-extrabold text-sky-700">
                         (+{row.ratingDelta} Elo)
@@ -1496,7 +1496,7 @@ function LeaderboardContent() {
                           </td>
                           <td className="py-3.5 px-4 text-right">
                             <span className="font-black text-emerald-700">
-                              +{row.xpEarned} GP
+                              +{row.xpEarned} XP
                             </span>
                             <span className="ml-2 text-xs font-extrabold text-sky-700">
                               (+{row.ratingDelta} Elo)
@@ -1519,7 +1519,7 @@ function LeaderboardContent() {
                   <th className="py-3 px-4">City</th>
                   <th className="py-3 px-4">Scholar Rank</th>
                   <th className="py-3 px-4">Quiz Rating</th>
-                  <th className="py-3 px-4 text-right">Total GP</th>
+                  <th className="py-3 px-4 text-right">Total XP</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 text-sm">
@@ -1580,7 +1580,7 @@ function LeaderboardContent() {
                         {row.rating} Elo
                       </td>
                       <td className="py-4 px-4 text-right font-black text-emerald-600">
-                        {row.xp.toLocaleString()} GP
+                        {row.xp.toLocaleString()} XP
                       </td>
                     </tr>
                   );
@@ -1671,7 +1671,7 @@ function LeaderboardContent() {
                               {row.rating} Elo
                             </td>
                             <td className="py-4 px-4 text-right font-black text-emerald-600">
-                              {row.xp.toLocaleString()} GP
+                              {row.xp.toLocaleString()} XP
                               {row.isCurrentUser && overallRank15Cutoff && (
                                 <span className="block text-[10px] font-extrabold text-indigo-700">
                                   +
@@ -1679,7 +1679,7 @@ function LeaderboardContent() {
                                     10,
                                     overallRank15Cutoff.xp - row.xp
                                   ).toLocaleString()}{" "}
-                                  GP to reach #15
+                                  XP to reach #15
                                 </span>
                               )}
                             </td>

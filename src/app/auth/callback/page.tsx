@@ -50,7 +50,7 @@ function OAuthCallbackHandler() {
 
         if (session?.access_token) {
           if (active) {
-            setStatusText("Syncing your Scholar Profile & Gyan Points...");
+            setStatusText("Syncing your Scholar Profile & XP...");
           }
           await fetch("/api/auth/sync", {
             method: "POST",

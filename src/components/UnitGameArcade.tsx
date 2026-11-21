@@ -192,8 +192,8 @@ export function UnitGameArcade({ unit }: { unit: UnitItem }) {
       setLastXpBanner({
         xp: res.xpEarned,
         label: res.isFirstWin
-          ? `${title} Cleared! +${res.xpEarned} First-Win Bonus GP Added!`
-          : `${title} Practice Win! +${res.xpEarned} Revision GP Added!`,
+          ? `${title} Cleared! +${res.xpEarned} First-Win Bonus XP Added!`
+          : `${title} Practice Win! +${res.xpEarned} Revision XP Added!`,
       });
     },
     [awardMiniGameXp, unit.id]
@@ -640,7 +640,7 @@ export function UnitGameArcade({ unit }: { unit: UnitItem }) {
             </span>
           </h3>
           <p className="text-xs sm:text-sm text-indigo-200/90 font-medium">
-            Master the definitions, formulas, and exam traps of this unit through 4 bite-sized games (All questions in English • Win +15 Bonus GP per game!).
+            Master the definitions, formulas, and exam traps of this unit through 4 bite-sized games (All questions in English • Win +15 Bonus XP per game!).
           </p>
         </div>
 
@@ -702,7 +702,7 @@ export function UnitGameArcade({ unit }: { unit: UnitItem }) {
             <span>{lastXpBanner.label}</span>
           </div>
           <span className="rounded-xl bg-emerald-400 text-slate-950 px-3 py-1 text-xs font-black shrink-0">
-            +{lastXpBanner.xp} GP ⚡
+            +{lastXpBanner.xp} XP ⚡
           </span>
         </div>
       )}

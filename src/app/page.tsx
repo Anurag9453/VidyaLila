@@ -576,7 +576,7 @@ function HomeContent() {
                         📚 {totalUnits} {totalUnits === 1 ? "Topic" : "Topics"}
                       </span>
                       <span className="rounded-xl bg-amber-50 border border-amber-200 px-2.5 py-1 text-amber-800">
-                        ⚡ +{chap.totalXp} GP
+                        ⚡ +{chap.totalXp} XP
                       </span>
                       <span className="rounded-xl bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-emerald-700">
                         {completedUnits}/{totalUnits} Done

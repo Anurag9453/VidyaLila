@@ -8,7 +8,14 @@
 
 html,
 body {
-  background-color: #fafbff;
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(at 12% 8%, rgba(99, 102, 241, 0.09) 0px, transparent 48%),
+    radial-gradient(at 88% 12%, rgba(16, 185, 129, 0.09) 0px, transparent 48%),
+    radial-gradient(at 50% 90%, rgba(245, 158, 11, 0.07) 0px, transparent 50%),
+    radial-gradient(#cbd5e1 0.85px, transparent 0.85px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+  background-attachment: fixed;
   color: #1e293b;
   font-family: var(--font-jakarta), "Segoe UI Symbol", "Apple Symbols", "Noto Sans Math", "STIX Two Math", system-ui, -apple-system, sans-serif;
   letter-spacing: -0.01em;
@@ -21,22 +28,46 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-/* Tactile 3D Game Card & Button Utilities */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Tactile 3D Game Card, Glassmorphism & Button Utilities */
 @layer components {
   .game-card {
-    @apply rounded-2xl sm:rounded-3xl bg-white border-2 border-slate-200/90 shadow-[0_6px_0_0_#e2e8f0] transition-all duration-200;
+    @apply rounded-2xl sm:rounded-3xl bg-white/95 backdrop-blur-md border-2 border-slate-200/90 shadow-[0_6px_0_0_#e2e8f0] transition-all duration-200;
+  }
+  .bento-card {
+    @apply relative overflow-hidden rounded-3xl bg-white/90 backdrop-blur-md border-2 border-slate-200/90 shadow-[0_8px_24px_-6px_rgba(15,23,42,0.06),0_6px_0_0_#e2e8f0] transition-all duration-300;
+  }
+  .animate-float {
+    animation: floatSlow 4s ease-in-out infinite;
   }
   .btn-3d-emerald {
     font-family: var(--font-outfit), sans-serif;
-    @apply rounded-xl sm:rounded-2xl bg-emerald-500 border-2 border-emerald-600 border-b-[4px] text-white font-bold shadow-sm hover:bg-emerald-400 active:translate-y-[2px] active:border-b-2 transition-all;
+    @apply rounded-xl sm:rounded-2xl bg-gradient-to-b from-emerald-400 to-emerald-500 border-2 border-emerald-600 border-b-[4px] text-white font-bold shadow-sm hover:from-emerald-300 hover:to-emerald-400 active:translate-y-[2px] active:border-b-2 transition-all;
   }
   .btn-3d-amber {
     font-family: var(--font-outfit), sans-serif;
-    @apply rounded-xl sm:rounded-2xl bg-amber-400 border-2 border-amber-500 border-b-[4px] text-slate-900 font-bold shadow-sm hover:bg-amber-300 active:translate-y-[2px] active:border-b-2 transition-all;
+    @apply rounded-xl sm:rounded-2xl bg-gradient-to-b from-amber-300 to-amber-400 border-2 border-amber-500 border-b-[4px] text-slate-900 font-bold shadow-sm hover:from-amber-200 hover:to-amber-300 active:translate-y-[2px] active:border-b-2 transition-all;
   }
   .btn-3d-indigo {
     font-family: var(--font-outfit), sans-serif;
-    @apply rounded-xl sm:rounded-2xl bg-indigo-600 border-2 border-indigo-700 border-b-[4px] text-white font-bold shadow-sm hover:bg-indigo-500 active:translate-y-[2px] active:border-b-2 transition-all;
+    @apply rounded-xl sm:rounded-2xl bg-gradient-to-b from-indigo-500 to-indigo-600 border-2 border-indigo-700 border-b-[4px] text-white font-bold shadow-sm hover:from-indigo-400 hover:to-indigo-500 active:translate-y-[2px] active:border-b-2 transition-all;
   }
   .btn-3d-white {
     font-family: var(--font-outfit), sans-serif;

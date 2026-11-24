@@ -19,6 +19,12 @@ import {
   Lock,
   Unlock,
   Sparkles,
+  Flame,
+  Gamepad2,
+  Trophy,
+  Zap,
+  Globe2,
+  BookOpen,
 } from "lucide-react";
 import { PaymentModal, PassPackageType } from "@/components/PaymentModal";
 
@@ -30,8 +36,10 @@ function HomeContent() {
     profile,
     isAuthenticated,
     modules,
-    selectedBoardFilter,
-    setSelectedBoardFilter,
+    currentRank,
+    nextRank,
+    setShowDailyTrickModal,
+    hasPlayedDailyTrickToday,
     isChapterFreeStarter,
     isChapterUnlocked,
     unlockChapterWithCredits,
@@ -250,19 +258,145 @@ function HomeContent() {
         </div>
       )}
 
-      {/* MINIMAL, SPACIOUS ENGLISH HEADER (Only on Step 1) */}
+      {/* LIVELY INTERACTIVE BENTO HERO & STUDENT QUEST HUB (Step 1) */}
       {currentStep === 1 && (
-        <section className="text-center max-w-4xl mx-auto space-y-4 pt-2">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            Which grade or class are you in?
-          </h1>
+        <section className="relative overflow-hidden rounded-3xl border-2 border-indigo-200/80 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 p-6 sm:p-9 text-white shadow-[0_12px_32px_-8px_rgba(30,27,75,0.45)]">
+          {/* Decorative Ambient Aurora Orbs */}
+          <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-indigo-500/25 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
+          <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-96 rounded-full bg-amber-400/10 blur-3xl" />
 
-          <p className="text-sm sm:text-base text-slate-500 font-medium">
-            Select your grade below to explore interactive chapters, play concept games, and earn XP.
-          </p>
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-7">
+            {/* Left Column: Dynamic Headline & Live Feature Pills */}
+            <div className="max-w-2xl space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 border border-emerald-400/40 px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-emerald-300">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span>Live Global STEM Arena • 🇬🇧 English &amp; 🇮🇳 Hinglish</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-400/20 border border-amber-300/40 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-amber-300">
+                  <Gamepad2 className="h-3.5 w-3.5" />
+                  <span>4-in-1 Concept Game Arcade in Every Topic</span>
+                </span>
+              </div>
+
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12]">
+                Master Physics, Chemistry &amp; Maths{" "}
+                <span className="bg-gradient-to-r from-amber-300 via-emerald-300 to-sky-300 bg-clip-text text-transparent">
+                  Like an Interactive Game.
+                </span>
+              </h1>
+
+              <p className="text-sm sm:text-base text-indigo-100/90 font-medium leading-relaxed">
+                Pick your grade below to dive into story-driven visual chapters, defuse concept vaults in the 4-in-1 Game Arcade, and climb the Global Leaderboard.
+              </p>
+
+              {/* Platform Live Counters */}
+              <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                <div className="inline-flex items-center gap-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 px-3.5 py-2 text-xs font-extrabold text-white">
+                  <BookOpen className="h-4 w-4 text-sky-300" />
+                  <span>{modules.length} Interactive Chapters</span>
+                </div>
+                <div className="inline-flex items-center gap-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 px-3.5 py-2 text-xs font-extrabold text-white">
+                  <Zap className="h-4 w-4 text-amber-300" />
+                  <span>
+                    {modules.reduce((acc, m) => acc + m.units.length, 0)}+ Visual Topics
+                  </span>
+                </div>
+                <div className="inline-flex items-center gap-2 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 px-3.5 py-2 text-xs font-extrabold text-white">
+                  <Gamepad2 className="h-4 w-4 text-emerald-300" />
+                  <span>
+                    {modules.reduce((acc, m) => acc + m.units.length * 4, 0)}+ Mini-Games
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Interactive Student Live Status & Daily Quest Card */}
+            <div className="w-full lg:w-[370px] shrink-0 rounded-3xl bg-white/10 backdrop-blur-xl border-2 border-white/20 p-5 space-y-4 shadow-xl">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-2xl shadow-md animate-float">
+                    {currentRank.badgeEmoji}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-indigo-200">
+                      {isAuthenticated ? profile.name : "Scholar Status"}
+                    </span>
+                    <h3 className="text-base font-black text-white flex items-center gap-1.5">
+                      <span>{currentRank.name} Tier</span>
+                      <span className="rounded-lg bg-emerald-500/30 border border-emerald-400/40 px-2 py-0.5 text-[11px] text-emerald-200">
+                        {profile.xp.toLocaleString()} XP
+                      </span>
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <span className="inline-flex items-center gap-1 rounded-xl bg-orange-500/25 border border-orange-400/40 px-2.5 py-1 text-xs font-black text-orange-200">
+                    <Flame className="h-3.5 w-3.5 text-orange-400 fill-orange-400" />
+                    <span>{profile.streak || 1}d</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* XP Progress Bar to Next Tier */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-[11px] font-extrabold text-indigo-200">
+                  <span>Progress to {nextRank ? `${nextRank.badgeEmoji} ${nextRank.name}` : "Max Tier"}</span>
+                  <span className="text-amber-300">
+                    {nextRank
+                      ? `${Math.max(0, nextRank.minXp - profile.xp).toLocaleString()} XP to go`
+                      : "Grandmaster Unlocked!"}
+                  </span>
+                </div>
+                <div className="h-2.5 w-full rounded-full bg-slate-950/60 p-0.5 overflow-hidden border border-white/10">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-amber-300 to-sky-400 transition-all duration-500"
+                    style={{
+                      width: `${
+                        nextRank
+                          ? Math.min(
+                              100,
+                              Math.max(
+                                12,
+                                Math.round(
+                                  ((profile.xp - currentRank.minXp) /
+                                    Math.max(1, nextRank.minXp - currentRank.minXp)) *
+                                    100
+                                )
+                              )
+                            )
+                          : 100
+                      }%`,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Quick Interactive Action Buttons */}
+              <div className="grid grid-cols-2 gap-2.5 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setShowDailyTrickModal(true)}
+                  className="btn-3d-amber px-3 py-2.5 text-xs font-black flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <Flame className="h-4 w-4 text-orange-600 fill-orange-500" />
+                  <span>{hasPlayedDailyTrickToday ? "Daily Trick ✓" : "Daily Trick (+15🪙)"}</span>
+                </button>
+                <Link
+                  href="/leaderboard"
+                  className="rounded-xl sm:rounded-2xl bg-white/15 hover:bg-white/25 border-2 border-white/25 px-3 py-2.5 text-xs font-extrabold text-white flex items-center justify-center gap-1.5 transition"
+                >
+                  <Trophy className="h-4 w-4 text-amber-300" />
+                  <span>Global Ranks</span>
+                </Link>
+              </div>
+            </div>
+          </div>
 
           {comingSoonAlert && (
-            <div className="rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-amber-900 flex items-center justify-between gap-3 shadow-sm text-left max-w-xl mx-auto">
+            <div className="relative z-10 mt-6 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-amber-900 flex items-center justify-between gap-3 shadow-md text-left">
               <div className="flex items-center gap-2.5 text-xs sm:text-sm font-extrabold">
                 <Lock className="h-4 w-4 text-amber-600 shrink-0" />
                 <span>{comingSoonAlert}</span>
@@ -270,7 +404,7 @@ function HomeContent() {
               <button
                 type="button"
                 onClick={() => setComingSoonAlert(null)}
-                className="text-amber-800 hover:text-amber-950 font-black text-xs px-2 py-1 rounded-md hover:bg-amber-100 transition shrink-0"
+                className="text-amber-800 hover:text-amber-950 font-black text-xs px-2.5 py-1 rounded-lg hover:bg-amber-100 transition shrink-0 cursor-pointer"
               >
                 ✕ Dismiss
               </button>
@@ -280,108 +414,246 @@ function HomeContent() {
       )}
 
       {/* ====================================================================
-          STEP 1: 4 CLEAN CLASS CARDS (Class 9, 10, 11, 12)
+          STEP 1: 4 INTERACTIVE 3D BENTO GRADE CARDS (Class 9, 10, 11, 12)
          ==================================================================== */}
       {currentStep === 1 && (
-        <section className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
-          {classCards.map((item) => (
-            <button
-              key={item.grade}
-              type="button"
-              onClick={() => handleSelectClass(item.grade)}
-              className={`group relative text-left rounded-2xl sm:rounded-3xl p-5 sm:p-7 flex items-center justify-between gap-4 transition-all ${
-                item.isLocked
-                  ? "bg-slate-100/80 border-2 border-slate-300 shadow-[0_4px_0_0_#cbd5e1] hover:border-slate-400 cursor-pointer"
-                  : `${item.bg} border-2 ${item.border} ${item.shadow} hover:-translate-y-1`
-              }`}
-            >
-              {item.isLocked && (
-                <span className="absolute -top-3 right-5 rounded-full bg-slate-900 text-amber-300 border border-amber-400/50 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
-                  <Lock className="h-3 w-3" />
-                  Coming Soon
-                </span>
-              )}
+        <section className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-wider text-indigo-600">
+                Step 1 of 3 • Select Your Academic Track
+              </span>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                Choose Your Grade / Class Level
+              </h2>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-extrabold text-emerald-800">
+              <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+              <span>First 2 Chapters Free in Every Subject</span>
+            </span>
+          </div>
 
-              <div className={`flex items-center gap-4 min-w-0 ${item.isLocked ? "opacity-60" : ""}`}>
-                <div
-                  className={`flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl ${
-                    item.isLocked ? "bg-slate-400" : item.iconBg
-                  } text-2xl sm:text-3xl text-white shadow-sm group-hover:scale-105 transition`}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+            {classCards.map((item) => {
+              const gradeModules = modules.filter((m) => m.classGrade === item.grade);
+              const gradeUnitsCount = gradeModules.reduce(
+                (acc, m) => acc + m.units.length,
+                0
+              );
+              const gradeTotalXp = gradeModules.reduce(
+                (acc, m) => acc + m.totalXp,
+                0
+              );
+
+              return (
+                <button
+                  key={item.grade}
+                  type="button"
+                  onClick={() => handleSelectClass(item.grade)}
+                  className={`group relative text-left rounded-3xl p-6 flex flex-col justify-between gap-5 transition-all duration-300 ${
+                    item.isLocked
+                      ? "bg-slate-100/85 border-2 border-slate-300 shadow-[0_5px_0_0_#cbd5e1] hover:border-slate-400 cursor-pointer"
+                      : `bg-white/95 backdrop-blur-md border-2 ${item.border} ${item.shadow} hover:-translate-y-1.5 hover:shadow-xl cursor-pointer`
+                  }`}
                 >
-                  {item.isLocked ? "🔒" : item.emoji}
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
-                      {item.title}
-                    </h2>
-                  </div>
-                  <p className="text-xs sm:text-sm font-medium text-slate-600 mt-1 line-clamp-2">
-                    {item.isLocked
-                      ? "Senior secondary syllabus is coming soon! Live chapters currently for Class 9 & 10."
-                      : item.subtitle}
-                  </p>
-                </div>
-              </div>
+                  {item.isLocked ? (
+                    <span className="absolute -top-3 right-5 rounded-full bg-slate-900 text-amber-300 border border-amber-400/50 px-3 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
+                      <Lock className="h-3 w-3" />
+                      Coming Soon
+                    </span>
+                  ) : (
+                    <span className="absolute -top-3 right-5 rounded-full bg-gradient-to-r from-indigo-600 to-emerald-600 text-white px-3 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1">
+                      <Sparkles className="h-3 w-3 text-amber-300" />
+                      {gradeModules.length} Chapters Live
+                    </span>
+                  )}
 
-              <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-white border border-slate-200 text-slate-700 group-hover:bg-slate-900 group-hover:text-white transition">
-                {item.isLocked ? (
-                  <Lock className="h-4 w-4 text-slate-400" />
-                ) : (
-                  <ArrowRight className="h-4 w-4" />
-                )}
-              </div>
-            </button>
-          ))}
+                  <div className={`space-y-4 ${item.isLocked ? "opacity-60" : ""}`}>
+                    <div className="flex items-center justify-between gap-3">
+                      <div
+                        className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl ${
+                          item.isLocked ? "bg-slate-400" : item.iconBg
+                        } text-3xl text-white shadow-md group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}
+                      >
+                        {item.isLocked ? "🔒" : item.emoji}
+                      </div>
+
+                      {!item.isLocked && (
+                        <div className="text-right">
+                          <span className="block text-[10px] font-black uppercase tracking-wider text-slate-400">
+                            Total Reward
+                          </span>
+                          <span className="text-sm font-black text-amber-600">
+                            ⚡ +{gradeTotalXp.toLocaleString()} XP
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm font-medium text-slate-600 mt-1.5 line-clamp-2 leading-relaxed">
+                        {item.isLocked
+                          ? "Senior secondary syllabus is coming soon! Live chapters currently for Grade 9 & 10."
+                          : item.subtitle}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Bottom Interactive Footer inside Grade Card */}
+                  <div className="space-y-3 pt-3 border-t border-slate-100 w-full">
+                    {!item.isLocked ? (
+                      <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-extrabold">
+                        <span className="rounded-lg bg-sky-50 border border-sky-200 px-2 py-0.5 text-sky-800">
+                          🔭 Physics
+                        </span>
+                        <span className="rounded-lg bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-emerald-800">
+                          🧪 Chemistry
+                        </span>
+                        <span className="rounded-lg bg-amber-50 border border-amber-200 px-2 py-0.5 text-amber-800">
+                          📐 Maths
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="text-[11px] font-bold text-slate-400">
+                        AP / IB / A-Level / Senior Track
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between text-xs font-extrabold">
+                      <span className="text-slate-500">
+                        {item.isLocked
+                          ? "Notify on Launch"
+                          : `${gradeUnitsCount} Topics • ${gradeUnitsCount * 4} Games`}
+                      </span>
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-800 group-hover:bg-indigo-600 group-hover:text-white transition">
+                        {item.isLocked ? (
+                          <Lock className="h-3.5 w-3.5 text-slate-400" />
+                        ) : (
+                          <ArrowRight className="h-4 w-4" />
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </section>
       )}
 
       {/* ====================================================================
-          STEP 2: 3 CLEAN SUBJECT CARDS (Physics, Chemistry, Mathematics)
+          STEP 2: 3 INTERACTIVE SUBJECT CARDS (Physics, Chemistry, Mathematics)
          ==================================================================== */}
       {currentStep === 2 && selectedClass && (
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {subjectCards.map((subj) => {
-            const subjChapters = modules.filter(
-              (m) =>
-                m.classGrade === selectedClass && m.subject === subj.subject
-            );
+        <section className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 px-1">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-wider text-indigo-600">
+                Step 2 of 3 • Grade / Class {selectedClass} STEM Curriculum
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                Pick a Subject Arena to Start Playing &amp; Learning
+              </h2>
+            </div>
+          </div>
 
-            return (
-              <button
-                key={subj.subject}
-                onClick={() => handleSelectSubject(subj.subject)}
-                className={`group text-left rounded-3xl ${subj.bg} border-2 ${subj.border} ${subj.shadow} p-7 flex flex-col justify-between space-y-8 hover:-translate-y-1 transition-all`}
-              >
-                <div className="space-y-4">
-                  <div
-                    className={`flex h-16 w-16 items-center justify-center rounded-2xl ${subj.iconBg} text-3xl text-white shadow-sm group-hover:scale-105 transition`}
-                  >
-                    {subj.emoji}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {subjectCards.map((subj) => {
+              const subjChapters = modules.filter(
+                (m) =>
+                  m.classGrade === selectedClass && m.subject === subj.subject
+              );
+              const subjTotalUnits = subjChapters.reduce(
+                (acc, m) => acc + m.units.length,
+                0
+              );
+              const subjCompletedUnits = subjChapters.reduce(
+                (acc, m) =>
+                  acc +
+                  m.units.filter((u) => profile.completedUnitIds.includes(u.id))
+                    .length,
+                0
+              );
+              const subjTotalXp = subjChapters.reduce(
+                (acc, m) => acc + m.totalXp,
+                0
+              );
+              const subjProgressPct =
+                subjTotalUnits > 0
+                  ? Math.round((subjCompletedUnits / subjTotalUnits) * 100)
+                  : 0;
+
+              return (
+                <button
+                  key={subj.subject}
+                  onClick={() => handleSelectSubject(subj.subject)}
+                  className={`group relative overflow-hidden text-left rounded-3xl bg-white/95 backdrop-blur-md border-2 ${subj.border} ${subj.shadow} p-7 flex flex-col justify-between space-y-6 hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300 cursor-pointer`}
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div
+                        className={`flex h-16 w-16 items-center justify-center rounded-2xl ${subj.iconBg} text-3xl text-white shadow-md group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}
+                      >
+                        {subj.emoji}
+                      </div>
+
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="rounded-full bg-amber-50 border border-amber-200 px-3 py-0.5 text-[11px] font-black text-amber-800">
+                          ⚡ +{subjTotalXp.toLocaleString()} XP
+                        </span>
+                        <span className="rounded-full bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 text-[10px] font-extrabold text-indigo-700">
+                          🎮 {subjTotalUnits * 4} Mini-Games
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <span className="text-xs font-black uppercase tracking-wider text-indigo-600">
+                        {subj.categoryLabel} • Grade {selectedClass}
+                      </span>
+                      <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-0.5 group-hover:text-indigo-600 transition">
+                        {subj.subject}
+                      </h2>
+                      <p className="text-sm font-medium text-slate-600 mt-2 leading-relaxed">
+                        {subj.tagline}
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                      {subj.categoryLabel}
-                    </span>
-                    <h2 className="text-2xl font-extrabold text-slate-900 mt-0.5">
-                      {subj.subject}
-                    </h2>
-                    <p className="text-sm font-medium text-slate-600 mt-2 leading-relaxed">
-                      {subj.tagline}
-                    </p>
-                  </div>
-                </div>
+                  <div className="space-y-3 pt-4 border-t border-slate-100 w-full">
+                    {/* Subject Mastery Progress Bar */}
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-[11px] font-extrabold text-slate-500">
+                        <span>
+                          {subjCompletedUnits} / {subjTotalUnits} Topics Completed
+                        </span>
+                        <span className="text-emerald-600">{subjProgressPct}%</span>
+                      </div>
+                      <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-300"
+                          style={{ width: `${Math.max(4, subjProgressPct)}%` }}
+                        />
+                      </div>
+                    </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-slate-200/70 text-xs font-bold text-slate-700">
-                  <span>{subjChapters.length} Chapters</span>
-                  <span className="inline-flex items-center gap-1 text-slate-900 group-hover:translate-x-1 transition">
-                    Explore <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </div>
-              </button>
-            );
-          })}
+                    <div className="flex items-center justify-between text-xs font-extrabold text-slate-800 pt-1">
+                      <span className="rounded-xl bg-slate-100 px-3 py-1.5">
+                        📚 {subjChapters.length} Chapters ({subjTotalUnits} Topics)
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 text-indigo-600 group-hover:translate-x-1 transition">
+                        <span>Open Arena</span>
+                        <ArrowRight className="h-4 w-4" />
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </section>
       )}
 
@@ -556,8 +828,8 @@ function HomeContent() {
                       </div>
                     </div>
 
-                    {/* Chapter Title & Subtitle */}
-                    <div className="space-y-1.5">
+                    {/* Chapter Title, Subtitle & Topic Preview Chips */}
+                    <div className="space-y-2.5">
                       <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 group-hover:text-indigo-600 transition line-clamp-2">
                         {chap.title}
                       </h3>
@@ -566,6 +838,23 @@ function HomeContent() {
                           ? chap.subtitleHinglish
                           : chap.subtitle}
                       </p>
+
+                      {/* Preview first 2 unit titles + game arcade tag */}
+                      <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                        {chap.units.slice(0, 2).map((u, uIdx) => (
+                          <span
+                            key={u.id}
+                            className="max-w-[180px] truncate rounded-lg bg-slate-50 border border-slate-200/80 px-2 py-0.5 text-[10px] font-bold text-slate-600"
+                          >
+                            {uIdx + 1}. {u.title.replace(/^Unit\s*\d+[:.-]?\s*/i, "")}
+                          </span>
+                        ))}
+                        {chap.units.length > 2 && (
+                          <span className="rounded-lg bg-indigo-50 border border-indigo-200/70 px-2 py-0.5 text-[10px] font-extrabold text-indigo-700">
+                            +{chap.units.length - 2} more
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -575,20 +864,28 @@ function HomeContent() {
                       <span className="rounded-xl bg-slate-100 border border-slate-200 px-2.5 py-1 text-slate-700">
                         📚 {totalUnits} {totalUnits === 1 ? "Topic" : "Topics"}
                       </span>
+                      <span className="rounded-xl bg-violet-50 border border-violet-200 px-2.5 py-1 text-violet-800">
+                        🎮 {totalUnits * 4} Games
+                      </span>
                       <span className="rounded-xl bg-amber-50 border border-amber-200 px-2.5 py-1 text-amber-800">
                         ⚡ +{chap.totalXp} XP
-                      </span>
-                      <span className="rounded-xl bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-emerald-700">
-                        {completedUnits}/{totalUnits} Done
                       </span>
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-emerald-500 transition-all duration-300"
-                        style={{ width: `${progressPct}%` }}
-                      />
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-[11px] font-extrabold text-slate-500">
+                        <span>Chapter Mastery</span>
+                        <span className="text-emerald-600">
+                          {completedUnits}/{totalUnits} Topics ({progressPct}%)
+                        </span>
+                      </div>
+                      <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300"
+                          style={{ width: `${progressPct}%` }}
+                        />
+                      </div>
                     </div>
 
                     {/* Card CTA */}
@@ -621,31 +918,80 @@ function HomeContent() {
         </section>
       )}
 
-      {/* SUBTLE BOTTOM BANNER FOR DAILY QUIZZES (Only on Step 1) */}
+      {/* DUAL BENTO SHOWCASE: LIVE QUIZ ARENA + 4-IN-1 GAME ARCADE (Step 1) */}
       {currentStep === 1 && (
-        <section className="pt-4">
-          <div className="rounded-3xl bg-white border-2 border-slate-200 p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-2xl">
-                ⚔️
-              </div>
-              <div>
-                <h3 className="text-base font-extrabold text-slate-900">
-                  Ready for today&apos;s Daily &amp; Weekly Live Quizzes?
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-2">
+          {/* Card 1: Global Live Quiz Arena */}
+          <div className="bento-card p-6 sm:p-7 flex flex-col justify-between gap-5 border-2 border-amber-200/90 bg-gradient-to-br from-amber-50/90 via-white to-orange-50/60">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 border border-amber-300 px-3 py-0.5 text-[10px] font-black uppercase tracking-wider text-amber-900">
+                  <Swords className="h-3 w-3 text-amber-700" />
+                  <span>Global UTC Live Competitions</span>
+                </span>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                  Daily Sprints &amp; Sunday Championships ⚔️
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                  Compete from anywhere in the world and climb the Global Leaderboard.
+                <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+                  Compete with scholars from London, Singapore, New York, Dubai &amp; New Delhi in timed English STEM quizzes. Score 75%+ to win Bonus Learning Credits!
                 </p>
+              </div>
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-400 text-3xl shadow-md">
+                🏆
               </div>
             </div>
 
-            <Link
-              href="/contests"
-              className="btn-3d-amber px-5 py-2.5 text-xs flex items-center gap-2 shrink-0"
-            >
-              <Swords className="h-4 w-4" />
-              <span>Go to Quiz Arena</span>
-            </Link>
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-amber-200/60">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-amber-900">
+                <Globe2 className="h-4 w-4 text-amber-600" />
+                <span>15:00 • 16:00 • 17:00 UTC Windows</span>
+              </div>
+              <Link
+                href="/contests"
+                className="btn-3d-amber px-5 py-2.5 text-xs font-black flex items-center gap-2"
+              >
+                <Swords className="h-4 w-4" />
+                <span>Enter Quiz Arena</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Card 2: 4-in-1 Unit Concept Game Arcade */}
+          <div className="bento-card p-6 sm:p-7 flex flex-col justify-between gap-5 border-2 border-indigo-200/90 bg-gradient-to-br from-indigo-50/90 via-white to-emerald-50/60">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-100 border border-indigo-300 px-3 py-0.5 text-[10px] font-black uppercase tracking-wider text-indigo-900">
+                  <Gamepad2 className="h-3 w-3 text-indigo-700" />
+                  <span>Built Into Every Study Topic</span>
+                </span>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                  4-in-1 Concept Game Arcade 🎮
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">
+                  No boring memorization! Every topic includes <strong>Concept Match-Up</strong>, <strong>60s Rapid Blitz</strong>, <strong>5-Wire Vault Defusal</strong>, and <strong>Exam Trap Buster</strong>.
+                </p>
+              </div>
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-3xl text-white shadow-md">
+                🕹️
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-indigo-100">
+              <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-extrabold text-indigo-900">
+                <span className="rounded-lg bg-white border border-indigo-200 px-2.5 py-1">🧩 Match-Up</span>
+                <span className="rounded-lg bg-white border border-indigo-200 px-2.5 py-1">⚡ 60s Blitz</span>
+                <span className="rounded-lg bg-white border border-indigo-200 px-2.5 py-1">💣 Vault Defusal</span>
+                <span className="rounded-lg bg-white border border-indigo-200 px-2.5 py-1">🛡️ Trap Buster</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleSelectClass(9)}
+                className="btn-3d-indigo px-4 py-2.5 text-xs font-black flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>Try a Game</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
           </div>
         </section>
       )}

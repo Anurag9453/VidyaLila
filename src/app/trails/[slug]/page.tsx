@@ -3178,91 +3178,288 @@ function TrailDetailContent({ slug }: { slug: string }) {
         </div>
       ) : !hasSelectedUnit ? (
         /* ====================================================================
-           VIEW 1: CHAPTER FULL UNIT LIST (When user clicks Chapter Name or View All)
+           VIEW 1: 3D INTERACTIVE TOPIC SKILL TREE / WINDING CHAPTER EXPEDITION
           ==================================================================== */
-        <div className="rounded-3xl bg-white border-2 border-slate-200 shadow-[0_6px_0_0_#e2e8f0] p-6 sm:p-8 space-y-5">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
-            <div className="flex items-center gap-2">
+        <div className="relative overflow-hidden rounded-3xl border-2 border-slate-200/90 bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 p-5 sm:p-8 text-white shadow-[0_14px_36px_-10px_rgba(15,23,42,0.55)] space-y-8">
+          {/* Decorative Ambient Aurora Orbs & Dot Matrix */}
+          <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-indigo-500/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-emerald-500/20 blur-3xl" />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-15"
+            style={{
+              backgroundImage:
+                "radial-gradient(rgba(255,255,255,0.45) 1px, transparent 1px)",
+              backgroundSize: "26px 26px",
+            }}
+          />
+
+          {/* Top Expedition Status Bar */}
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/15 p-4 sm:p-5">
+            <div className="flex flex-wrap items-center gap-2.5">
               {chapterIsFreeStarter ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 border border-emerald-300 px-3 py-1 text-xs font-extrabold text-emerald-800">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/20 border border-emerald-300/50 px-3 py-1 text-xs font-black text-emerald-300">
                   <Unlock className="h-3.5 w-3.5" />
                   <span>100% Free Starter Chapter</span>
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 border border-indigo-300 px-3 py-1 text-xs font-extrabold text-indigo-800">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-400/20 border border-indigo-300/50 px-3 py-1 text-xs font-black text-indigo-200">
                   <CheckCircle2 className="h-3.5 w-3.5" />
-                  <span>Unlocked Permanently with Vidya Credits</span>
+                  <span>Unlocked Permanently</span>
                 </span>
               )}
+              <span className="text-xs sm:text-sm font-extrabold text-indigo-100">
+                🗺️ Complete all {mod.units.length} Topic Nodes to unlock the{" "}
+                <strong className="text-amber-300">
+                  {mod.badgeEmoji} {mod.badgeName}
+                </strong>{" "}
+                Crest!
+              </span>
             </div>
+
             {isAuthenticated ? (
-              <span className="text-xs font-extrabold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-1">
+              <span className="text-xs font-black text-amber-300 bg-slate-950/60 border border-white/15 rounded-xl px-3.5 py-1.5">
                 🪙 Wallet: {(profile.credits ?? 300).toLocaleString()} Credits
               </span>
             ) : (
               <Link
                 href={`/auth?next=${encodeURIComponent(`/trails/${mod.slug}`)}`}
-                className="text-xs font-extrabold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-xl px-3 py-1 transition"
+                className="btn-3d-amber px-3.5 py-1.5 text-xs font-black"
               >
                 🔐 Sign In to Claim 🪙 300 Free Credits
               </Link>
             )}
           </div>
-          {/* All Units Stacked Vertically One Below the Other */}
-          <div className="relative pl-6 sm:pl-8 space-y-3 before:absolute before:left-2.5 sm:before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
+
+          {/* Winding S-Curve Topic Nodes */}
+          <div className="relative z-10 max-w-4xl mx-auto space-y-6 py-2">
             {mod.units.map((unit, idx) => {
               const isDone = profile.completedUnitIds.includes(unit.id);
+              const firstIncompleteIdx = mod.units.findIndex(
+                (u) => !profile.completedUnitIds.includes(u.id)
+              );
+              const isActiveQuest =
+                idx === (firstIncompleteIdx >= 0 ? firstIncompleteIdx : 0);
+
+              const cycle = idx % 4;
+              const alignClass =
+                cycle === 0
+                  ? "lg:mr-auto lg:ml-4"
+                  : cycle === 1
+                  ? "lg:mx-auto"
+                  : cycle === 2
+                  ? "lg:ml-auto lg:mr-4"
+                  : "lg:mx-auto";
 
               return (
-                <Link
+                <div
                   key={unit.id}
-                  href={`/trails/${mod.slug}?unit=${idx}`}
-                  className={`group relative block rounded-2xl border p-4 transition-all ${
-                    isDone
-                      ? "bg-emerald-50/50 border-emerald-200 hover:border-emerald-400"
-                      : "bg-slate-50/70 border-slate-200 hover:bg-white hover:border-indigo-300 hover:shadow-sm"
-                  }`}
+                  className="relative flex flex-col items-center"
                 >
-                  {/* Vertical Connector Dot */}
-                  <span
-                    className={`absolute -left-[25px] sm:-left-[29px] top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full border-2 ${
-                      isDone
-                        ? "bg-emerald-500 border-emerald-600 text-white"
-                        : "bg-white border-slate-300 group-hover:border-indigo-500"
-                    }`}
+                  {idx > 0 && (
+                    <div
+                      className={`mb-4 h-8 w-1.5 rounded-full ${
+                        isDone || isActiveQuest
+                          ? "bg-gradient-to-b from-emerald-400 to-amber-400 shadow-[0_0_12px_rgba(52,211,153,0.6)]"
+                          : "bg-slate-700"
+                      }`}
+                    />
+                  )}
+
+                  <Link
+                    href={`/trails/${mod.slug}?unit=${idx}`}
+                    className={`group w-full lg:w-[84%] ${alignClass} flex flex-col sm:flex-row items-center gap-4 sm:gap-5`}
                   >
-                    {isDone && <CheckCircle2 className="h-3.5 w-3.5" />}
-                  </span>
+                    {/* 3D Circular Topic Pedestal */}
+                    <div className="relative flex flex-col items-center shrink-0">
+                      {isActiveQuest && (
+                        <span className="mb-1.5 rounded-full bg-amber-400 text-slate-950 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider shadow-md animate-bounce">
+                          Start Here
+                        </span>
+                      )}
+                      <div
+                        className={`relative flex h-20 w-20 sm:h-24 sm:w-24 items-center justify-center rounded-full border-4 text-2xl sm:text-3xl font-black transition-transform duration-200 group-hover:scale-105 ${
+                          isDone
+                            ? "bg-gradient-to-b from-emerald-400 to-teal-600 border-emerald-200 text-white shadow-[0_7px_0_0_#047857,0_0_24px_rgba(16,185,129,0.5)]"
+                            : isActiveQuest
+                            ? "bg-gradient-to-b from-amber-300 via-amber-400 to-orange-500 border-white text-slate-950 shadow-[0_7px_0_0_#b45309,0_0_28px_rgba(251,191,36,0.65)]"
+                            : "bg-gradient-to-b from-indigo-500 to-violet-600 border-indigo-300 text-white shadow-[0_7px_0_0_#3730a3]"
+                        }`}
+                      >
+                        {isDone ? "✓" : idx + 1}
+                        <span className="absolute -bottom-2 rounded-full bg-slate-950 border border-white/80 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider text-white">
+                          TOPIC {idx + 1}
+                        </span>
+                      </div>
+                    </div>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
-                        {isHinglish && unit.titleHinglish ? unit.titleHinglish : unit.title}
+                    {/* Topic Card */}
+                    <div
+                      className={`flex-1 w-full rounded-3xl p-5 border-2 transition-all ${
+                        isActiveQuest
+                          ? "bg-white text-slate-900 border-amber-400 shadow-[0_10px_28px_-6px_rgba(251,191,36,0.35)]"
+                          : isDone
+                          ? "bg-emerald-950/60 text-white border-emerald-400/50 hover:border-emerald-300"
+                          : "bg-white/95 text-slate-900 border-indigo-200 hover:border-indigo-400 shadow-md"
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-black uppercase tracking-wider">
+                          <span
+                            className={`rounded-lg px-2.5 py-0.5 ${
+                              isDone
+                                ? "bg-emerald-400/20 text-emerald-300"
+                                : "bg-indigo-100 text-indigo-800"
+                            }`}
+                          >
+                            Stage {idx + 1} of {mod.units.length}
+                          </span>
+                          <span
+                            className={`rounded-lg px-2.5 py-0.5 ${
+                              isDone
+                                ? "bg-white/10 text-amber-300"
+                                : "bg-amber-50 border border-amber-200 text-amber-800"
+                            }`}
+                          >
+                            ⚡ +{unit.xpReward} XP
+                          </span>
+                          <span
+                            className={`rounded-lg px-2.5 py-0.5 ${
+                              isDone
+                                ? "bg-white/10 text-indigo-200"
+                                : "bg-violet-50 border border-violet-200 text-violet-800"
+                            }`}
+                          >
+                            🎮 4 Concept Games
+                          </span>
+                        </div>
+
+                        <span
+                          className={`text-xs font-bold flex items-center gap-1 ${
+                            isDone ? "text-emerald-200" : "text-slate-400"
+                          }`}
+                        >
+                          <Clock className="h-3.5 w-3.5" /> {unit.durationMinutes}m
+                        </span>
+                      </div>
+
+                      <h3
+                        className={`text-lg sm:text-xl font-black mt-2 group-hover:text-indigo-500 transition ${
+                          isDone ? "text-white" : "text-slate-900"
+                        }`}
+                      >
+                        {isHinglish && unit.titleHinglish
+                          ? unit.titleHinglish
+                          : unit.title}
                       </h3>
-                      <p className="text-xs text-slate-500 font-medium mt-0.5">
-                        {isHinglish && unit.summaryHinglish ? unit.summaryHinglish : unit.summary}
+                      <p
+                        className={`text-xs sm:text-sm font-medium mt-1 ${
+                          isDone ? "text-emerald-100/80" : "text-slate-600"
+                        }`}
+                      >
+                        {isHinglish && unit.summaryHinglish
+                          ? unit.summaryHinglish
+                          : unit.summary}
                       </p>
-                    </div>
 
-                    <div className="flex items-center gap-3 shrink-0 text-xs font-bold">
-                      <span className="text-slate-400 flex items-center gap-1">
-                        <Clock className="h-3.5 w-3.5" /> {unit.durationMinutes}m
-                      </span>
-                      <span className="text-slate-600">
-                        {unit.checkpointQuestions.length} Qs • {unit.checkpointQuestions.length * 10} Marks
-                      </span>
+                      <div className="mt-4 pt-3 border-t border-slate-200/30 flex items-center justify-between text-xs font-black">
+                        <span
+                          className={
+                            isDone ? "text-emerald-300" : "text-slate-500"
+                          }
+                        >
+                          🎯 {unit.checkpointQuestions.length} Practice Questions •{" "}
+                          {unit.checkpointQuestions.length * 10} XP Test
+                        </span>
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-xl px-3.5 py-1.5 ${
+                            isActiveQuest
+                              ? "bg-emerald-500 text-white"
+                              : isDone
+                              ? "bg-white/15 text-white"
+                              : "bg-indigo-600 text-white"
+                          }`}
+                        >
+                          <span>{isDone ? "Replay Topic" : "Launch Topic"}</span>
+                          <ChevronRight className="h-4 w-4" />
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                </div>
               );
             })}
+
+            {/* Final Chapter Badge Boss Chest */}
+            <div className="flex flex-col items-center pt-3">
+              <div className="h-8 w-1.5 rounded-full bg-gradient-to-b from-indigo-400 to-amber-400 mb-3" />
+              <div className="rounded-3xl border-2 border-amber-300/70 bg-white/10 backdrop-blur-xl px-6 py-5 text-center max-w-lg mx-auto space-y-1.5">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-b from-amber-300 to-amber-500 border-4 border-white text-3xl shadow-md">
+                  {mod.badgeEmoji}
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-300">
+                  Chapter Completion Reward (+100 Bonus XP)
+                </span>
+                <h4 className="text-lg font-black text-white">
+                  Unlock &ldquo;{mod.badgeName}&rdquo; Scholar Badge
+                </h4>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
         /* ====================================================================
            VIEW 2: BORDERLESS MAIN UNIT STUDY CONTENT + BORDERED UNIT TEST
           ==================================================================== */
-        <div className="space-y-8">
+        <div className="space-y-6">
+          {/* Interactive Connected Topic Stepping-Stone Trail Bar */}
+          <div className="rounded-2xl bg-slate-900 text-white p-3.5 sm:p-4 border-2 border-indigo-900/80 shadow-md flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none py-0.5">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-300 shrink-0 mr-1">
+                🗺️ Topic Trail:
+              </span>
+              {mod.units.map((u, uIdx) => {
+                const uDone = profile.completedUnitIds.includes(u.id);
+                const isCurrent = uIdx === activeUnitIdx;
+                return (
+                  <React.Fragment key={u.id}>
+                    <button
+                      type="button"
+                      onClick={() => switchUnit(uIdx)}
+                      title={u.title}
+                      className={`shrink-0 inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-black transition cursor-pointer border-2 ${
+                        isCurrent
+                          ? "bg-amber-400 text-slate-950 border-white shadow-sm scale-105"
+                          : uDone
+                          ? "bg-emerald-500/25 text-emerald-200 border-emerald-400/50 hover:bg-emerald-500/40"
+                          : "bg-white/10 text-indigo-100 border-white/15 hover:bg-white/20"
+                      }`}
+                    >
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/20 text-[10px]">
+                        {uDone ? "✓" : uIdx + 1}
+                      </span>
+                      <span className="max-w-[120px] truncate hidden sm:inline">
+                        {u.title.replace(/^Unit\s*\d+[:.-]?\s*/i, "")}
+                      </span>
+                    </button>
+                    {uIdx < mod.units.length - 1 && (
+                      <span
+                        className={`h-0.5 w-3 shrink-0 rounded-full ${
+                          uDone ? "bg-emerald-400" : "bg-white/20"
+                        }`}
+                      />
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+
+            <Link
+              href={`/trails/${mod.slug}`}
+              className="shrink-0 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1.5 text-xs font-extrabold text-indigo-100 transition"
+            >
+              🗺️ Full Chapter Map
+            </Link>
+          </div>
           {/* Main Unit Study Content — No outer border, clean reading layout */}
           <div className="py-2 sm:py-4 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-5">

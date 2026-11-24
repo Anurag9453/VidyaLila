@@ -25,8 +25,11 @@ import {
   Zap,
   Globe2,
   BookOpen,
+  Compass,
+  LayoutGrid,
 } from "lucide-react";
 import { PaymentModal, PassPackageType } from "@/components/PaymentModal";
+import { SkillTreeMap } from "@/components/SkillTreeMap";
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -69,6 +72,7 @@ function HomeContent() {
       : null
   );
   const [comingSoonAlert, setComingSoonAlert] = useState<string | null>(null);
+  const [chapterViewMode, setChapterViewMode] = useState<"MAP" | "GRID">("MAP");
 
   useEffect(() => {
     const c = Number(searchParams.get("class")) as ClassGrade;
@@ -734,8 +738,84 @@ function HomeContent() {
             </div>
           </div>
 
-          {/* Chapter Cards Grid — Only Chapters are shown here; Topics open on clicking a Card */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {/* VIEW SWITCHER BAR: 3D ADVENTURE MAP (SKILL TREE) vs BENTO CARD GRID */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-white/95 backdrop-blur-md border-2 border-slate-200 px-5 py-3.5 shadow-sm">
+            <div className="space-y-0.5">
+              <span className="text-[11px] font-black uppercase tracking-wider text-indigo-600">
+                Grade {selectedClass} {selectedSubject} • {chaptersForSelection.length} Chapters
+              </span>
+              <h3 className="text-base sm:text-lg font-extrabold text-slate-900">
+                {chapterViewMode === "MAP"
+                  ? "🗺️ Interactive 3D Skill Tree & Topic Expedition Map"
+                  : "🎛️ Chapter Bento Cards Grid"}
+              </h3>
+            </div>
+
+            <div className="inline-flex items-center rounded-2xl bg-slate-100 border border-slate-200 p-1 self-start sm:self-auto">
+              <button
+                type="button"
+                onClick={() => setChapterViewMode("MAP")}
+                className={`rounded-xl px-3.5 py-2 text-xs font-black transition flex items-center gap-1.5 cursor-pointer ${
+                  chapterViewMode === "MAP"
+                    ? "bg-indigo-600 text-white shadow-sm"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <Compass className="h-3.5 w-3.5" />
+                <span>3D Adventure Map</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setChapterViewMode("GRID")}
+                className={`rounded-xl px-3.5 py-2 text-xs font-black transition flex items-center gap-1.5 cursor-pointer ${
+                  chapterViewMode === "GRID"
+                    ? "bg-indigo-600 text-white shadow-sm"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+                <span>Card Grid</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 3D SKILL TREE / ADVENTURE MAP VIEW (DEFAULT) */}
+          {chapterViewMode === "MAP" ? (
+            <SkillTreeMap
+              chapters={chaptersForSelection}
+              selectedClass={selectedClass}
+              selectedSubject={selectedSubject}
+              completedUnitIds={profile.completedUnitIds}
+              isAuthenticated={isAuthenticated}
+              userCredits={profile.credits ?? 0}
+              isHinglish={isHinglish}
+              isChapterFreeStarter={isChapterFreeStarter}
+              isChapterUnlocked={isChapterUnlocked}
+              onUnlockChapter={(chap, e) => {
+                e.stopPropagation();
+                if (!isAuthenticated) {
+                  router.push(
+                    `/auth?next=${encodeURIComponent(
+                      `/?class=${selectedClass}&subject=${selectedSubject}`
+                    )}`
+                  );
+                  return;
+                }
+                if ((profile.credits ?? 0) >= 100) {
+                  const res = unlockChapterWithCredits(chap.id);
+                  if (res.ok) {
+                    router.push(`/trails/${chap.slug}`);
+                  }
+                } else {
+                  setPendingChapterToUnlock({ id: chap.id, title: chap.title });
+                  setDefaultModalPkg("ONE_DAY");
+                  setPaymentModalOpen(true);
+                }
+              }}
+            />
+          ) : (
+            /* Chapter Cards Grid — Classic Bento Grid Alternative */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {chaptersForSelection.map((chap, chapIdx) => {
               const completedUnits = chap.units.filter((u) =>
                 profile.completedUnitIds.includes(u.id)
@@ -914,7 +994,8 @@ function HomeContent() {
                 </div>
               );
             })}
-          </div>
+            </div>
+          )}
         </section>
       )}
 

@@ -1575,17 +1575,17 @@ function ContestArenaContent() {
               </span>
             </p>
 
-            {/* Class Filter (Class 9 & 10 Live, 11 & 12 Locked) */}
+            {/* Class Filter (Class 9, 10 & 11 Live, 12 Locked) */}
             <div className="flex items-center gap-1.5 text-xs font-bold">
               {([9, 10, 11, 12] as ClassGrade[]).map((grade) => {
-                const isLocked = grade === 11 || grade === 12;
+                const isLocked = grade === 12;
                 return (
                   <button
                     key={grade}
                     onClick={() => {
                       if (isLocked) {
                         setQuizClassAlert(
-                          `Class ${grade} Live Examinations are coming soon! Daily & Weekly tests are currently active for Class 9 and 10.`
+                          `Class ${grade} Live Examinations are coming soon! Daily & Weekly tests are currently active for Class 9, 10, and 11.`
                         );
                         return;
                       }

@@ -129,11 +129,11 @@ function HomeContent() {
       title: "Grade 11 / Class 11",
       subtitle: "Year 12 / Senior High • Vectors, Chemical Bonding & Calculus",
       emoji: "🚀",
-      bg: "bg-slate-100/90",
-      border: "border-slate-300",
-      shadow: "shadow-[0_4px_0_0_#cbd5e1]",
-      iconBg: "bg-slate-400",
-      isLocked: true,
+      bg: "bg-indigo-50/70",
+      border: "border-indigo-200 hover:border-indigo-400",
+      shadow: "shadow-[0_6px_0_0_#c7d2fe]",
+      iconBg: "bg-indigo-600",
+      isLocked: false,
     },
     {
       grade: 12,
@@ -197,9 +197,9 @@ function HomeContent() {
   });
 
   const handleSelectClass = (grade: ClassGrade) => {
-    if (grade === 11 || grade === 12) {
+    if (grade === 12) {
       setComingSoonAlert(
-        `Class ${grade} chapters & tests are coming soon! We are currently live for Class 9 and 10.`
+        `Class ${grade} chapters & tests are coming soon! We are currently live for Class 9, 10, and 11.`
       );
       return;
     }
@@ -500,7 +500,7 @@ function HomeContent() {
                       </h3>
                       <p className="text-xs sm:text-sm font-medium text-slate-600 mt-1.5 line-clamp-2 leading-relaxed">
                         {item.isLocked
-                          ? "Senior secondary syllabus is coming soon! Live chapters currently for Grade 9 & 10."
+                          ? "Grade 12 syllabus is coming soon! Live chapters currently for Grade 9, 10 & 11."
                           : item.subtitle}
                       </p>
                     </div>

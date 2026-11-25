@@ -760,7 +760,7 @@ function DoubtsLoungeContent() {
 
             <div className="space-y-1.5">
               {STUDY_CHANNELS.map((ch) => {
-                const isLocked = ch.classGrade === 11 || ch.classGrade === 12;
+                const isLocked = ch.classGrade === 12;
                 const isSelected = ch.classGrade === selectedGrade;
                 const isMyJoinedGroup =
                   myMembership?.channelId === ch.id && myMembership?.status === "approved";
@@ -774,7 +774,7 @@ function DoubtsLoungeContent() {
                     onClick={() => {
                       if (isLocked) {
                         setErrorAlert(
-                          `Class ${ch.classGrade} Doubt Room is coming soon! Discussion groups are currently active for Class 9 and 10.`
+                          `Class ${ch.classGrade} Doubt Room is coming soon! Discussion groups are currently active for Class 9, 10, and 11.`
                         );
                         return;
                       }

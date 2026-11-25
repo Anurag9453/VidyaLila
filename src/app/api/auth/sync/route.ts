@@ -127,20 +127,17 @@ export async function POST(req: NextRequest) {
       `@${cleanHandle}_${user.id.slice(0, 4)}`;
 
     const rawGrade = Number(bodyPayload.classGrade || meta.class_grade || 9);
-    if (
-      bodyPayload.classGrade &&
-      (bodyPayload.classGrade === 11 || bodyPayload.classGrade === 12)
-    ) {
+    if (bodyPayload.classGrade && bodyPayload.classGrade === 12) {
       return NextResponse.json(
         {
           ok: false,
           error:
-            "Class 11 & 12 are coming soon! Please select Class 9 or 10 to continue.",
+            "Class 12 is coming soon! Please select Class 9, 10, or 11 to continue.",
         },
         { status: 400 }
       );
     }
-    const validGrade = rawGrade === 10 ? 10 : 9;
+    const validGrade = rawGrade === 11 ? 11 : rawGrade === 10 ? 10 : 9;
 
     const metaLang =
       bodyPayload.preferredLanguage ||

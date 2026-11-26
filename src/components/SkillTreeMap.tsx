@@ -65,7 +65,7 @@ export function SkillTreeMap({
   // Determine the "current active" chapter (first unlocked chapter that isn't 100% done, or index 0)
   const activeChapterIdx = (() => {
     const idx = chapters.findIndex((chap, i) => {
-      const free = isChapterFreeStarter(chap.id) || i < 2;
+      const free = isChapterFreeStarter(chap.id);
       const unlocked = free || (isAuthenticated && isChapterUnlocked(chap.id));
       const doneCount = chap.units.filter((u) =>
         completedUnitIds.includes(u.id)
@@ -201,7 +201,7 @@ export function SkillTreeMap({
               ? Math.round((completedUnits / totalUnits) * 100)
               : 0;
           const isCompleted = totalUnits > 0 && completedUnits === totalUnits;
-          const isFreeStarter = isChapterFreeStarter(chap.id) || idx < 2;
+          const isFreeStarter = isChapterFreeStarter(chap.id);
           const isUnlocked =
             isFreeStarter || (isAuthenticated && isChapterUnlocked(chap.id));
           const isCurrentActive = idx === activeChapterIdx;
@@ -318,7 +318,7 @@ export function SkillTreeMap({
                       ) : isUnlocked ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 border border-indigo-300 px-2.5 py-0.5 text-[10px] font-extrabold text-indigo-800 uppercase">
                           <CheckCircle2 className="h-3 w-3" />
-                          <span>Unlocked Forever</span>
+                          <span>Enrolled</span>
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/20 border border-amber-400/50 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-300 uppercase">
@@ -550,10 +550,10 @@ export function SkillTreeMap({
                             <span>{isAuthenticated ? "🪙" : "🔐"}</span>
                             <span>
                               {!isAuthenticated
-                                ? "Sign In to Unlock Forever (100 Cr)"
+                                ? "Sign In to Enroll (100 Cr)"
                                 : userCredits >= 100
-                                ? "Unlock Forever & Start (100 Credits)"
-                                : "Top Up Credits to Unlock (100 Cr)"}
+                                ? "Enroll Now (100 Credits)"
+                                : "Top Up Credits to Enroll (100 Cr)"}
                             </span>
                           </button>
                           <button

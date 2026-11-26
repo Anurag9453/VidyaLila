@@ -3111,7 +3111,7 @@ function TrailDetailContent({ slug }: { slug: string }) {
                       className="w-full btn-3d-amber py-3.5 text-sm font-extrabold flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <Unlock className="h-4 w-4" />
-                      <span>Unlock Chapter Now (Spend 🪙 100 Credits)</span>
+                      <span>Enroll Now (Spend 🪙 100 Credits)</span>
                     </button>
                   ) : (
                     <button

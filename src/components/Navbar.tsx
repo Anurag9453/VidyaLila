@@ -23,6 +23,7 @@ import {
   AlertCircle,
   Lock,
   Headphones,
+  BookmarkCheck,
 } from "lucide-react";
 import { PaymentModal } from "./PaymentModal";
 import { DailyStreakModal } from "./DailyStreakModal";
@@ -125,6 +126,11 @@ export function Navbar() {
       href: "/",
       label: "Learn",
       icon: Compass,
+    },
+    {
+      href: "/my-learnings",
+      label: "My Learnings",
+      icon: BookmarkCheck,
     },
     {
       href: "/contests",

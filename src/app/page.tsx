@@ -819,7 +819,7 @@ function HomeContent() {
                 totalUnits > 0
                   ? Math.round((completedUnits / totalUnits) * 100)
                   : 0;
-              const isFreeStarter = isChapterFreeStarter(chap.id) || chapIdx < 2;
+              const isFreeStarter = isChapterFreeStarter(chap.id);
               const isUnlocked =
                 isFreeStarter || (isAuthenticated && isChapterUnlocked(chap.id));
 
@@ -891,7 +891,7 @@ function HomeContent() {
                         ) : isUnlocked ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-indigo-100 border border-indigo-300 px-2.5 py-0.5 text-[10px] font-extrabold text-indigo-800 uppercase tracking-wider">
                             <CheckCircle2 className="h-3 w-3" />
-                            <span>Unlocked Forever</span>
+                            <span>Enrolled</span>
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 border border-amber-300 px-2.5 py-0.5 text-[10px] font-extrabold text-amber-900 uppercase tracking-wider">
@@ -977,10 +977,10 @@ function HomeContent() {
                         <span>{isAuthenticated ? "🪙" : "🔐"}</span>
                         <span>
                           {!isAuthenticated
-                            ? "Unlock Forever (100 Credits) — Sign In"
+                            ? "Sign In to Enroll (100 Credits)"
                             : (profile.credits ?? 0) >= 100
-                            ? "Unlock Forever & Open (100 Credits)"
-                            : "Buy Credits to Unlock Forever (100 Cr)"}
+                            ? "Enroll Now (100 Credits)"
+                            : "Buy Credits to Enroll (100 Cr)"}
                         </span>
                       </button>
                     )}

@@ -140,11 +140,11 @@ function HomeContent() {
       title: "Grade 12 / Class 12",
       subtitle: "Year 13 / AP / A-Level • Electrostatics, Solutions & Integrals",
       emoji: "👑",
-      bg: "bg-slate-100/90",
-      border: "border-slate-300",
-      shadow: "shadow-[0_4px_0_0_#cbd5e1]",
-      iconBg: "bg-slate-400",
-      isLocked: true,
+      bg: "bg-purple-50/70",
+      border: "border-purple-200 hover:border-purple-400",
+      shadow: "shadow-[0_6px_0_0_#e9d5ff]",
+      iconBg: "bg-purple-600",
+      isLocked: false,
     },
   ];
 
@@ -197,12 +197,6 @@ function HomeContent() {
   });
 
   const handleSelectClass = (grade: ClassGrade) => {
-    if (grade === 12) {
-      setComingSoonAlert(
-        `Class ${grade} chapters & tests are coming soon! We are currently live for Class 9, 10, and 11.`
-      );
-      return;
-    }
     setComingSoonAlert(null);
     setSelectedClass(grade);
     setSelectedSubject(null);

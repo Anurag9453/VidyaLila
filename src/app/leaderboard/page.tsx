@@ -319,7 +319,7 @@ function LeaderboardContent() {
   >("DAILY_TESTS");
 
   const [sortMode, setSortMode] = useState<"GP" | "RATING">("GP");
-  const [selectedClass, setSelectedClass] = useState<"ALL" | 9 | 10 | 11>("ALL");
+  const [selectedClass, setSelectedClass] = useState<"ALL" | 9 | 10 | 11 | 12>("ALL");
   const [selectedSubject, setSelectedSubject] = useState<"ALL" | SubjectName>(
     "ALL"
   );
@@ -869,13 +869,13 @@ function LeaderboardContent() {
         {/* CLASS & SUBJECT FILTERS + CURRENT MONTH TEST PICKER */}
         <div className="space-y-4 rounded-2xl bg-slate-50 border-2 border-slate-200 p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            {/* Class Filter with Class 12 Locked */}
+            {/* Class Filter (All Classes 9–12 Live) */}
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 mr-1">
                 Class:
               </span>
               {(["ALL", 9, 10, 11, 12] as const).map((g) => {
-                const isLocked = g === 12;
+                const isLocked = false;
                 const active = selectedClass === g;
                 return (
                   <button
@@ -883,7 +883,7 @@ function LeaderboardContent() {
                     onClick={() => {
                       if (isLocked) {
                         setClassLockAlert(
-                          `Class ${g} Rank Lists are coming soon! We are currently running Daily & Weekly Tests for Class 9, 10, and 11.`
+                          `Class ${g} Rank Lists are coming soon!`
                         );
                         return;
                       }
@@ -898,7 +898,7 @@ function LeaderboardContent() {
                         : "bg-white border border-slate-200 text-slate-600 hover:text-slate-900"
                     }`}
                   >
-                    <span>{g === "ALL" ? "All (9 & 10)" : `Class ${g}`}</span>
+                    <span>{g === "ALL" ? "All Classes" : `Class ${g}`}</span>
                     {isLocked && <Lock className="h-3 w-3 text-slate-400" />}
                   </button>
                 );

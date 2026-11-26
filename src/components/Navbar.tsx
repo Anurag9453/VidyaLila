@@ -431,7 +431,7 @@ export function Navbar() {
               )}
             </div>
 
-            {/* 2. Class Selection (Class 9, 10 & 11 Active, 12 Coming Soon) */}
+            {/* 2. Class Selection (All Classes 9–12 Active) */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wider text-slate-700">
@@ -439,14 +439,14 @@ export function Navbar() {
                   <span>2. Select Your Class</span>
                 </label>
                 <span className="text-[10px] font-bold text-slate-400">
-                  Live for Class 9, 10 &amp; 11
+                  Live for Class 9, 10, 11 &amp; 12
                 </span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                 {([9, 10, 11, 12] as ClassGrade[]).map((grade) => {
                   const active = onboardClass === grade;
-                  const isLocked = grade === 12;
+                  const isLocked = false;
 
                   return (
                     <button

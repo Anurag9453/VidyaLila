@@ -493,12 +493,6 @@ function AuthAndSettingsContent() {
                   value={profile.classGrade}
                   onChange={(e) => {
                     const val = Number(e.target.value) as ClassGrade;
-                    if (val === 12) {
-                      setClassSettingsAlert(
-                        `Class ${val} syllabus is coming soon! VidyaLila is currently live for Class 9, 10, and 11.`
-                      );
-                      return;
-                    }
                     setClassSettingsAlert(null);
                     updateProfileBoardAndClass(
                       profile.board,
@@ -511,9 +505,7 @@ function AuthAndSettingsContent() {
                   <option value={9}>Class 9 (Live)</option>
                   <option value={10}>Class 10 (Live)</option>
                   <option value={11}>Class 11 (Live)</option>
-                  <option value={12} disabled className="text-slate-400 bg-slate-100">
-                    Class 12 (Coming Soon 🔒)
-                  </option>
+                  <option value={12}>Class 12 (Live)</option>
                 </select>
 
                 {classSettingsAlert && (
@@ -1084,12 +1076,6 @@ function AuthAndSettingsContent() {
                       value={classGrade}
                       onChange={(e) => {
                         const val = Number(e.target.value) as ClassGrade;
-                        if (val === 12) {
-                          setSignupHandleError(
-                            `Class ${val} is coming soon! Please select Class 9, 10, or 11.`
-                          );
-                          return;
-                        }
                         setClassGrade(val);
                       }}
                       className="w-full rounded-2xl border-2 border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 focus:border-emerald-500 focus:bg-white focus:outline-none"
@@ -1097,9 +1083,7 @@ function AuthAndSettingsContent() {
                       <option value={9}>Class 9 (Live)</option>
                       <option value={10}>Class 10 (Live)</option>
                       <option value={11}>Class 11 (Live)</option>
-                      <option value={12} disabled className="text-slate-400 bg-slate-100">
-                        Class 12 (Coming Soon 🔒)
-                      </option>
+                      <option value={12}>Class 12 (Live)</option>
                     </select>
                   </div>
 

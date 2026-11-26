@@ -561,7 +561,7 @@ function FormattedStudyBody({
                         <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 block">
                           {isHinglish ? "Matlab (Meaning):" : "Definition / Meaning:"}
                         </span>
-                        <p className="text-sm sm:text-base font-semibold text-slate-800 leading-relaxed">
+                        <p className="lesson-reading text-[15px] sm:text-base font-medium text-slate-800 leading-[1.75]">
                           {renderInlineMarkdown(definition)}
                         </p>
                       </div>
@@ -623,7 +623,7 @@ function FormattedStudyBody({
                     {row.map((cell, cIdx) => (
                       <td
                         key={cIdx}
-                        className="px-4 py-3 sm:px-5 sm:py-3.5 font-medium text-slate-700 leading-relaxed"
+                        className="lesson-reading px-4 py-3 sm:px-5 sm:py-3.5 text-[14.5px] sm:text-[15.5px] text-slate-800 leading-relaxed"
                       >
                         {renderInlineMarkdown(cell)}
                       </td>
@@ -708,7 +708,7 @@ function FormattedStudyBody({
               )}
             </div>
             {quoteLines.map((ql, qIdx) => (
-              <p key={qIdx} className="leading-relaxed">
+              <p key={qIdx} className="lesson-reading text-[14.5px] sm:text-[15.5px] leading-[1.75]">
                 {renderInlineMarkdown(ql)}
               </p>
             ))}
@@ -742,10 +742,10 @@ function FormattedStudyBody({
 
       if (isOrdered) {
         elements.push(
-          <ol key={`list-${i}`} className="space-y-2.5 pl-1 text-sm sm:text-base font-medium text-slate-700 my-2">
+          <ol key={`list-${i}`} className="lesson-reading space-y-3 pl-1 text-[15.5px] sm:text-[17px] text-slate-800 my-2.5">
             {(listItems as Array<{ num: number; text: string }>).map((item, lIdx) => (
-              <li key={lIdx} className="flex items-start gap-3 leading-relaxed">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-extrabold text-xs shrink-0 mt-0.5">
+              <li key={lIdx} className="flex items-start gap-3 leading-[1.75]">
+                <span className="font-sans flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 font-extrabold text-xs shrink-0 mt-1">
                   {item.num}
                 </span>
                 <span className="flex-1">{renderInlineMarkdown(item.text)}</span>
@@ -755,10 +755,10 @@ function FormattedStudyBody({
         );
       } else {
         elements.push(
-          <ul key={`list-${i}`} className="space-y-2 pl-1 text-sm sm:text-base font-medium text-slate-700 my-2">
+          <ul key={`list-${i}`} className="lesson-reading space-y-2.5 pl-1 text-[15.5px] sm:text-[17px] text-slate-800 my-2.5">
             {(listItems as string[]).map((item, lIdx) => (
-              <li key={lIdx} className="flex items-start gap-2.5 leading-relaxed">
-                <span className="h-2 w-2 rounded-full bg-indigo-500 shrink-0 mt-2"></span>
+              <li key={lIdx} className="flex items-start gap-2.5 leading-[1.75]">
+                <span className="h-2 w-2 rounded-full bg-indigo-500 shrink-0 mt-2.5"></span>
                 <span className="flex-1">{renderInlineMarkdown(item)}</span>
               </li>
             ))}
@@ -772,7 +772,7 @@ function FormattedStudyBody({
     elements.push(
       <p
         key={`p-${i}`}
-        className="text-sm sm:text-base font-medium text-slate-700 leading-relaxed sm:leading-7"
+        className="lesson-reading text-[15.5px] sm:text-[17px] text-slate-800 leading-[1.8]"
       >
         {renderInlineMarkdown(trimmed)}
       </p>
@@ -780,7 +780,7 @@ function FormattedStudyBody({
     i++;
   }
 
-  return <div className="space-y-3">{elements}</div>;
+  return <div className="space-y-3.5">{elements}</div>;
 }
 
 type SectionType = "STORY" | "VOCABULARY" | "MISTAKES" | "RECAP" | "PRACTICE" | "LESSON";

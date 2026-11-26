@@ -8,6 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-ui)", "system-ui", "-apple-system", "sans-serif"],
+        display: ["var(--font-display)", "var(--font-ui)", "sans-serif"],
+        reading: ["var(--font-reading)", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
       colors: {
         brand: {
           50: "#f5f3ff",

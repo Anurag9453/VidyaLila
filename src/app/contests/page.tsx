@@ -1575,10 +1575,10 @@ function ContestArenaContent() {
               </span>
             </p>
 
-            {/* Class Filter (Class 9, 10 & 11 Live, 12 Locked) */}
+            {/* Class Filter (All Classes 9–12 Live) */}
             <div className="flex items-center gap-1.5 text-xs font-bold">
               {([9, 10, 11, 12] as ClassGrade[]).map((grade) => {
-                const isLocked = grade === 12;
+                const isLocked = false;
                 return (
                   <button
                     key={grade}

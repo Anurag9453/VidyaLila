@@ -1,6 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
+import {
+  Bricolage_Grotesque,
+  DM_Sans,
+  Literata,
+  JetBrains_Mono,
+} from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { AppProvider } from "@/lib/store";
@@ -9,16 +14,29 @@ import { CelebrationModal } from "@/components/CelebrationModal";
 import { BrandLoader } from "@/components/BrandLoader";
 import { BrandCrestIcon } from "@/components/BrandLogo";
 
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-jakarta",
-});
-
-const outfit = Outfit({
+const displayFont = Bricolage_Grotesque({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
-  variable: "--font-outfit",
+  variable: "--font-display",
+});
+
+const uiFont = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-ui",
+});
+
+const readingFont = Literata({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-reading",
+});
+
+const monoFont = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-mono",
 });
 
 export const viewport: Viewport = {
@@ -39,7 +57,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${outfit.variable}`}>
+    <html
+      lang="en"
+      className={`${displayFont.variable} ${uiFont.variable} ${readingFont.variable} ${monoFont.variable}`}
+    >
       <body className="min-h-screen flex flex-col text-slate-800 antialiased selection:bg-amber-200 selection:text-slate-900">
         <AppProvider>
           <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />

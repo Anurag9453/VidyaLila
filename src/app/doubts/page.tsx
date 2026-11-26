@@ -760,7 +760,7 @@ function DoubtsLoungeContent() {
 
             <div className="space-y-1.5">
               {STUDY_CHANNELS.map((ch) => {
-                const isLocked = ch.classGrade === 12;
+                const isLocked = false;
                 const isSelected = ch.classGrade === selectedGrade;
                 const isMyJoinedGroup =
                   myMembership?.channelId === ch.id && myMembership?.status === "approved";

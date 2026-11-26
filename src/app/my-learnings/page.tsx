@@ -28,6 +28,7 @@ export default function MyLearningsPage() {
     modules,
     profile,
     isAuthenticated,
+    isChapterFreeStarter,
     isChapterUnlocked,
     contentLanguage,
   } = useApp();
@@ -40,11 +41,13 @@ export default function MyLearningsPage() {
     "ALL"
   );
 
-  // Only show chapters the signed-in user has explicitly enrolled in (unlocked)
+  // Only show chapters the signed-in user has explicitly enrolled in (excludes auto-free starter chapters)
   const enrolledChapters = useMemo(() => {
     if (!isAuthenticated) return [];
-    return modules.filter((m) => isChapterUnlocked(m.id));
-  }, [modules, isAuthenticated, isChapterUnlocked]);
+    return modules.filter(
+      (m) => !isChapterFreeStarter(m.id) && isChapterUnlocked(m.id)
+    );
+  }, [modules, isAuthenticated, isChapterFreeStarter, isChapterUnlocked]);
 
   const filteredChapters = useMemo(() => {
     return enrolledChapters.filter((m) => {
@@ -181,9 +184,9 @@ export default function MyLearningsPage() {
               Sign In to View Your Enrolled Chapters
             </h2>
             <p className="text-sm text-slate-600">
-              Every chapter starts locked. Sign in to use your Vidya Credits,
-              enroll in any Class 9–12 chapter, and build your personal library
-              here.
+              Try the first 2 Free Starter chapters in every subject, then sign
+              in to enroll in any Chapter 3+ using your Vidya Credits and build
+              your personal library here.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-1">

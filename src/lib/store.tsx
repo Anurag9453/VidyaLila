@@ -1961,9 +1961,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return { xpEarned, isFirstWin };
   };
 
-  const isChapterFreeStarter = (_moduleIdOrSlug: string): boolean => {
-    // Every chapter starts locked until the student explicitly enrolls using Vidya Credits
-    return false;
+  const isChapterFreeStarter = (moduleIdOrSlug: string): boolean => {
+    const mod = modules.find(
+      (m) => m.id === moduleIdOrSlug || m.slug === moduleIdOrSlug
+    );
+    if (!mod) return false;
+    // First 2 chapters of each subject per class are 100% Free Starter Chapters
+    const sameSubjectModules = modules.filter(
+      (m) => m.classGrade === mod.classGrade && m.subject === mod.subject
+    );
+    const idx = sameSubjectModules.findIndex((m) => m.id === mod.id);
+    return idx >= 0 && idx < 2;
   };
 
   const isChapterUnlocked = (moduleIdOrSlug: string): boolean => {

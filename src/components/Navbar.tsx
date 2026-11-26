@@ -27,6 +27,7 @@ import {
 import { PaymentModal } from "./PaymentModal";
 import { DailyStreakModal } from "./DailyStreakModal";
 import { BrandLogo } from "./BrandLogo";
+import { CourseSearchBar } from "./CourseSearchBar";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -185,6 +186,9 @@ export function Navbar() {
             })}
           </nav>
 
+          {/* Instant Course Search Bar (Desktop) */}
+          <CourseSearchBar className="hidden lg:block w-52 xl:w-72 shrink-0" />
+
           {/* Right Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {/* Quick Study Language Switcher: 🇬🇧 English / 🇮🇳 Hinglish */}
@@ -306,6 +310,11 @@ export function Navbar() {
               </Link>
             )}
           </div>
+        </div>
+
+        {/* Instant Course Search Bar (Mobile & Tablet) */}
+        <div className="lg:hidden border-t border-slate-100 px-3.5 py-2 sm:px-6 md:px-10 bg-white/90">
+          <CourseSearchBar className="w-full" />
         </div>
       </header>
 

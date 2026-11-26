@@ -24,6 +24,7 @@ import {
   Lock,
   Headphones,
   BookmarkCheck,
+  ClipboardCheck,
 } from "lucide-react";
 import { PaymentModal } from "./PaymentModal";
 import { DailyStreakModal } from "./DailyStreakModal";
@@ -131,6 +132,11 @@ export function Navbar() {
       href: "/my-learnings",
       label: "My Learnings",
       icon: BookmarkCheck,
+    },
+    {
+      href: "/practice",
+      label: "Practice",
+      icon: ClipboardCheck,
     },
     {
       href: "/contests",
